@@ -9,9 +9,9 @@
 #include <functional>
 
 
-using StateContainer = std::vector<std::pair<StateType, std::shared_ptr<BaseState>>>;
+using StateContainer = std::vector<std::pair<StateType, BaseState*>>;
 using TypeContainer = std::vector<StateType>;
-using StateFactory = std::unordered_map<StateType, std::function<std::shared_ptr<BaseState>(void)>>;
+using StateFactory = std::unordered_map<StateType, std::function<BaseState*(void)>>;
 
 class StateManager
 {
@@ -47,8 +47,8 @@ private:
 template<class T>
 inline void StateManager::registerState(const StateType& type)
 {
-	this->stateFactory[type] = [this]()
+	this->stateFactory[type] = [this]() -> BaseState*
 	{
-		return std::make_shared<T>(this);
+		return new T(this);
 	};
 }

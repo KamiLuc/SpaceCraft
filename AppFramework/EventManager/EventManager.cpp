@@ -75,12 +75,6 @@ bool EventManager::removeCallback(StateType state, const std::string& callbackNa
 
 void EventManager::handleEvent(sf::Event& event)
 {
-	if (event.type == sf::Event::Closed)
-	{
-		int x = 2;
-	}
-
-
 	for (auto& bindingIt : bindings)
 	{
 		Binding* bind = bindingIt.second;

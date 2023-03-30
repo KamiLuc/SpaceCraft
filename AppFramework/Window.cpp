@@ -1,13 +1,18 @@
 #include "Window.h"
 
-Window::Window() : Window("No name", {640, 480})
+Window::Window() : Window("No name", {640, 480}, sf::Color::White)
 {
 }
 
-Window::Window(const std::string& title, const sf::Vector2u& size) : windowTitle(title), windowSize(size), done(false), fullscreen(false), focused(true)
+Window::Window(const std::string& title, const sf::Vector2u& size, const sf::Color& clearColor)
+	: windowTitle(title), windowSize(size), done(false), fullscreen(false), focused(true), clearColor(clearColor)
 {
-
 	this->create();
+
+	this->eventManager.addCallback(StateType(0), "Fullscreen_toggle",
+		&Window::toggleFullscreen, this);
+	this->eventManager.addCallback(StateType(0), "Window_close",
+		&Window::close, this);
 }
 
 Window::~Window()
@@ -17,7 +22,7 @@ Window::~Window()
 
 void Window::beginDraw()
 {
-	this->window.clear(sf::Color::Black);
+	this->window.clear(this->clearColor);
 }
 
 void Window::endDraw()
@@ -90,6 +95,11 @@ sf::RenderWindow* Window::getRenderWindow()
 EventManager* Window::getEventManager()
 {
 	return &this->eventManager;
+}
+
+void Window::setClearColor(const sf::Color& color)
+{
+	this->clearColor = color;
 }
 
 void Window::destroy()

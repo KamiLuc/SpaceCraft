@@ -1,9 +1,11 @@
 #include "StateManager.h"
+#include "../../States/StateIntro.h"
+#include "../../States/StateMainMenu.h"
 
 StateManager::StateManager(SharedContext* sharedContext) : sharedContext(sharedContext)
 {
-	//this->registerState<State_Intro>(StateType::Intro);
-	//this->registerState<State_MainMenu>(StateType::MainMenu);
+	this->registerState<StateIntro>(StateType::Intro);
+	this->registerState<StateMainMenu>(StateType::MainMenu);
 	//this->registerState<State_Game>(StateType::Game);
 	//this->registerState<State_Paused>(StateType::Paused);
 }
@@ -13,7 +15,7 @@ StateManager::~StateManager()
 	for (auto& state : this->states)
 	{
 		state.second->onDestroy();
-		state.second = nullptr;
+		delete state.second;
 	}
 }
 
@@ -78,9 +80,9 @@ void StateManager::draw()
 
 void StateManager::processRequest()
 {
-	while (!this->statesToRemove.empty())
+	while (this->statesToRemove.begin() != this->statesToRemove.end())
 	{
-		this->remove(*statesToRemove.begin());
+		this->removeState(*statesToRemove.begin());
 		this->statesToRemove.erase(this->statesToRemove.begin());
 	}
 }
@@ -119,15 +121,15 @@ void StateManager::switchTo(const StateType& type)
 			tempState->activate();
 			return;
 		}
-
-		if (!this->states.empty())
-		{
-			this->states.back().second->deactivate();
-		}
-
-		this->createState(type);
-		this->states.back().second->activate();
 	}
+
+	if (!this->states.empty())
+	{
+		this->states.back().second->deactivate();
+	}
+
+	this->createState(type);
+	this->states.back().second->activate();
 }
 
 void StateManager::createState(const StateType& type)
@@ -149,7 +151,7 @@ void StateManager::removeState(const StateType& type)
 		if (it->first == type)
 		{
 			it->second->onDestroy();
-			it->second = nullptr;
+			delete it->second;
 			this->states.erase(it);
 			return;
 		}

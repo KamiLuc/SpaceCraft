@@ -9,7 +9,7 @@ class Window
 {
 public:
 	Window();
-	Window(const std::string& title, const sf::Vector2u& size);
+	Window(const std::string& title, const sf::Vector2u& size, const sf::Color& clearColor);
 	~Window();
 
 	void beginDraw();
@@ -26,6 +26,8 @@ public:
 	sf::RenderWindow* getRenderWindow();
 	EventManager* getEventManager();
 
+	void setClearColor(const sf::Color& color);
+
 private:
 	void destroy();
 	void create();
@@ -34,6 +36,7 @@ private:
 	EventManager eventManager;
 	sf::Vector2u windowSize;
 	std::string windowTitle;
+	sf::Color clearColor;
 	bool done;
 	bool fullscreen;
 	bool focused;
