@@ -43,7 +43,7 @@ sf::Time App::getElapsedTime() const
 
 void App::restartClock()
 {
-	this->elapsedTime += this->clock.restart();
+	this->elapsedTime = this->clock.restart();
 }
 
 Window* App::getWindow()
