@@ -1,6 +1,6 @@
 #include "App.h"
 
-App::App() : window("SpaceCraft", {1024,768}), sharedContext(), stateManager(&this->sharedContext)
+App::App() : window("SpaceCraft", {1024,768}, sf::Color::White), sharedContext(), stateManager(&this->sharedContext)
 {
 	this->sharedContext.window = &this->window;
 	this->sharedContext.eventManager = this->window.getEventManager();
@@ -14,7 +14,6 @@ App::~App()
 
 void App::handleInput()
 {
-	
 }
 
 void App::update()

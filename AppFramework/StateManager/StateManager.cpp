@@ -1,10 +1,11 @@
 #include "StateManager.h"
 #include "../../States/StateIntro.h"
+#include "../../States/StateMainMenu.h"
 
 StateManager::StateManager(SharedContext* sharedContext) : sharedContext(sharedContext)
 {
 	this->registerState<StateIntro>(StateType::Intro);
-	//this->registerState<State_MainMenu>(StateType::MainMenu);
+	this->registerState<StateMainMenu>(StateType::MainMenu);
 	//this->registerState<State_Game>(StateType::Game);
 	//this->registerState<State_Paused>(StateType::Paused);
 }
@@ -79,9 +80,9 @@ void StateManager::draw()
 
 void StateManager::processRequest()
 {
-	while (!this->statesToRemove.empty())
+	while (this->statesToRemove.begin() != this->statesToRemove.end())
 	{
-		this->remove(*statesToRemove.begin());
+		this->removeState(*statesToRemove.begin());
 		this->statesToRemove.erase(this->statesToRemove.begin());
 	}
 }
