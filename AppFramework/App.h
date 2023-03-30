@@ -2,8 +2,6 @@
 
 #include "Window.h"
 
-//test
-#include "GUI/Textbox.h"
 #include "StateManager/StateManager.h"
 
 class App
@@ -30,8 +28,5 @@ private:
 
 	sf::Clock clock;
 	sf::Time elapsedTime;
-
-//test
-	Textbox textbox;
 };
 

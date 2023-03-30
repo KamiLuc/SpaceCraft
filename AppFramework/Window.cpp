@@ -6,8 +6,12 @@ Window::Window() : Window("No name", {640, 480})
 
 Window::Window(const std::string& title, const sf::Vector2u& size) : windowTitle(title), windowSize(size), done(false), fullscreen(false), focused(true)
 {
-
 	this->create();
+
+	this->eventManager.addCallback(StateType(0), "Fullscreen_toggle",
+		&Window::toggleFullscreen, this);
+	this->eventManager.addCallback(StateType(0), "Window_close",
+		&Window::close, this);
 }
 
 Window::~Window()
@@ -17,7 +21,7 @@ Window::~Window()
 
 void Window::beginDraw()
 {
-	this->window.clear(sf::Color::Black);
+	this->window.clear(sf::Color::White);
 }
 
 void Window::endDraw()

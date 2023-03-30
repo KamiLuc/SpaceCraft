@@ -59,8 +59,8 @@ void Textbox::render(sf::RenderWindow& window)
 	if (content.size() > 0)
 	{
 		this->content.setString(content);
-		window.draw(this->background);
 		window.draw(this->content);
+		window.draw(this->background);
 	}
 }
 

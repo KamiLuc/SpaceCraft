@@ -1,11 +1,14 @@
 #pragma once
 #include "../AppFramework/EventManager/EventDetails.h"
+#include "../AppFramework/StateManager/BaseState.h"
 #include <SFML/Graphics.hpp>
+#include "../AppFramework/GUI/Textbox.h"
 
 class StateIntro : public BaseState
 {
 public:
-	// Inherited via BaseState
+	using BaseState::BaseState;
+
 	virtual void onCreate() override;
 	virtual void onDestroy() override;
 	virtual void activate() override;
@@ -13,12 +16,20 @@ public:
 	virtual void update(const sf::Time& time) override;
 	virtual void draw() override;
 
-	void skip(EventDetails * details);
+	void skip(EventDetails* details);
 
 private:
-	sf::Texture introTexture;
-	sf::Sprite introSprite;
-	sf::Text text;
+	sf::Texture spaceTexture;
+	sf::Texture craftTexture;
+	sf::Texture rocketTexture;
+	sf::Texture pressEnterTexture;
+	sf::Texture madeByTexture;
+	sf::Sprite spaceSprite;
+	sf::Sprite craftSprite;
+	sf::Sprite rocketSprite;
+	sf::Sprite pressEnterSprite;
+	sf::Sprite madeBySprite;
+
 	float timePassed;
 };
 

@@ -27,7 +27,7 @@ public:
 	template<class T>
 	bool addCallback(StateType state, const std::string& callbackName, void(T::* function)(EventDetails*), T* instance)
 	{
-		auto& it = this->callbacks.emplace(state, CallbacksContainer()).first;
+		auto it = this->callbacks.emplace(state, CallbacksContainer()).first;
 		auto temp = std::bind(function, instance, std::placeholders::_1);
 		return it->second.emplace(callbackName, temp).second;
 	}
