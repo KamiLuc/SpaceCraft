@@ -109,6 +109,6 @@ void Window::destroy()
 
 void Window::create()
 {
-	auto style = (this->fullscreen ? sf::Style::Fullscreen : sf::Style::Default);
+	auto style = (this->fullscreen ? sf::Style::Fullscreen :  sf::Style::Close | sf::Style::Titlebar);
 	window.create({ this->windowSize.x, this->windowSize.y, 32 }, this->windowTitle, style);
 }
