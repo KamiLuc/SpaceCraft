@@ -8,7 +8,7 @@ class BaseState
 {
 	friend class StateManager;
 public:
-	BaseState(StateManager* stateManager) : stateManager(stateManager), transparent(false), transcendent(false) {}
+	BaseState(StateManager* stateManager, bool render3D = false) : stateManager(stateManager), transparent(false), transcendent(false), render3D(render3D) {}
 	virtual ~BaseState() {}
 
 	virtual void onCreate() = 0;
@@ -23,6 +23,7 @@ public:
 	void setTransparent(bool transparent) { this->transparent = transparent; }
 	void setTranscendent(bool transcendent) { this->transcendent = transcendent; }
 
+	bool shouldRender3D() const { return this->render3D; }
 	bool isTransparent() const { return this->transparent; }
 	bool isTranscendent() const { return this->transcendent; }
 	StateManager* getStateManager() { return this->stateManager; }
@@ -31,5 +32,6 @@ protected:
 	StateManager* stateManager;
 	bool transparent;
 	bool transcendent;
+	bool render3D;
 };
 

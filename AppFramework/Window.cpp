@@ -13,6 +13,7 @@ Window::Window(const std::string& title, const sf::Vector2u& size, const sf::Col
 		&Window::toggleFullscreen, this);
 	this->eventManager.addCallback(StateType(0), "Window_close",
 		&Window::close, this);
+
 }
 
 Window::~Window()
@@ -67,6 +68,26 @@ void Window::draw(const sf::Drawable& drawable)
 	this->window.draw(drawable);
 }
 
+void Window::start2D()
+{
+	this->window.pushGLStates();
+}
+
+void Window::stop2D()
+{
+	this->window.popGLStates();
+}
+
+void Window::start3D()
+{
+	this->window.setActive(true);
+}
+
+void Window::stop3D()
+{
+	this->window.setActive(false);
+}
+
 bool Window::isDone() const
 {
 	return this->done;
@@ -109,6 +130,26 @@ void Window::destroy()
 
 void Window::create()
 {
+	sf::ContextSettings settings;
+	settings.depthBits = 24;
+	settings.stencilBits = 8;
+	settings.antialiasingLevel = 4;
+	settings.majorVersion = 3;
+	settings.minorVersion = 3;
+
 	auto style = (this->fullscreen ? sf::Style::Fullscreen :  sf::Style::Close | sf::Style::Titlebar);
-	window.create({ this->windowSize.x, this->windowSize.y, 32 }, this->windowTitle, style);
+	window.create({ this->windowSize.x, this->windowSize.y, 32 }, this->windowTitle, style, settings);
+	window.setActive(false);
+}
+
+void Window::initGLEW() const
+{
+	glewExperimental = GL_TRUE;
+
+	if (glewInit() != GLEW_OK)
+	{
+		std::string excpetionMessage("Glew initialisation failed");
+		printf("%s ERROR: %s\n", __func__, excpetionMessage.c_str());
+		throw std::runtime_error(excpetionMessage);
+	}
 }
