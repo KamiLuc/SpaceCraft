@@ -2,6 +2,7 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <GL\glew.h>
 
 #include "EventManager/EventManager.h"
 
@@ -19,6 +20,11 @@ public:
 	void toggleFullscreen(EventDetails* details);
 	void draw(const sf::Drawable& drawable);
 
+	void start2D();
+	void stop2D();
+	void start3D();
+	void stop3D();
+
 	bool isDone() const;
 	bool isFocused() const;
 	bool isFullscreen() const;
@@ -31,6 +37,7 @@ public:
 private:
 	void destroy();
 	void create();
+	void initGLEW();
 
 	sf::RenderWindow window;
 	EventManager eventManager;

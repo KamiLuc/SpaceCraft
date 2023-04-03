@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "AppFramework/App.h"
 
 int main(int argc, char** argvp[])

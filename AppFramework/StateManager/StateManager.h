@@ -36,7 +36,7 @@ private:
 	void removeState(const StateType& type);
 
 	template<class T>
-	void registerState(const StateType& type);
+	void registerState(const StateType& type, bool render3D = false);
 
 	SharedContext* sharedContext;
 	StateContainer states;
@@ -45,10 +45,10 @@ private:
 };
 
 template<class T>
-inline void StateManager::registerState(const StateType& type)
+inline void StateManager::registerState(const StateType& type, bool render3D)
 {
-	this->stateFactory[type] = [this]() -> BaseState*
+	this->stateFactory[type] = [this, render3D]() -> BaseState*
 	{
-		return new T(this);
+		return new T(this, render3D);
 	};
 }

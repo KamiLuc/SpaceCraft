@@ -1,12 +1,13 @@
 #include "StateManager.h"
 #include "../../States/StateIntro.h"
 #include "../../States/StateMainMenu.h"
+#include "../../States/StateSpaceSimulation.h"
 
 StateManager::StateManager(SharedContext* sharedContext) : sharedContext(sharedContext)
 {
-	this->registerState<StateIntro>(StateType::Intro);
-	this->registerState<StateMainMenu>(StateType::MainMenu);
-	//this->registerState<State_Game>(StateType::Game);
+	this->registerState<StateIntro>(StateType::Intro, false);
+	this->registerState<StateMainMenu>(StateType::MainMenu, false);
+	this->registerState<StateSpaceSimulation>(StateType::SpaceSimulation, true);
 	//this->registerState<State_Paused>(StateType::Paused);
 }
 
@@ -69,12 +70,35 @@ void StateManager::draw()
 		}
 		for (; stateIt != this->states.end(); ++stateIt)
 		{
-			stateIt->second->draw();
+			if (!stateIt->second->shouldRender3D())
+			{
+				this->sharedContext->window->start2D();
+				stateIt->second->draw();
+				this->sharedContext->window->stop2D();
+			}
+			else
+			{
+				this->sharedContext->window->start3D();
+				stateIt->second->draw();
+				this->sharedContext->window->stop3D();
+			}
 		}
 	}
 	else
 	{
-		this->states.back().second->draw();
+		auto state = this->states.back().second;
+		if (!state->shouldRender3D())
+		{
+			this->sharedContext->window->start2D();
+			state->draw();
+			this->sharedContext->window->stop2D();
+		}
+		else
+		{
+			this->sharedContext->window->start3D();
+			state->draw();
+			this->sharedContext->window->stop3D();
+		}
 	}
 }
 

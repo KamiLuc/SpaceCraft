@@ -22,15 +22,23 @@ void StateIntro::onCreate()
 	this->craftSprite.setOrigin({ static_cast<float>(this->craftTexture.getSize().x) / 2, static_cast<float>(this->craftTexture.getSize().y) / 2 });
 	this->craftSprite.setPosition(windowSize.x / 2.0f + 260, 0);
 
-	this->madeByTexture.loadFromFile("Assets/made-by.png");
-	this->madeBySprite.setTexture(this->madeByTexture);
-	this->madeBySprite.setPosition({ 25.0f, static_cast<float>(windowSize.y - 25 - this->madeByTexture.getSize().y) });
+	this->font.loadFromFile("Michroma-Regular.ttf");
 
-	this->pressEnterTexture.loadFromFile("Assets/press-enter.png");
-	this->pressEnterSprite.setTexture(this->pressEnterTexture);
-	this->pressEnterSprite.setOrigin({ static_cast<float>(this->pressEnterTexture.getSize().x) / 2, static_cast<float>(this->pressEnterTexture.getSize().y) / 2 });
-	this->pressEnterSprite.setPosition(windowSize.x / 2.0f, windowSize.y / 1.7f);
-	this->pressEnterSprite.setScale(0.0f, 0.0f);
+	this->madeByText.setString("Made by Kamil Luc");
+	this->madeByText.setCharacterSize(30);
+	this->madeByText.setFillColor(sf::Color::Black);
+	this->madeByText.setOutlineColor(sf::Color::Black);
+	this->madeByText.setFont(this->font);
+	this->madeByText.setPosition({ 25.0f, static_cast<float>(windowSize.y - 25 - this->madeByText.getCharacterSize())});
+
+	this->pressEnterText.setString("Press enter to continue");
+	this->pressEnterText.setCharacterSize(30);
+	this->pressEnterText.setFillColor(sf::Color::Black);
+	this->pressEnterText.setOutlineColor(sf::Color::Black);
+	this->pressEnterText.setFont(this->font);
+	this->pressEnterText.setOrigin({ static_cast<float>(this->pressEnterText.getLocalBounds().width) / 2, static_cast<float>(this->pressEnterText.getLocalBounds().height) / 2 });
+	this->pressEnterText.setPosition(windowSize.x / 2.0f, windowSize.y / 1.7f);
+	this->pressEnterText.setScale(0.0f, 0.0f);
 
 	this->stateManager->getContext()->eventManager->addCallback(StateType::Intro, "Skip_Intro", &StateIntro::skip, this);
 }
@@ -72,11 +80,11 @@ void StateIntro::update(const sf::Time& time)
 
 		if (decimal < 0.5f)
 		{
-			this->pressEnterSprite.setScale(1.0f, 1.0f);
+			this->pressEnterText.setScale(1.0f, 1.0f);
 		}
 		else
 		{
-			this->pressEnterSprite.setScale(0.0f, 0.0f);
+			this->pressEnterText.setScale(0.0f, 0.0f);
 		}
 	}
 
@@ -89,12 +97,12 @@ void StateIntro::draw()
 	window->draw(this->spaceSprite);
 	window->draw(this->rocketSprite);
 	window->draw(this->craftSprite);
-	window->draw(this->madeBySprite);
-	window->draw(this->pressEnterSprite);
+	window->draw(this->madeByText);
+	window->draw(this->pressEnterText);
 }
 
 void StateIntro::skip(EventDetails* details)
 {
-	this->stateManager->switchTo(StateType::MainMenu);
+	this->stateManager->switchTo(StateType::SpaceSimulation);
 	this->stateManager->remove(StateType::Intro);
 }

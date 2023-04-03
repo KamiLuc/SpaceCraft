@@ -4,8 +4,7 @@ enum class StateType
 {
 	Intro = 1,
 	MainMenu,
-	Game,
+	SpaceSimulation,
 	Paused,
-	GameOver,
 	Credits
 };

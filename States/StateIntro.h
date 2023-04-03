@@ -22,13 +22,15 @@ private:
 	sf::Texture spaceTexture;
 	sf::Texture craftTexture;
 	sf::Texture rocketTexture;
-	sf::Texture pressEnterTexture;
-	sf::Texture madeByTexture;
+
+	sf::Font font;
+
 	sf::Sprite spaceSprite;
 	sf::Sprite craftSprite;
 	sf::Sprite rocketSprite;
-	sf::Sprite pressEnterSprite;
-	sf::Sprite madeBySprite;
+
+	sf::Text pressEnterText;
+	sf::Text madeByText;
 
 	float timePassed;
 };

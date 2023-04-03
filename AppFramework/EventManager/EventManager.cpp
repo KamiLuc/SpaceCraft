@@ -249,12 +249,11 @@ void EventManager::loadBindings()
 			eventInfo.code = code;
 
 			bind->BindEvent(type, eventInfo);
-
-			if (!this->addBinding(bind))
-			{
-				delete bind;
-				bind = nullptr;
-			}
+		}
+		if (bind != nullptr && !this->addBinding(bind))
+		{
+			delete bind;
+			bind = nullptr;
 		}
 	}
 	bindings.close();
