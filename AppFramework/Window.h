@@ -37,7 +37,7 @@ public:
 private:
 	void destroy();
 	void create();
-	void initGLEW() const;
+	void initGLEW();
 
 	sf::RenderWindow window;
 	EventManager eventManager;

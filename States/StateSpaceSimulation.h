@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../AppFramework/StateManager/StateManager.h"
 #include "../AppFramework/StateManager/BaseState.h"
 
 class StateSpaceSimulation : public BaseState
