@@ -144,6 +144,8 @@ void Window::create()
 
 void Window::initGLEW() const
 {
+	//sfml is working with own glew version so this code shouldn't be executed
+	/*
 	glewExperimental = GL_TRUE;
 
 	if (glewInit() != GLEW_OK)
@@ -152,4 +154,5 @@ void Window::initGLEW() const
 		printf("%s ERROR: %s\n", __func__, excpetionMessage.c_str());
 		throw std::runtime_error(excpetionMessage);
 	}
+	*/
 }

@@ -39,6 +39,7 @@ void StateIntro::onCreate()
 	this->pressEnterText.setOrigin({ static_cast<float>(this->pressEnterText.getLocalBounds().width) / 2, static_cast<float>(this->pressEnterText.getLocalBounds().height) / 2 });
 	this->pressEnterText.setPosition(windowSize.x / 2.0f, windowSize.y / 1.7f);
 	this->pressEnterText.setScale(0.0f, 0.0f);
+
 	this->stateManager->getContext()->eventManager->addCallback(StateType::Intro, "Skip_Intro", &StateIntro::skip, this);
 }
 
