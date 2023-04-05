@@ -13,7 +13,7 @@ public:
 	void setAmbientIntensity(GLfloat ambientIntensity);
 	void setDirection(const glm::vec3& direction);
 
-	void useLight(GLfloat ambientIntensityLocation, GLfloat colorLocation, GLfloat diffuseIntensityLocation, GLfloat directionLocation);
+	void useLight(GLint ambientIntensityLocation, GLint colorLocation, GLint diffuseIntensityLocation, GLint directionLocation);
 
 private:
 	glm::vec3 color;

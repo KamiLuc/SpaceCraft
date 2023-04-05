@@ -7,11 +7,10 @@
 class Camera
 {
 public:
-	Camera(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed);
-	~Camera();
+	friend class CameraManager;
 
-	void keyControl(bool* keys, GLfloat deltaTime);
-	void mouseControl(GLfloat xChange, GLfloat yChange);
+	Camera(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch);
+	~Camera();
 
 	glm::vec3 getPosition() const;
 
@@ -24,12 +23,8 @@ private:
 	glm::vec3 up;
 	glm::vec3 right;
 	glm::vec3 worldUp;
-
 	GLfloat yaw;
 	GLfloat pitch;
-
-	GLfloat moveSpeed;
-	GLfloat turnSpeed;
 
 	void updateCameraProperties();
 };

@@ -127,6 +127,7 @@ bool StateManager::hasState(const StateType& type) const
 		}
 		return false;
 	}
+	return false;
 }
 
 void StateManager::switchTo(const StateType& type)

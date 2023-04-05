@@ -39,7 +39,7 @@ void calculateAverageNormals(unsigned int* indices, unsigned int indicesCount, G
 
 	for (size_t i = 0; i < verticesCount / vertexLenght; i++)
 	{
-		unsigned int nOffset = i * vertexLenght + normalOffset;
+		unsigned int nOffset = static_cast<unsigned int>(i * vertexLenght + normalOffset);
 		glm::vec3 vec(vertices[nOffset], vertices[nOffset + 1], vertices[nOffset + 2]);
 		vec = glm::normalize(vec);
 		vertices[nOffset] = vec.x;
@@ -94,7 +94,6 @@ void generateSphere(float radius, int sectorCount, int stackCount, std::vector<G
 		}
 	}
 }
-
 
 void createShaders(std::vector<Shader*>& shaders, const std::filesystem::path fShader, const std::filesystem::path vShader) {
 	Shader* shader1 = new Shader();

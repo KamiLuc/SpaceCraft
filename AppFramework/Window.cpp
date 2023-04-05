@@ -24,6 +24,7 @@ Window::~Window()
 void Window::beginDraw()
 {
 	this->window.clear(this->clearColor);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::endDraw()
@@ -139,18 +140,17 @@ void Window::create()
 
 	auto style = (this->fullscreen ? sf::Style::Fullscreen :  sf::Style::Close | sf::Style::Titlebar);
 	window.create({ this->windowSize.x, this->windowSize.y, 32 }, this->windowTitle, style, settings);
+	window.setKeyRepeatEnabled(false);
 	
 	window.setActive(true);
-	glEnable(GL_DEPTH_TEST);
-	glViewport(0, 0, this->windowSize.y, this->windowSize.x);
-	window.setActive(false);
-
 	this->initGLEW();
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, this->windowSize.x, this->windowSize.y);
+	window.setActive(false);
 }
 
 void Window::initGLEW()
 {
-	this->window.setActive(true);
 	glewExperimental = GL_TRUE;
 
 	if (glewInit() != GLEW_OK)
@@ -159,5 +159,4 @@ void Window::initGLEW()
 		printf("%s ERROR: %s\n", __func__, excpetionMessage.c_str());
 		throw std::runtime_error(excpetionMessage);
 	}
-	this->window.setActive(false);
 }
