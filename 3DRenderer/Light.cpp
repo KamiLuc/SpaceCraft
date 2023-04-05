@@ -23,7 +23,7 @@ void Light::setDirection(const glm::vec3& direction)
 	this->direction = direction;
 }
 
-void Light::useLight(GLfloat ambientIntensityLocation, GLfloat colorLocation, GLfloat diffuseIntensityLocation, GLfloat directionLocation)
+void Light::useLight(GLint ambientIntensityLocation, GLint colorLocation, GLint diffuseIntensityLocation, GLint directionLocation)
 {
 	glUniform3f(colorLocation, this->color.r, this->color.g, this->color.b);
 	glUniform1f(ambientIntensityLocation, this->ambientIntensity);

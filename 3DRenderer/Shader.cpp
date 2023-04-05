@@ -1,6 +1,8 @@
 #include "Shader.h"
 
-Shader::Shader() : shaderID(0), uniformModel(0), uniformProjection(0), uniformView(0)
+Shader::Shader()
+	: shaderID(0), uniformModel(-1), uniformProjection(-1), uniformView(-1), uniformAmbientColor(-1), uniformAmbientIntensity(-1), uniformCameraPosition(-1),
+	uniformDiffuseIntensity(-1), uniformLightDirection(-1), uniformSpecularIntensity(-1), uniformShininess(-1)
 {
 }
 
@@ -165,10 +167,10 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 void Shader::addShader(GLuint programID, const char* shaderCode, GLenum shaderType)
 {
 	GLuint theShader = glCreateShader(shaderType);
-	const GLchar* theCode[1];
+	const GLchar* theCode[1]{ 0 };
 	theCode[0] = shaderCode;
 
-	GLint codeLenght[1];
+	GLint codeLenght[1]{ 0 };
 	codeLenght[0] = static_cast<GLint>(strlen(shaderCode));
 
 	glShaderSource(theShader, 1, theCode, codeLenght);
