@@ -75,6 +75,8 @@ void StateSpaceSimulation::onDestroy()
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Left");
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Right");
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Right");
+	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move");
+	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move");
 }
 
 void StateSpaceSimulation::activate()
