@@ -1,6 +1,6 @@
 #include "Window.h"
 
-Window::Window() : Window("No name", {640, 480}, sf::Color::White)
+Window::Window() : Window("No name", { 640, 480 }, sf::Color::White)
 {
 }
 
@@ -119,6 +119,11 @@ EventManager* Window::getEventManager()
 	return &this->eventManager;
 }
 
+sf::Color Window::getClearColor() const
+{
+	return this->clearColor;
+}
+
 void Window::setClearColor(const sf::Color& color)
 {
 	this->clearColor = color;
@@ -138,10 +143,10 @@ void Window::create()
 	settings.majorVersion = 3;
 	settings.minorVersion = 3;
 
-	auto style = (this->fullscreen ? sf::Style::Fullscreen :  sf::Style::Close | sf::Style::Titlebar);
+	auto style = (this->fullscreen ? sf::Style::Fullscreen : sf::Style::Close | sf::Style::Titlebar);
 	window.create({ this->windowSize.x, this->windowSize.y, 32 }, this->windowTitle, style, settings);
 	window.setKeyRepeatEnabled(false);
-	
+
 	window.setActive(true);
 	this->initGLEW();
 	glEnable(GL_DEPTH_TEST);

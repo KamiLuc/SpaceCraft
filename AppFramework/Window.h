@@ -31,6 +31,7 @@ public:
 	sf::Vector2u getWindowSize() const;
 	sf::RenderWindow* getRenderWindow();
 	EventManager* getEventManager();
+	sf::Color getClearColor() const;
 
 	void setClearColor(const sf::Color& color);
 
