@@ -1,7 +1,9 @@
 #include "CameraManagerToSFMLFrameworkAdapter.h"
 
 CameraManagerToSFMLFrameworkAdapter::CameraManagerToSFMLFrameworkAdapter(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, sf::Window* window)
-	: CameraManager(position, up, yaw, pitch, moveSpeed, turnSpeed), window(window), mouseCameraMove(false), lastMousePos(0, 0)
+	: CameraManager(position, up, yaw, pitch, moveSpeed, turnSpeed,
+		static_cast<GLfloat>(window->getSize().x) / static_cast<GLfloat>(window->getSize().y)),
+	window(window), mouseCameraMove(false), lastMousePos(0, 0)
 {
 }
 
@@ -49,7 +51,10 @@ void CameraManagerToSFMLFrameworkAdapter::updateCameraPosition(const GLfloat& ti
 	{
 		auto mousePos = sf::Mouse::getPosition(*this->window);
 
-		this->mouseControl(static_cast<GLfloat>(mousePos.x - this->lastMousePos.x), static_cast<GLfloat>(mousePos.y - this->lastMousePos.y));
+		glm::vec2 oldPos(this->lastMousePos.x, this->lastMousePos.y);
+		glm::vec2 newPos(mousePos.x, mousePos.y);
+
+		this->mouseControl(oldPos, newPos);
 
 		this->lastMousePos = mousePos;
 	}
@@ -67,4 +72,9 @@ void CameraManagerToSFMLFrameworkAdapter::enableMouseCameraMove(EventDetails* e)
 void CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove(EventDetails* e)
 {
 	this->mouseCameraMove = false;
+}
+
+void CameraManagerToSFMLFrameworkAdapter::changeCamera(EventDetails* e)
+{
+	CameraManager::changeCamera();
 }

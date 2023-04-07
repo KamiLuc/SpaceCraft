@@ -13,6 +13,7 @@ public:
 	void updateCameraPosition(const GLfloat& timeInSec);
 	void enableMouseCameraMove(EventDetails* e);
 	void disableMouseCameraMove(EventDetails* e);
+	void changeCamera(EventDetails* e);
 
 private:
 	bool mouseCameraMove;

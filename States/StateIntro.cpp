@@ -9,7 +9,7 @@ void StateIntro::onCreate()
 
 	this->spaceTexture.loadFromFile("Assets/space-logo.png");
 	this->spaceSprite.setTexture(this->spaceTexture);
-	this->spaceSprite.setOrigin({ static_cast<float>(this->spaceTexture.getSize().x) / 2, static_cast<float>(this->spaceTexture.getSize().y) / 2});
+	this->spaceSprite.setOrigin({ static_cast<float>(this->spaceTexture.getSize().x) / 2, static_cast<float>(this->spaceTexture.getSize().y) / 2 });
 	this->spaceSprite.setPosition(windowSize.x / 2.0f - 260, 0);
 
 	this->rocketTexture.loadFromFile("Assets/rocket-logo.png");
@@ -29,7 +29,7 @@ void StateIntro::onCreate()
 	this->madeByText.setFillColor(sf::Color::Black);
 	this->madeByText.setOutlineColor(sf::Color::Black);
 	this->madeByText.setFont(this->font);
-	this->madeByText.setPosition({ 25.0f, static_cast<float>(windowSize.y - 25 - this->madeByText.getCharacterSize())});
+	this->madeByText.setPosition({ 25.0f, static_cast<float>(windowSize.y - 25 - this->madeByText.getCharacterSize()) });
 
 	this->pressEnterText.setString("Press enter to continue");
 	this->pressEnterText.setCharacterSize(30);
@@ -63,7 +63,7 @@ void StateIntro::update(const sf::Time& time)
 	if (this->timePassed < introMovementTime)
 	{
 		sf::Vector2u windowSize = this->stateManager->getContext()->window->getRenderWindow()->getSize();
-		
+
 		float yPos = (windowSize.y / 2.3f) * (this->timePassed / introMovementTime);
 
 		this->spaceSprite.setPosition(this->spaceSprite.getPosition().x, yPos);

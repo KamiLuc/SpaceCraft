@@ -2,7 +2,6 @@
 #include "../3DRenderer/Shader.h"
 #include "../3DRenderer/Mesh.h"
 #include "../Utils/Functions.h"
-#include "../3DRenderer/Camera/Camera.h"
 #include "../3DRenderer/Texture.h"
 #include "../3DRenderer/Material.h"
 #include "../3DRenderer/Light.h"
@@ -51,8 +50,6 @@ void StateSpaceSimulation::onCreate()
 	mainLight = Light(0.0f, 1.0f, 1.0f, 0.2f,
 		0.0f, 0.0f, -1.0f, 0.3f);
 
-	projection = glm::perspective(glm::radians(45.0f), (GLfloat)windowSize.y / windowSize.y, 0.1f, 100.0f);
-
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
@@ -63,6 +60,7 @@ void StateSpaceSimulation::onCreate()
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::enableMouseCameraMove, this->cameraManager.get());
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, this->cameraManager.get());
+	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, this->cameraManager.get());
 }
 
 void StateSpaceSimulation::onDestroy()
@@ -77,6 +75,7 @@ void StateSpaceSimulation::onDestroy()
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Right");
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move");
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move");
+	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Change_Camera");
 }
 
 void StateSpaceSimulation::activate()
@@ -110,8 +109,7 @@ void StateSpaceSimulation::draw()
 	mainLight.useLight(uniformAmbientIntensity, uniformAmbientColour,
 		uniformDiffuseIntensity, uniformDirection);
 
-	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-	this->cameraManager->useCamera(uniformView, uniformEyePosition);
+	this->cameraManager->useCamera(uniformView, uniformEyePosition, uniformProjection);
 
 	glm::mat4 model(1.0f);
 

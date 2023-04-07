@@ -149,7 +149,7 @@ void EventManager::update()
 		{
 			switch (eventIt.first)
 			{
-			case (EventType::Keyboard) :
+			case (EventType::Keyboard):
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(eventIt.second.code)))
 				{
 					if (bind->details.keyCode != -1)
@@ -159,7 +159,7 @@ void EventManager::update()
 					++(bind->eventsHappening);
 				}
 				break;
-			case (EventType::Mouse) :
+			case (EventType::Mouse):
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Button(eventIt.second.code)))
 				{
 					if (bind->details.keyCode != -1)
@@ -174,7 +174,7 @@ void EventManager::update()
 				break;
 			}
 		}
-		
+
 		if (bind->events.size() == bind->eventsHappening)
 		{
 			auto stateCallbacks = this->callbacks.find(this->currentState);
@@ -234,7 +234,7 @@ void EventManager::loadBindings()
 			std::string keyValue{};
 			keyStream >> keyValue;
 			int start = 0;
-			int end = keyValue.find(delimeter);
+			size_t end = keyValue.find(delimeter);
 
 			if (end == std::string::npos)
 			{

@@ -8,7 +8,7 @@ enum class EventType
 	KeyUp = sf::Event::KeyReleased,
 	MButtonDown = sf::Event::MouseButtonPressed,
 	MButtonUp = sf::Event::MouseButtonReleased,
-	MouseWheel = sf::Event::MouseWheelMoved,
+	MouseWheel = sf::Event::MouseWheelScrolled,
 	WindowResized = sf::Event::Resized,
 	GainedFocus = sf::Event::GainedFocus,
 	LostFocus = sf::Event::LostFocus,
