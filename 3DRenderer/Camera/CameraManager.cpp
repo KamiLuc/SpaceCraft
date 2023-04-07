@@ -1,8 +1,10 @@
 #include "CameraManager.h"
 #include <glm/gtc/type_ptr.hpp>
 
-CameraManager::CameraManager(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, GLfloat aspectRatio)
-	: aspectRatio(aspectRatio), moveSpeed(moveSpeed), turnSpeed(turnSpeed), camera(position, up, yaw, pitch), cameraMoveDirections{}
+CameraManager::CameraManager(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, GLfloat aspectRatio)
+	: aspectRatio(aspectRatio), fpCamera(position, worldUp, yaw, pitch, moveSpeed, turnSpeed),
+	cameraMoveDirections{}, arcBallCamera((position.z + 1) * 2.0f, worldUp, moveSpeed, turnSpeed / 100.0f),
+	currentCamera(&arcBallCamera)
 {
 	this->calculateProjectionMatrix();
 }
@@ -20,62 +22,37 @@ void CameraManager::removeCameraMoveDirection(const CameraMoveDirection& directi
 	this->cameraMoveDirections.remove(direction);
 }
 
-void CameraManager::mouseControl(GLfloat xChange, GLfloat yChange)
+void CameraManager::mouseControl(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition)
 {
-	xChange *= this->turnSpeed;
-	yChange *= this->turnSpeed;
-
-	this->camera.yaw += xChange;
-	this->camera.pitch -= yChange;
-
-	if (this->camera.pitch > 89.0f) {
-		this->camera.pitch = 89.0f;
-	}
-	else if (this->camera.pitch < -89.0f) {
-		this->camera.pitch = -89.0f;
-	}
-
-	this->camera.updateCameraProperties();
+	this->currentCamera->handleMouse(oldMousePosition, newMousePosition);
 }
 
 void CameraManager::updateCameraPosition(const GLfloat& timeInSec)
 {
-	auto velocity = timeInSec * this->moveSpeed;
-
-	if (this->cameraMoveDirections.empty())
-	{
-		return;
-	}
-
 	for (const auto& it : this->cameraMoveDirections)
 	{
-		switch (it)
-		{
-		case(CameraMoveDirection::Forward):
-			this->camera.position += camera.front * velocity;
-			break;
-		case(CameraMoveDirection::Backward):
-			this->camera.position -= camera.front * velocity;
-			break;
-		case(CameraMoveDirection::Left):
-			this->camera.position -= camera.right * velocity;
-			break;
-		case(CameraMoveDirection::Right):
-			this->camera.position += camera.right * velocity;
-			break;
-		default:
-			break;
-		}
+		this->currentCamera->updateCameraPosition(it, timeInSec);
 	}
-	this->camera.updateCameraProperties();
 }
 
 void CameraManager::useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection)
 {
-	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(this->camera.calculateViewMatrix()));
+	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(this->currentCamera->calculateViewMatrix()));
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(this->projectionMatrix));
-	auto cPos = this->camera.getPosition();
+	auto cPos = this->currentCamera->getPosition();
 	glUniform3f(uniformEyePosition, cPos.x, cPos.y, cPos.z);
+}
+
+void CameraManager::changeCamera()
+{
+	if (this->currentCamera == &this->arcBallCamera)
+	{
+		this->currentCamera = &this->fpCamera;
+	}
+	else
+	{
+		this->currentCamera = &this->arcBallCamera;
+	}
 }
 
 void CameraManager::calculateProjectionMatrix()

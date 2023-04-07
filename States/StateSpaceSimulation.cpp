@@ -2,7 +2,6 @@
 #include "../3DRenderer/Shader.h"
 #include "../3DRenderer/Mesh.h"
 #include "../Utils/Functions.h"
-#include "../3DRenderer/Camera/Camera.h"
 #include "../3DRenderer/Texture.h"
 #include "../3DRenderer/Material.h"
 #include "../3DRenderer/Light.h"
@@ -61,6 +60,7 @@ void StateSpaceSimulation::onCreate()
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::enableMouseCameraMove, this->cameraManager.get());
 	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, this->cameraManager.get());
+	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, this->cameraManager.get());
 }
 
 void StateSpaceSimulation::onDestroy()
@@ -75,6 +75,7 @@ void StateSpaceSimulation::onDestroy()
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Right");
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move");
 	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move");
+	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Change_Camera");
 }
 
 void StateSpaceSimulation::activate()
