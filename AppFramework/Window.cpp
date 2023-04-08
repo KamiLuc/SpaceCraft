@@ -109,6 +109,11 @@ sf::Vector2u Window::getWindowSize() const
 	return this->windowSize;
 }
 
+sf::Vector2i Window::getMousePosition() const
+{
+	return sf::Mouse::getPosition(this->window);
+}
+
 sf::RenderWindow* Window::getRenderWindow()
 {
 	return &this->window;

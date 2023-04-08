@@ -103,6 +103,6 @@ void StateIntro::draw()
 
 void StateIntro::skip(EventDetails* details)
 {
-	this->stateManager->switchTo(StateType::SpaceSimulation);
+	this->stateManager->switchTo(StateType::MainMenu);
 	this->stateManager->remove(StateType::Intro);
 }

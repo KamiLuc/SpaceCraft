@@ -2,6 +2,7 @@
 
 #include "../AppFramework/StateManager/BaseState.h"
 #include "../AppFramework/EventManager/EventDetails.h"
+#include "../AppFramework/GUI/TextWithBackdrop.h"
 
 #include <vector>
 #include <SFML/Graphics.hpp>
@@ -23,11 +24,13 @@ public:
 private:
 	sf::Font font;
 	sf::Text text;
-	sf::Vector2f buttonSize;
-	sf::Vector2f buttonPosition;
-	unsigned int buttonPadding;
 
-	std::vector<sf::RectangleShape> rectangles;
-	std::vector<sf::Text> menuLabels;
+	std::string repoUrl;
+
+	float currentHoverAnimationTimeInSec;
+	float animationTimeInSec;
+
+	TextWithBackdrop* selectedButton;
+	std::vector<TextWithBackdrop> buttons;
 };
 

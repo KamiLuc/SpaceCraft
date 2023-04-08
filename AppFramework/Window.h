@@ -29,6 +29,7 @@ public:
 	bool isFocused() const;
 	bool isFullscreen() const;
 	sf::Vector2u getWindowSize() const;
+	sf::Vector2i getMousePosition() const;
 	sf::RenderWindow* getRenderWindow();
 	EventManager* getEventManager();
 	sf::Color getClearColor() const;
