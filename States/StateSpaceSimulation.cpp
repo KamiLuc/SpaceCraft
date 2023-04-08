@@ -50,32 +50,36 @@ void StateSpaceSimulation::onCreate()
 	mainLight = Light(0.0f, 1.0f, 1.0f, 0.2f,
 		0.0f, 0.0f, -1.0f, 0.3f);
 
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Left", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Left", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::enableMouseCameraMove, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, this->cameraManager.get());
-	this->stateManager->getContext()->eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, this->cameraManager.get());
+	auto eventManager = this->stateManager->getContext()->eventManager;
+
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Left", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Left", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::enableMouseCameraMove, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, this->cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, this->cameraManager.get());
 }
 
 void StateSpaceSimulation::onDestroy()
 {
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Forward");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Forward");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Backward");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Backward");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Left");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Left");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Right");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Right");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move");
-	this->stateManager->getContext()->eventManager->removeCallback(StateType::SpaceSimulation, "Change_Camera");
+	auto eventManager = this->stateManager->getContext()->eventManager;
+
+	eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Forward");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Forward");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Backward");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Backward");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Left");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Left");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Right");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Right");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Change_Camera");
 }
 
 void StateSpaceSimulation::activate()

@@ -24,9 +24,11 @@ public:
 private:
 	sf::Font font;
 	sf::Text text;
-	sf::Vector2f buttonSize;
-	sf::Vector2f firstButtonPosition;
-	unsigned int buttonsPadding;
+
+	std::string repoUrl;
+
+	float currentHoverAnimationTimeInSec;
+	float animationTimeInSec;
 
 	TextWithBackdrop* selectedButton;
 	std::vector<TextWithBackdrop> buttons;

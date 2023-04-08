@@ -7,7 +7,7 @@ class TextWithBackdrop : public sf::Text
 {
 public:
 	TextWithBackdrop(const std::string& content, const sf::Font& font, const unsigned int& characterSize,
-		const sf::Color& contentColor, const sf::Vector2f& backdropSize, const sf::Color& backdropColor);
+		const sf::Color& contentColor, const sf::Color& backdropColor);
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override;
 	void setPosition(float x, float y);

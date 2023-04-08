@@ -1,8 +1,8 @@
 #include "TextWithBackdrop.h"
 
 TextWithBackdrop::TextWithBackdrop(const std::string& content, const sf::Font& font, const unsigned int& characterSize,
-	const sf::Color& contentColor, const sf::Vector2f& backdropSize, const sf::Color& backdropColor)
-	: sf::Text(content, font, characterSize), backdrop(backdropSize)
+	const sf::Color& contentColor, const sf::Color& backdropColor)
+	: sf::Text(content, font, characterSize), backdrop()
 {
 	this->setFillColor(contentColor);
 	this->setOutlineColor(contentColor);;
@@ -12,6 +12,8 @@ TextWithBackdrop::TextWithBackdrop(const std::string& content, const sf::Font& f
 	sf::Vector2f center(this->getLocalBounds().width / 2.0f, this->getLocalBounds().height / 2.0f);
 	sf::Vector2f localBounds(center.x + this->getLocalBounds().left, center.y + this->getLocalBounds().top);
 	this->setOrigin(localBounds);
+
+	this->backdrop.setSize({ this->getLocalBounds().width * 1.1f, this->getLocalBounds().height * 1.5f });
 
 	this->backdrop.setOrigin(this->backdrop.getLocalBounds().width / 2.0f, this->backdrop.getLocalBounds().height / 2.0f);
 	this->backdrop.setPosition(((sf::Text)(*this)).getPosition());
