@@ -51,7 +51,6 @@ void StateMainMenu::update(const sf::Time& time)
 {
 	sf::RenderWindow* window = this->stateManager->getContext()->window->getRenderWindow();
 
-	int animationSpeed = 6;
 	TextWithBackdrop* newSelectedButton = nullptr;
 
 	for (auto& button : this->buttons)
@@ -106,7 +105,7 @@ void StateMainMenu::mouseClick(EventDetails* details)
 			switch (i)
 			{
 			case 0:
-				this->stateManager->switchTo(StateType::SpaceSimulation);
+				this->getStateManager()->switchTo(StateType::SimulationLoading);
 				break;
 			case 3:
 #ifdef _WIN32

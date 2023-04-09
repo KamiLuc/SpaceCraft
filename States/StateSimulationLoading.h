@@ -2,9 +2,8 @@
 
 #include "../AppFramework/StateManager/StateManager.h"
 #include "../AppFramework/StateManager/BaseState.h"
-#include "../3DRenderer/Camera/CameraManagerToSFMLFrameworkAdapter.h"
 
-class StateSpaceSimulation : public BaseState
+class StateSimulationLoading : public BaseState
 {
 public:
 	using BaseState::BaseState;
@@ -17,5 +16,8 @@ public:
 	virtual void draw() override;
 
 private:
-	std::unique_ptr<CameraManagerToSFMLFrameworkAdapter> cameraManager;
+	sf::Color firstBackgroundColor;
+	sf::Time timePassed;
+	float animationTimeInSec;
 };
+

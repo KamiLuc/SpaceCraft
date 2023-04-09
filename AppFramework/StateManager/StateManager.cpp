@@ -2,13 +2,14 @@
 #include "../../States/StateIntro.h"
 #include "../../States/StateMainMenu.h"
 #include "../../States/StateSpaceSimulation.h"
+#include "../../States/StateSimulationLoading.h"
 
 StateManager::StateManager(SharedContext* sharedContext) : sharedContext(sharedContext)
 {
 	this->registerState<StateIntro>(StateType::Intro, false);
 	this->registerState<StateMainMenu>(StateType::MainMenu, false);
+	this->registerState<StateSimulationLoading>(StateType::SimulationLoading, false);
 	this->registerState<StateSpaceSimulation>(StateType::SpaceSimulation, true);
-	//this->registerState<State_Paused>(StateType::Paused);
 }
 
 StateManager::~StateManager()

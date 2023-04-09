@@ -24,7 +24,6 @@ public:
 private:
 	sf::Font font;
 	sf::Text text;
-
 	std::string repoUrl;
 
 	float currentHoverAnimationTimeInSec;

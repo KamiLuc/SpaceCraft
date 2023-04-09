@@ -3,7 +3,8 @@
 
 void StateIntro::onCreate()
 {
-	this->timePassed = 0;
+	this->timePassedInSec = 0;
+	this->introMovementTimInSec = 1.0f;
 
 	sf::Vector2u windowSize = this->stateManager->getContext()->window->getRenderWindow()->getSize();
 
@@ -58,25 +59,23 @@ void StateIntro::deactivate()
 
 void StateIntro::update(const sf::Time& time)
 {
-	float introMovementTime = 1.0f;
-
-	if (this->timePassed < introMovementTime)
+	if (this->timePassedInSec < this->introMovementTimInSec)
 	{
 		sf::Vector2u windowSize = this->stateManager->getContext()->window->getRenderWindow()->getSize();
 
-		float yPos = (windowSize.y / 2.3f) * (this->timePassed / introMovementTime);
+		float yPos = (windowSize.y / 2.3f) * (this->timePassedInSec / this->introMovementTimInSec);
 
 		this->spaceSprite.setPosition(this->spaceSprite.getPosition().x, yPos);
 		this->craftSprite.setPosition(this->craftSprite.getPosition().x, yPos);
 
-		float yPos2 = windowSize.y - windowSize.y * (this->timePassed / introMovementTime) + yPos;
+		float yPos2 = windowSize.y - windowSize.y * (this->timePassedInSec / this->introMovementTimInSec) + yPos;
 
 		this->rocketSprite.setPosition(this->rocketSprite.getPosition().x, yPos2 - 10);
 	}
 
-	else if (this->timePassed > 2.0f)
+	else if (this->timePassedInSec > this->introMovementTimInSec * 2.0f)
 	{
-		float decimal = this->timePassed - static_cast<int>(this->timePassed);
+		float decimal = this->timePassedInSec - static_cast<int>(this->timePassedInSec);
 
 		if (decimal < 0.5f)
 		{
@@ -88,7 +87,7 @@ void StateIntro::update(const sf::Time& time)
 		}
 	}
 
-	this->timePassed += time.asSeconds();
+	this->timePassedInSec += time.asSeconds();
 }
 
 void StateIntro::draw()
