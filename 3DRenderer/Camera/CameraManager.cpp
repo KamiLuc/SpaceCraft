@@ -3,7 +3,7 @@
 
 CameraManager::CameraManager(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, GLfloat aspectRatio)
 	: aspectRatio(aspectRatio), fpCamera(position, worldUp, yaw, pitch, moveSpeed, turnSpeed),
-	cameraMoveDirections{}, arcBallCamera((position.z + 1) * 2.0f, worldUp, moveSpeed, turnSpeed / 100.0f),
+	cameraMoveDirections{}, arcBallCamera((position.z + 1) * 2.0f, worldUp, moveSpeed, turnSpeed),
 	currentCamera(&arcBallCamera)
 {
 	this->calculateProjectionMatrix();

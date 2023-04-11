@@ -5,7 +5,8 @@ Window::Window() : Window("No name", { 640, 480 }, sf::Color::White)
 }
 
 Window::Window(const std::string& title, const sf::Vector2u& size, const sf::Color& clearColor)
-	: windowTitle(title), windowSize(size), done(false), fullscreen(false), focused(true), clearColor(clearColor)
+	: windowTitle(title), windowSize(size), done(false), fullscreen(false), focused(true),
+	clearColor(clearColor), currentRender(Render::twoDimensional)
 {
 	this->create();
 
@@ -71,22 +72,22 @@ void Window::draw(const sf::Drawable& drawable)
 
 void Window::start2D()
 {
-	this->window.pushGLStates();
-}
-
-void Window::stop2D()
-{
-	this->window.popGLStates();
+	if (this->currentRender != Render::twoDimensional)
+	{
+		this->window.setActive(false);
+		this->window.pushGLStates();
+		this->currentRender = Render::twoDimensional;
+	}
 }
 
 void Window::start3D()
 {
-	this->window.setActive(true);
-}
-
-void Window::stop3D()
-{
-	this->window.setActive(false);
+	if (this->currentRender != Render::threeDimensional)
+	{
+		this->window.popGLStates();
+		this->window.setActive(true);
+		this->currentRender = Render::threeDimensional;
+	}
 }
 
 bool Window::isDone() const
@@ -152,11 +153,21 @@ void Window::create()
 	window.create({ this->windowSize.x, this->windowSize.y, 32 }, this->windowTitle, style, settings);
 	window.setKeyRepeatEnabled(false);
 
-	window.setActive(true);
+	this->window.setActive(true);
 	this->initGLEW();
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, this->windowSize.x, this->windowSize.y);
-	window.setActive(false);
+	this->window.setActive(false);
+	this->window.pushGLStates();
+
+	if (this->currentRender == Render::twoDimensional)
+	{
+		this->start2D();
+	}
+	else
+	{
+		this->start3D();
+	}
 }
 
 void Window::initGLEW()

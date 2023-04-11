@@ -1,8 +1,9 @@
 #pragma once
 
 #include "CameraInterface.h"
-#include <glm/vector_relational.hpp>
 
+#include <algorithm>
+#include <glm/vector_relational.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 class ArcBallCamera :public CameraInterface
@@ -15,11 +16,11 @@ public:
 	virtual glm::mat4 calculateViewMatrix() const override;
 
 private:
-	glm::quat rotation;
-	glm::vec3 position;
-	glm::vec3 up;
-	GLfloat distance;
-
 	virtual void updateCameraProperties() override;
+
+	glm::vec2 viewport;
+	glm::vec3 lookAt;
+	glm::mat3 rotation;
+	GLfloat distance;
 };
 

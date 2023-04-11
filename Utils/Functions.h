@@ -48,53 +48,6 @@ void calculateAverageNormals(unsigned int* indices, unsigned int indicesCount, G
 	}
 }
 
-void generateSphere(float radius, int sectorCount, int stackCount, std::vector<GLfloat>& vertices, std::vector<unsigned int>& indices) {
-
-	auto PI = 3.14159265f;
-
-	float sectorStep = 2 * PI / sectorCount;
-	float stackStep = PI / stackCount;
-	float sectorAngle, stackAngle;
-
-	for (int i = 0; i <= stackCount; ++i) {
-		stackAngle = PI / 2 - i * stackStep;
-		float xy = radius * cos(stackAngle);
-		float z = radius * sin(stackAngle);
-
-		for (int j = 0; j <= sectorCount; ++j) {
-			sectorAngle = j * sectorStep;
-			float x = xy * cos(sectorAngle);
-			float y = xy * sin(sectorAngle);
-
-			vertices.push_back(x);
-			vertices.push_back(y);
-			vertices.push_back(z);
-			vertices.push_back(float(j) / sectorCount);
-			vertices.push_back(float(i) / stackCount);
-
-		}
-	}
-
-	for (int i = 0; i < stackCount; ++i) {
-		int k1 = i * (sectorCount + 1);
-		int k2 = k1 + sectorCount + 1;
-
-		for (int j = 0; j < sectorCount; ++j, ++k1, ++k2) {
-			if (i != 0) {
-				indices.push_back(k1);
-				indices.push_back(k2);
-				indices.push_back(k1 + 1);
-			}
-
-			if (i != (stackCount - 1)) {
-				indices.push_back(k1 + 1);
-				indices.push_back(k2);
-				indices.push_back(k2 + 1);
-			}
-		}
-	}
-}
-
 void createShaders(std::vector<Shader*>& shaders, const std::filesystem::path fShader, const std::filesystem::path vShader) {
 	Shader* shader1 = new Shader();
 	shader1->createFromFiles(vShader, fShader);

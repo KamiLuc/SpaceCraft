@@ -6,6 +6,12 @@
 
 #include "EventManager/EventManager.h"
 
+enum class Render
+{
+	twoDimensional = 0,
+	threeDimensional = 1
+};
+
 class Window
 {
 public:
@@ -21,9 +27,7 @@ public:
 	void draw(const sf::Drawable& drawable);
 
 	void start2D();
-	void stop2D();
 	void start3D();
-	void stop3D();
 
 	bool isDone() const;
 	bool isFocused() const;
@@ -41,6 +45,7 @@ private:
 	void create();
 	void initGLEW();
 
+	Render currentRender;
 	sf::RenderWindow window;
 	EventManager eventManager;
 	sf::Vector2u windowSize;

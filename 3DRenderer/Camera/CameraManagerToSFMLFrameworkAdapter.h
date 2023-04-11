@@ -2,6 +2,7 @@
 
 #include "CameraManager.h"
 #include "../../AppFramework/EventManager/EventDetails.h"
+
 #include <SFML/Graphics/RenderWindow.hpp>
 
 class CameraManagerToSFMLFrameworkAdapter : public CameraManager
