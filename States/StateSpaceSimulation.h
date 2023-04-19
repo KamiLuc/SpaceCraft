@@ -19,3 +19,4 @@ public:
 private:
 	std::unique_ptr<CameraManagerToSFMLFrameworkAdapter> cameraManager;
 };
+

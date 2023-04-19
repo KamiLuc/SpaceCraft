@@ -30,6 +30,8 @@ glm::mat4 projection;
 
 Texture earthTexture("Textures/brick.png");
 Texture sunTexture("Textures/brick.png");
+Texture brickTexture("Textures/brick.png");
+
 
 void StateSpaceSimulation::onCreate()
 {
@@ -45,6 +47,7 @@ void StateSpaceSimulation::onCreate()
 	createObjects(meshes);
 	createShaders(shaders, fShader, vShader);
 
+
 	mesh = new Mesh();
 
 	GLfloat veritces[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -58,11 +61,12 @@ void StateSpaceSimulation::onCreate()
 	earthTexture.loadTexture();
 	sunTexture = Texture("Textures/sun.jpg");
 	sunTexture.loadTexture();
+	brickTexture.loadTexture();
 
 	shinyMaterial = Material(2.0f, 256);
 	dullMaterial = Material(0.3f, 4);
 
-	mainLight = Light(1.0f, 1.0f, 1.0f, 1.0f,
+	mainLight = Light(1.0f, 1.0f, 1.0f, 0.3f,
 		0.0f, 0.0f, -1.0f, 0.3f);
 
 	//sun = new Sphere(36, 36, 0.004654f);
@@ -151,7 +155,8 @@ void StateSpaceSimulation::draw()
 	model = glm::translate(model, glm::vec3(0.0, 0.0f, 0.0f));
 	//angle += 0.01f;
 
-	//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	earthTexture.useTexture();
 	shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
@@ -159,12 +164,20 @@ void StateSpaceSimulation::draw()
 	earth->renderMesh();
 
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-5.0f, 0.0f, 0.0f));
-	//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+	model = glm::translate(model, glm::vec3(-5.0f, 0.0f, -2.0f));
+	model = glm::scale(model, glm::vec3(9.0f, 9.0f, 9.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	sunTexture.useTexture();
 	dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
 	sun->renderMesh();
+
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	brickTexture.useTexture();
+	shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	meshes[0]->renderMesh();
 
 	glUseProgram(0);
 }

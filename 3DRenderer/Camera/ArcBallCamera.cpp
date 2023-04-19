@@ -4,51 +4,74 @@
 
 #include <cmath>
 
-ArcBallCamera::ArcBallCamera(GLfloat distance, glm::vec3 worldUp, GLfloat moveSpeed, GLfloat turnSpeed)
-	: CameraInterface(glm::vec3(0.0f, 0.0f, distance + 5.0f), worldUp, moveSpeed, turnSpeed),
-	rotation(1.0f), viewport(viewport), distance(distance), lookAt(0.0f, 0.0f, 0.0f)
+ArcBallCamera::ArcBallCamera(GLfloat distance, glm::vec3 worldUp, glm::vec3 lookAt, GLfloat moveSpeed, GLfloat turnSpeed, glm::vec2 windowSize)
+	: CameraInterface(glm::vec3(0.0f, 0.0f, distance), worldUp, lookAt, moveSpeed, turnSpeed), viewMatrix(1.0f), windowSize(windowSize)
 {
-	this->updateCameraProperties();
+	updateCameraProperties();
 }
 
 void ArcBallCamera::updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec)
 {
 	if (direction == CameraMoveDirection::Forward)
 	{
-		if (this->distance - timeInSec * this->moveSpeed >= 0)
-		{
-			this->distance -= timeInSec * this->moveSpeed;
-		}
+		position += this->getViewDirection() * timeInSec * moveSpeed;
 	}
 	else if (direction == CameraMoveDirection::Backward)
 	{
-		this->distance += timeInSec * this->moveSpeed;
+		position -= this->getViewDirection() * timeInSec * moveSpeed;
 	}
 
-	this->updateCameraProperties();
+	updateCameraProperties();
 }
 
 void ArcBallCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition)
 {
-	glm::vec2 delta = newMousePosition - oldMousePosition;
-	glm::mat4 rotationMatrix(1.0f);
+	glm::vec4 position(this->position.x, this->position.y, this->position.z, 1);
+	glm::vec4 pivot(this->lookAt.x, this->lookAt.y, this->lookAt.z, 1);
 
-	rotationMatrix = glm::rotate(rotationMatrix, glm::radians(delta.x * turnSpeed), this->worldUp);
-	rotationMatrix = glm::rotate(rotationMatrix, glm::radians(-delta.y * turnSpeed), glm::normalize(glm::cross(this->worldUp, this->position)));
+	float deltaAngleX = static_cast<float>((2 * M_PI / this->windowSize.x));
+	float deltaAngleY = static_cast<float>((M_PI / this->windowSize.y));
 
-	this->position = glm::vec3(rotationMatrix * glm::vec4(this->position, 1.0f));
-	this->worldUp = glm::vec3(rotationMatrix * glm::vec4(this->worldUp, 0.0f));
+	float xAngle = (oldMousePosition.x - newMousePosition.x) * deltaAngleX;
+	float yAngle = (oldMousePosition.y - newMousePosition.y) * deltaAngleY;
+
+	float cosAngle = glm::dot(this->getViewDirection(), this->worldUp);
+	if (cosAngle < -0.99f) {
+		yAngle = 0.01f;
+	}
+	if (cosAngle > 0.99f) {
+		yAngle = -0.01f;
+	}
+
+
+	glm::mat4x4 rotationMatrixX(1.0f);
+	rotationMatrixX = glm::rotate(rotationMatrixX, xAngle, this->worldUp);
+	position = (rotationMatrixX * (position - pivot)) + pivot;
+
+	glm::mat4x4 rotationMatrixY(1.0f);
+	rotationMatrixY = glm::rotate(rotationMatrixY, yAngle, this->getRightVector());
+	this->position = (rotationMatrixY * (position - pivot)) + pivot;
 
 	this->updateCameraProperties();
 }
 
 glm::mat4 ArcBallCamera::calculateViewMatrix() const
 {
-	return glm::lookAt(this->position, this->lookAt, this->worldUp);
+	return this->viewMatrix;
+}
+
+glm::vec3 ArcBallCamera::getViewDirection() const
+{
+	return -glm::transpose(this->viewMatrix)[2];
+}
+
+glm::vec3 ArcBallCamera::getRightVector() const
+{
+	return glm::transpose(this->viewMatrix)[0];
 }
 
 void ArcBallCamera::updateCameraProperties()
 {
-	this->position = glm::normalize(this->position) * distance;
-	this->worldUp = glm::normalize(glm::cross(glm::cross(this->position, this->worldUp), this->position));
+	this->viewMatrix = glm::lookAt(this->position, this->lookAt, this->worldUp);
 }
+

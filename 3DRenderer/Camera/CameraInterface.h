@@ -8,8 +8,8 @@
 class CameraInterface
 {
 public:
-	CameraInterface(glm::vec3 position, glm::vec3 worldUp, GLfloat moveSpeed, GLfloat turnSpeed) :
-		position(position), worldUp(worldUp), moveSpeed(moveSpeed), turnSpeed(turnSpeed) {}
+	CameraInterface(glm::vec3 position, glm::vec3 worldUp, glm::vec3 lookAt, GLfloat moveSpeed, GLfloat turnSpeed) :
+		position(position), worldUp(worldUp), moveSpeed(moveSpeed), turnSpeed(turnSpeed), lookAt(lookAt) {}
 
 	virtual void updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec) = 0;
 	virtual void handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition) = 0;
@@ -23,6 +23,7 @@ protected:
 	GLfloat turnSpeed;
 	glm::vec3 position;
 	glm::vec3 worldUp;
+	glm::vec3 lookAt;
 
 	virtual void updateCameraProperties() = 0;
 };

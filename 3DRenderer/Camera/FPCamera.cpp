@@ -1,8 +1,8 @@
 #include "FPCamera.h"
 #include <glm/ext/matrix_transform.hpp>
 
-FPCamera::FPCamera(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed)
-	: CameraInterface(position, worldUp, moveSpeed, turnSpeed), yaw(yaw), pitch(pitch)
+FPCamera::FPCamera(glm::vec3 position, glm::vec3 worldUp, glm::vec3 lookAt, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed)
+	: CameraInterface(position, worldUp, lookAt, moveSpeed, turnSpeed), yaw(yaw), pitch(pitch)
 {
 	this->updateCameraProperties();
 }
