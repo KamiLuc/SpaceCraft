@@ -32,6 +32,8 @@ private:
 	sf::Text pressEnterText;
 	sf::Text madeByText;
 
-	float timePassed;
+	float timePassedInSec;
+	float introMovementTimInSec;
+
 };
 

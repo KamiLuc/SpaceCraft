@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/System.hpp>
+#include "../Window.h"
 
 class StateManager;
 
@@ -8,7 +9,8 @@ class BaseState
 {
 	friend class StateManager;
 public:
-	BaseState(StateManager* stateManager, bool render3D = false) : stateManager(stateManager), transparent(false), transcendent(false), render3D(render3D) {}
+	BaseState(StateManager* stateManager, Render render = Render::twoDimensional) : stateManager(stateManager), transparent(false),
+		transcendent(false), render(render) {}
 	virtual ~BaseState() {}
 
 	virtual void onCreate() = 0;
@@ -23,15 +25,15 @@ public:
 	void setTransparent(bool transparent) { this->transparent = transparent; }
 	void setTranscendent(bool transcendent) { this->transcendent = transcendent; }
 
-	bool shouldRender3D() const { return this->render3D; }
+	Render getRender() const { return this->render; }
 	bool isTransparent() const { return this->transparent; }
 	bool isTranscendent() const { return this->transcendent; }
 	StateManager* getStateManager() { return this->stateManager; }
 
 protected:
 	StateManager* stateManager;
+	Render render;
 	bool transparent;
 	bool transcendent;
-	bool render3D;
 };
 

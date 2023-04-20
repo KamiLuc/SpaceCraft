@@ -17,6 +17,6 @@ public:
 	virtual void draw() override;
 
 private:
-
 	std::unique_ptr<CameraManagerToSFMLFrameworkAdapter> cameraManager;
 };
+

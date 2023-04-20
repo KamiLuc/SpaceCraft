@@ -1,5 +1,5 @@
 #include "StateSpaceSimulation.h"
-#include "../3DRenderer/Shader.h"
+#include "../3DRenderer/Shader/Shader.h"
 #include "../3DRenderer/Mesh.h"
 #include "../Utils/Functions.h"
 #include "../3DRenderer/Texture.h"
@@ -10,6 +10,8 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
+//to delete
+#include "../3DObjects/Sphere.h"
 
 std::vector<Shader*> shaders{};
 std::vector<Mesh*> meshes{};
@@ -17,57 +19,75 @@ Material shinyMaterial;
 Material dullMaterial;
 Light mainLight;
 
+Sphere* earth;
+Sphere* sun;
+Mesh* mesh;
+
 GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 uniformAmbientIntensity = 0, uniformAmbientColour = 0, uniformDirection = 0, uniformDiffuseIntensity = 0,
 uniformSpecularIntensity = 0, uniformShininess = 0;
 glm::mat4 projection;
 
+Texture earthTexture("Textures/brick.png");
+Texture sunTexture("Textures/brick.png");
 Texture brickTexture("Textures/brick.png");
-Texture dirtTexture("Textures/dirt.png");
+
 
 void StateSpaceSimulation::onCreate()
 {
-	auto window = this->stateManager->getContext()->window;
+	auto window = stateManager->getContext()->window;
 	auto windowSize = window->getWindowSize();
 	window->setClearColor(sf::Color::Black);
 
-	this->cameraManager = std::make_unique<CameraManagerToSFMLFrameworkAdapter>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 5.0f, 0.5f, window->getRenderWindow());
-
-	const std::filesystem::path fShader("Shaders/shader.fragment");
-	const std::filesystem::path vShader("Shaders/shader.vertex");
+	cameraManager = std::make_unique<CameraManagerToSFMLFrameworkAdapter>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 270.0f, 0.0f, 5.0f, 0.5f, window->getRenderWindow());
 
 	createObjects(meshes);
-	createShaders(shaders, fShader, vShader);
 
-	brickTexture = Texture("Textures/brick.png");
+	mesh = new Mesh();
+
+	GLfloat veritces[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f };
+	GLuint indices[] = { 0,1,2 };
+
+	mesh->createMesh(veritces, indices, 21, 3);
+
+	earthTexture = Texture("Textures/earth.jpg");
+	earthTexture.loadTexture();
+	sunTexture = Texture("Textures/sun.jpg");
+	sunTexture.loadTexture();
 	brickTexture.loadTexture();
-	dirtTexture = Texture("Textures/dirt.png");
-	dirtTexture.loadTexture();
 
 	shinyMaterial = Material(2.0f, 256);
 	dullMaterial = Material(0.3f, 4);
 
-	mainLight = Light(0.0f, 1.0f, 1.0f, 0.2f,
+	mainLight = Light(1.0f, 1.0f, 1.0f, 0.3f,
 		0.0f, 0.0f, -1.0f, 0.3f);
 
-	auto eventManager = this->stateManager->getContext()->eventManager;
+	//sun = new Sphere(36, 36, 0.004654f);
+	//earth = new Sphere(36, 36, 0.0000426f);
 
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Left", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Left", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::enableMouseCameraMove, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, this->cameraManager.get());
-	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, this->cameraManager.get());
+	earth = new Sphere(36, 36, 0.5f);
+	sun = new Sphere(36, 36, 0.2f);
+
+	auto eventManager = stateManager->getContext()->eventManager;
+
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Backward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Left", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Left", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Right", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::enableMouseCameraMove, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, cameraManager.get());
+	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, cameraManager.get());
 }
 
 void StateSpaceSimulation::onDestroy()
 {
-	auto eventManager = this->stateManager->getContext()->eventManager;
+	auto eventManager = stateManager->getContext()->eventManager;
 
 	eventManager->removeCallback(StateType::SpaceSimulation, "Start_Camera_Forward");
 	eventManager->removeCallback(StateType::SpaceSimulation, "Stop_Camera_Forward");
@@ -92,45 +112,71 @@ void StateSpaceSimulation::deactivate()
 
 void StateSpaceSimulation::update(const sf::Time& time)
 {
-	this->cameraManager->updateCameraPosition(static_cast<GLfloat>(time.asSeconds()));
+	cameraManager->updateCameraPosition(static_cast<GLfloat>(time.asSeconds()));
 }
+
+float angle = 0.0;
 
 void StateSpaceSimulation::draw()
 {
-	shaders[0]->useShader();
+	auto shader = stateManager->getContext()->shaderManager->getShader("shader");
 
-	uniformModel = shaders[0]->getModelLocation();
-	uniformProjection = shaders[0]->getProjectionLocation();
-	uniformView = shaders[0]->getViewLocation();
-	uniformAmbientColour = shaders[0]->getAmbientColorLocation();
-	uniformAmbientIntensity = shaders[0]->getAmbientIntensityLocation();
-	uniformDirection = shaders[0]->getLightDirectionLocation();
-	uniformDiffuseIntensity = shaders[0]->getDiffuseIntensityLocation();
-	uniformEyePosition = shaders[0]->getCameraPositionLocation();
-	uniformSpecularIntensity = shaders[0]->getSpecularIntensityLocation();
-	uniformShininess = shaders[0]->getShininessLocation();
+	if (shader) {
+		stateManager->getContext()->shaderManager->useShader(shader);
+		uniformModel = shader->getModelLocation();
+		uniformProjection = shader->getProjectionLocation();
+		uniformView = shader->getViewLocation();
+		uniformAmbientColour = shader->getAmbientColorLocation();
+		uniformAmbientIntensity = shader->getAmbientIntensityLocation();
+		uniformDirection = shader->getLightDirectionLocation();
+		uniformDiffuseIntensity = shader->getDiffuseIntensityLocation();
+		uniformEyePosition = shader->getCameraPositionLocation();
+		uniformSpecularIntensity = shader->getSpecularIntensityLocation();
+		uniformShininess = shader->getShininessLocation();
+	}
 
 	mainLight.useLight(uniformAmbientIntensity, uniformAmbientColour,
 		uniformDiffuseIntensity, uniformDirection);
 
-	this->cameraManager->useCamera(uniformView, uniformEyePosition, uniformProjection);
+	cameraManager->useCamera(uniformView, uniformEyePosition, uniformProjection);
+
 
 	glm::mat4 model(1.0f);
+	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-	//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+	model = glm::rotate(model, glm::radians(angle), { 0.0, 0.0f, 1.0 });
+	model = glm::translate(model, glm::vec3(0.0, 0.0f, 0.0f));
+	//angle += 0.01f;
+
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	earthTexture.useTexture();
+	shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	//meshes[0]->renderMesh();
+
+
+
+	earth->renderMesh();
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(-5.0f, 0.0f, -2.0f));
+	model = glm::scale(model, glm::vec3(9.0f, 9.0f, 9.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	sunTexture.useTexture();
+	dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	sun->renderMesh();
+
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(3.0f, 3.0f, 3.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	brickTexture.useTexture();
 	shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
 	meshes[0]->renderMesh();
 
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
-	//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	dirtTexture.useTexture();
-	dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-	meshes[1]->renderMesh();
+
 
 	glUseProgram(0);
+	stateManager->getContext()->shaderManager->endDrawLoop();
 }

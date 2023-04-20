@@ -2,13 +2,14 @@
 #include "../../States/StateIntro.h"
 #include "../../States/StateMainMenu.h"
 #include "../../States/StateSpaceSimulation.h"
+#include "../../States/StateSimulationLoading.h"
 
 StateManager::StateManager(SharedContext* sharedContext) : sharedContext(sharedContext)
 {
-	this->registerState<StateIntro>(StateType::Intro, false);
-	this->registerState<StateMainMenu>(StateType::MainMenu, false);
-	this->registerState<StateSpaceSimulation>(StateType::SpaceSimulation, true);
-	//this->registerState<State_Paused>(StateType::Paused);
+	this->registerState<StateIntro>(StateType::Intro, Render::twoDimensional);
+	this->registerState<StateMainMenu>(StateType::MainMenu, Render::twoDimensional);
+	this->registerState<StateSimulationLoading>(StateType::SimulationLoading, Render::twoDimensional);
+	this->registerState<StateSpaceSimulation>(StateType::SpaceSimulation, Render::threeDimensional);
 }
 
 StateManager::~StateManager()
@@ -70,34 +71,30 @@ void StateManager::draw()
 		}
 		for (; stateIt != this->states.end(); ++stateIt)
 		{
-			if (!stateIt->second->shouldRender3D())
+			if (stateIt->second->getRender() == Render::twoDimensional)
 			{
 				this->sharedContext->window->start2D();
 				stateIt->second->draw();
-				this->sharedContext->window->stop2D();
 			}
 			else
 			{
 				this->sharedContext->window->start3D();
 				stateIt->second->draw();
-				this->sharedContext->window->stop3D();
 			}
 		}
 	}
 	else
 	{
 		auto state = this->states.back().second;
-		if (!state->shouldRender3D())
+		if (state->getRender() == Render::twoDimensional)
 		{
 			this->sharedContext->window->start2D();
 			state->draw();
-			this->sharedContext->window->stop2D();
 		}
 		else
 		{
 			this->sharedContext->window->start3D();
 			state->draw();
-			this->sharedContext->window->stop3D();
 		}
 	}
 }

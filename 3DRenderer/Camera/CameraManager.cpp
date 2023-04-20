@@ -1,10 +1,10 @@
 #include "CameraManager.h"
 #include <glm/gtc/type_ptr.hpp>
 
-CameraManager::CameraManager(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, GLfloat aspectRatio)
-	: aspectRatio(aspectRatio), fpCamera(position, worldUp, yaw, pitch, moveSpeed, turnSpeed),
-	cameraMoveDirections{}, arcBallCamera((position.z + 1) * 2.0f, worldUp, moveSpeed, turnSpeed / 100.0f),
-	currentCamera(&arcBallCamera)
+CameraManager::CameraManager(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, glm::vec2 windowSize)
+	: fpCamera(position, worldUp, { 0,0,0 }, yaw, pitch, moveSpeed, turnSpeed),
+	cameraMoveDirections{}, arcBallCamera((position.z + 1) * 2.0f, worldUp, { 0,0,0 }, moveSpeed, turnSpeed, windowSize),
+	currentCamera(&arcBallCamera), windowSize(windowSize)
 {
 	this->calculateProjectionMatrix();
 }
@@ -55,7 +55,11 @@ void CameraManager::changeCamera()
 	}
 }
 
+void CameraManager::drawAxis()
+{
+}
+
 void CameraManager::calculateProjectionMatrix()
 {
-	this->projectionMatrix = glm::perspective(glm::radians(45.0f), this->aspectRatio, 0.1f, 1000.0f);
+	this->projectionMatrix = glm::perspective(glm::radians(45.0f), this->windowSize.x / this->windowSize.y, 0.1f, 1000.0f);
 }

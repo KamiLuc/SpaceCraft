@@ -23,6 +23,7 @@ public:
 private:
 	Window window;
 	StateManager stateManager;
+	ShaderManager shaderManager;
 
 	SharedContext sharedContext;
 

@@ -11,7 +11,7 @@
 
 using StateContainer = std::vector<std::pair<StateType, BaseState*>>;
 using TypeContainer = std::vector<StateType>;
-using StateFactory = std::unordered_map<StateType, std::function<BaseState*(void)>>;
+using StateFactory = std::unordered_map<StateType, std::function<BaseState* (void)>>;
 
 class StateManager
 {
@@ -29,14 +29,14 @@ public:
 
 	void switchTo(const StateType& type);
 	void remove(const StateType& type);
-	
+
 private:
-	
+
 	void createState(const StateType& type);
 	void removeState(const StateType& type);
 
 	template<class T>
-	void registerState(const StateType& type, bool render3D = false);
+	void registerState(const StateType& type, Render render);
 
 	SharedContext* sharedContext;
 	StateContainer states;
@@ -45,10 +45,10 @@ private:
 };
 
 template<class T>
-inline void StateManager::registerState(const StateType& type, bool render3D)
+inline void StateManager::registerState(const StateType& type, Render render)
 {
-	this->stateFactory[type] = [this, render3D]() -> BaseState*
+	this->stateFactory[type] = [this, render]() -> BaseState*
 	{
-		return new T(this, render3D);
+		return new T(this, render);
 	};
 }

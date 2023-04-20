@@ -9,7 +9,7 @@
 class CameraManager
 {
 public:
-	CameraManager(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, GLfloat ascpectRatio);
+	CameraManager(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, glm::vec2 windowSize);
 
 	void addCameraMoveDirection(const CameraMoveDirection& direction);
 	void removeCameraMoveDirection(const CameraMoveDirection& direction);
@@ -18,6 +18,7 @@ public:
 	void updateCameraPosition(const GLfloat& timeInSec);
 	void useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection);
 	void changeCamera();
+	void drawAxis();
 
 private:
 
@@ -26,8 +27,8 @@ private:
 	ArcBallCamera arcBallCamera;
 
 	std::list<CameraMoveDirection> cameraMoveDirections;
-	GLfloat aspectRatio;
 	glm::mat4 projectionMatrix;
+	glm::vec2 windowSize;
 
 	void calculateProjectionMatrix();
 };
