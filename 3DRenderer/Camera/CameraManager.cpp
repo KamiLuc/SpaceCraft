@@ -55,6 +55,10 @@ void CameraManager::changeCamera()
 	}
 }
 
+void CameraManager::drawAxis()
+{
+}
+
 void CameraManager::calculateProjectionMatrix()
 {
 	this->projectionMatrix = glm::perspective(glm::radians(45.0f), this->windowSize.x / this->windowSize.y, 0.1f, 1000.0f);

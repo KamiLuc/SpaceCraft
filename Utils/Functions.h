@@ -48,12 +48,6 @@ void calculateAverageNormals(unsigned int* indices, unsigned int indicesCount, G
 	}
 }
 
-void createShaders(std::vector<Shader*>& shaders, const std::filesystem::path fShader, const std::filesystem::path vShader) {
-	Shader* shader1 = new Shader();
-	shader1->createFromFiles(vShader, fShader);
-	shaders.push_back(shader1);
-}
-
 void createObjects(std::vector<Mesh*>& meshes)
 {
 	unsigned int indices[] = {

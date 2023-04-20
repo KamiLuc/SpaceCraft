@@ -14,6 +14,7 @@ public:
 	virtual void updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec) override;
 	virtual void handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition) override;
 	virtual glm::mat4 calculateViewMatrix() const override;
+	void useImmediateGluLookAt() override;
 
 	glm::vec3 getViewDirection() const;
 	glm::vec3 getRightVector() const;

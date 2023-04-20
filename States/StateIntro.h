@@ -34,5 +34,6 @@ private:
 
 	float timePassedInSec;
 	float introMovementTimInSec;
+
 };
 

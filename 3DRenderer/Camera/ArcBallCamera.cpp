@@ -14,7 +14,10 @@ void ArcBallCamera::updateCameraPosition(const CameraMoveDirection& direction, c
 {
 	if (direction == CameraMoveDirection::Forward)
 	{
-		position += this->getViewDirection() * timeInSec * moveSpeed;
+		auto newPosition = position + this->getViewDirection() * timeInSec * moveSpeed;
+		if (glm::distance(newPosition, lookAt) > 0.1f) {
+			position = newPosition;
+		}
 	}
 	else if (direction == CameraMoveDirection::Backward)
 	{
@@ -43,7 +46,6 @@ void ArcBallCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::ve
 		yAngle = -0.01f;
 	}
 
-
 	glm::mat4x4 rotationMatrixX(1.0f);
 	rotationMatrixX = glm::rotate(rotationMatrixX, xAngle, this->worldUp);
 	position = (rotationMatrixX * (position - pivot)) + pivot;
@@ -58,6 +60,13 @@ void ArcBallCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::ve
 glm::mat4 ArcBallCamera::calculateViewMatrix() const
 {
 	return this->viewMatrix;
+}
+
+void ArcBallCamera::useImmediateGluLookAt()
+{
+	gluLookAt(position.x, position.y, position.z,
+		0, 0, 0,
+		worldUp.x, worldUp.y, worldUp.z);
 }
 
 glm::vec3 ArcBallCamera::getViewDirection() const

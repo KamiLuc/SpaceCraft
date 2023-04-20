@@ -66,3 +66,11 @@ glm::mat4 FPCamera::calculateViewMatrix() const
 {
 	return glm::lookAt(this->position, this->position + this->front, up);
 }
+
+void FPCamera::useImmediateGluLookAt()
+{
+	auto center = position + front;
+	gluLookAt(position.x, position.y, position.z,
+		center.x, center.y, center.z,
+		worldUp.x, worldUp.y, worldUp.y);
+}

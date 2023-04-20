@@ -13,6 +13,7 @@ public:
 
 	virtual void updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec) = 0;
 	virtual void handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition) = 0;
+	virtual void useImmediateGluLookAt() = 0;
 	virtual glm::mat4 calculateViewMatrix() const = 0;
 	virtual glm::vec3 getPosition() const { return this->position; }
 

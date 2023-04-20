@@ -18,6 +18,7 @@ public:
 	void updateCameraPosition(const GLfloat& timeInSec);
 	void useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection);
 	void changeCamera();
+	void drawAxis();
 
 private:
 
