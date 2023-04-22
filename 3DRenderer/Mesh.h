@@ -3,19 +3,24 @@
 #include <GL\glew.h>
 #include <cstdint>
 
+#include <vector>
+#include <glm/glm.hpp>
+
 class Mesh
 {
 public:
 	Mesh();
 	~Mesh();
-	void createMesh(GLfloat* vertices, uint32_t* indices, uint32_t numberOfVertices, uint32_t numberOfIndices);
+	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices, const std::vector<GLfloat>& textureCoordinates, const std::vector<GLfloat>& normals);
 	void renderMesh();
 	void clearMesh();
 
 private:
 	GLuint VAO;
-	GLuint VBO;
-	GLuint IBO;
+	GLuint vertexBuffer;
+	GLuint indicesBuffer;
+	GLuint normalsBuffer;
+	GLuint textureCoordinatesBuffer;
 	GLsizei indexCount;
 };
 

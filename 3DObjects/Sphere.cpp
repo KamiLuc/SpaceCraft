@@ -4,8 +4,11 @@
 
 Sphere::Sphere(GLuint stacks, GLuint sectors, GLfloat radius)
 {
-	std::vector<GLfloat> vertices;
-	std::vector<GLuint> indices;
+	std::vector<GLfloat> vertices{};
+	std::vector<GLfloat> textureCoordinates{};
+	std::vector<GLfloat> normals{};
+
+	std::vector<GLuint> indices{};
 
 	const float PI = static_cast<float>(acos(-1.0f));
 
@@ -29,12 +32,12 @@ Sphere::Sphere(GLuint stacks, GLuint sectors, GLfloat radius)
 			vertices.push_back(y);
 			vertices.push_back(z);
 
-			vertices.emplace_back(static_cast<GLfloat>(j) / sectors);
-			vertices.emplace_back(static_cast<GLfloat>(i) / stacks);
+			textureCoordinates.emplace_back(static_cast<GLfloat>(j) / sectors);
+			textureCoordinates.emplace_back(static_cast<GLfloat>(i) / stacks);
 
-			vertices.emplace_back(x * lengthInv);
-			vertices.emplace_back(y * lengthInv);
-			vertices.emplace_back(z * lengthInv);
+			normals.emplace_back(x * lengthInv);
+			normals.emplace_back(y * lengthInv);
+			normals.emplace_back(z * lengthInv);
 		}
 	}
 
@@ -57,6 +60,5 @@ Sphere::Sphere(GLuint stacks, GLuint sectors, GLfloat radius)
 		}
 	}
 
-	this->createMesh(vertices.data(), indices.data(),
-		static_cast<uint32_t>(vertices.size()), static_cast<uint32_t>(indices.size()));
+	this->createMesh(vertices, indices, textureCoordinates, normals);
 }

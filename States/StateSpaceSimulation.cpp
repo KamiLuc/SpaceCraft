@@ -43,14 +43,7 @@ void StateSpaceSimulation::onCreate()
 
 	createObjects(meshes);
 
-	mesh = new Mesh();
 
-	GLfloat veritces[] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f };
-	GLuint indices[] = { 0,1,2 };
-
-	mesh->createMesh(veritces, indices, 21, 3);
 
 	earthTexture = Texture("Textures/earth.jpg");
 	earthTexture.loadTexture();
@@ -58,11 +51,11 @@ void StateSpaceSimulation::onCreate()
 	sunTexture.loadTexture();
 	brickTexture.loadTexture();
 
-	shinyMaterial = Material(2.0f, 256);
+	shinyMaterial = Material(2.0f, 1024);
 	dullMaterial = Material(0.3f, 4);
 
 	mainLight = Light(1.0f, 1.0f, 1.0f, 0.3f,
-		0.0f, 0.0f, -1.0f, 0.3f);
+		0.0f, 0.0f, -1.0f, 0.9f);
 
 	//sun = new Sphere(36, 36, 0.004654f);
 	//earth = new Sphere(36, 36, 0.0000426f);

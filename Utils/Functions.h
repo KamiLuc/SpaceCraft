@@ -7,8 +7,7 @@
 
 #include "../3DRenderer/Mesh.h"
 
-
-void calculateAverageNormals(unsigned int* indices, unsigned int indicesCount, GLfloat* vertices, unsigned int verticesCount, unsigned int vertexLenght, unsigned int normalOffset)
+void calculateAverageNormalsLegacy(unsigned int* indices, unsigned int indicesCount, GLfloat* vertices, unsigned int verticesCount, unsigned int vertexLenght, unsigned int normalOffset)
 {
 	for (size_t i = 0; i < indicesCount; i += 3)
 	{
@@ -48,32 +47,56 @@ void calculateAverageNormals(unsigned int* indices, unsigned int indicesCount, G
 	}
 }
 
+void calculateAverageNormals(const std::vector<unsigned int>& indices, const std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals)
+{
+	normals.clear();
+	normals.resize(vertices.size(), 0.0f);
+
+	for (size_t i = 0; i < indices.size(); i += 3)
+	{
+		glm::vec3 v1(vertices[indices[i]], vertices[indices[i] + 1], vertices[indices[i] + 2]);
+		glm::vec3 v2(vertices[indices[i + 1]], vertices[indices[i + 1] + 1], vertices[indices[i + 1] + 2]);
+		glm::vec3 v3(vertices[indices[i + 2]], vertices[indices[i + 2] + 1], vertices[indices[i + 2] + 2]);
+		glm::vec3 faceNormal = glm::normalize(glm::cross(v2 - v1, v3 - v1));
+
+		normals[indices[i]] += faceNormal.x;
+		normals[indices[i] + 1] += faceNormal.y;
+		normals[indices[i] + 2] += faceNormal.z;
+		normals[indices[i + 1]] += faceNormal.x;
+		normals[indices[i + 1] + 1] += faceNormal.y;
+		normals[indices[i + 1] + 2] += faceNormal.z;
+		normals[indices[i + 2]] += faceNormal.x;
+		normals[indices[i + 2] + 1] += faceNormal.y;
+		normals[indices[i + 2] + 2] += faceNormal.z;
+	}
+
+	for (size_t i = 0; i < normals.size(); i += 3)
+	{
+		glm::vec3 normal(normals[i], normals[i + 1], normals[i + 2]);
+		normal = glm::normalize(normal);
+		normals[i] = normal.x;
+		normals[i + 1] = normal.y;
+		normals[i + 2] = normal.z;
+	}
+}
+
 void createObjects(std::vector<Mesh*>& meshes)
 {
-	unsigned int indices[] = {
-		0, 3, 1,
-		1, 3, 2,
-		2, 3, 0,
-		0, 1 ,2
-	};
 
-	GLfloat vertices[] = {
-		//	x      y      z			u	  v			nx	  ny    nz
-			-1.0f, -1.0f, -0.6f,	0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-			0.0f, -1.0f, 1.0f,		0.5f, 0.0f,		0.0f, 0.0f, 0.0f,
-			1.0f, -1.0f, -0.6f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,		0.5f, 1.0f,		0.0f, 0.0f, 0.0f
-	};
+	std::vector<GLuint> indices{ 0, 3, 1, 1, 3, 2, 2, 3, 0, 0, 1, 2 };
+	std::vector<GLfloat> vertices{ -1.0f, -1.0f, -0.6f, 0.0f, -1.0f, 1.0f, 1.0f, -1.0f, -0.6f, 0.0f, 1.0f, 0.0f };
+	std::vector<GLfloat> textureCoordinates{ 0.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f };
+	std::vector<GLfloat> normals{ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
+	calculateAverageNormals(indices, vertices, normals);
 
-	calculateAverageNormals(indices, 12, vertices, 32, 8, 5);
 
 	Mesh* obj1 = new Mesh();
-	obj1->createMesh(vertices, indices, 32, 12);
+	obj1->createMesh(vertices, indices, textureCoordinates, normals);
 	meshes.push_back(obj1);
 
 	Mesh* obj2 = new Mesh();
-	obj2->createMesh(vertices, indices, 32, 12);
+	obj2->createMesh(vertices, indices, textureCoordinates, normals);
 	meshes.push_back(obj2);
 }
 
