@@ -1,37 +1,7 @@
 #include "StateSpaceSimulation.h"
-#include "../3DRenderer/Shader/Shader.h"
-#include "../3DRenderer/Mesh.h"
+#include <glm/gtc/type_ptr.hpp>
+
 #include "../Utils/Functions.h"
-#include "../3DRenderer/Texture.h"
-#include "../3DRenderer/Material.h"
-#include "../3DRenderer/Light.h"
-
-#include <glm/glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
-
-//to delete
-#include "../3DObjects/Sphere.h"
-
-std::vector<Shader*> shaders{};
-std::vector<Mesh*> meshes{};
-Material shinyMaterial;
-Material dullMaterial;
-Light mainLight;
-
-Sphere* earth;
-Sphere* sun;
-Mesh* mesh;
-
-GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-uniformAmbientIntensity = 0, uniformAmbientColour = 0, uniformDirection = 0, uniformDiffuseIntensity = 0,
-uniformSpecularIntensity = 0, uniformShininess = 0;
-glm::mat4 projection;
-
-Texture earthTexture("Textures/brick.png");
-Texture sunTexture("Textures/brick.png");
-Texture brickTexture("Textures/brick.png");
-
 
 void StateSpaceSimulation::onCreate()
 {
@@ -40,28 +10,22 @@ void StateSpaceSimulation::onCreate()
 	window->setClearColor(sf::Color::Black);
 
 	cameraManager = std::make_unique<CameraManagerToSFMLFrameworkAdapter>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 270.0f, 0.0f, 5.0f, 0.5f, window->getRenderWindow());
+	mainLight = std::make_unique<Light>(1.0f, 1.0f, 1.0f, 0.3f, 0.0f, 0.0f, -1.0f, 0.9f);
 
 	createObjects(meshes);
+	earthTexture = std::make_unique<Texture>("Textures/earth.jpg");
+	brickTexture = std::make_unique<Texture>("Textures/brick.png");
+	sunTexture = std::make_unique<Texture>("Textures/sun.jpg");
 
+	brickTexture->loadTexture();
+	sunTexture->loadTexture();
+	earthTexture->loadTexture();
 
+	shinyMaterial = std::make_unique<Material>(2.0f, 1024.0f);
+	dullMaterial = std::make_unique<Material>(0.3f, 4.0f);
 
-	earthTexture = Texture("Textures/earth.jpg");
-	earthTexture.loadTexture();
-	sunTexture = Texture("Textures/sun.jpg");
-	sunTexture.loadTexture();
-	brickTexture.loadTexture();
-
-	shinyMaterial = Material(2.0f, 1024);
-	dullMaterial = Material(0.3f, 4);
-
-	mainLight = Light(1.0f, 1.0f, 1.0f, 0.3f,
-		0.0f, 0.0f, -1.0f, 0.9f);
-
-	//sun = new Sphere(36, 36, 0.004654f);
-	//earth = new Sphere(36, 36, 0.0000426f);
-
-	earth = new Sphere(36, 36, 0.5f);
-	sun = new Sphere(36, 36, 0.2f);
+	earth = std::make_unique<Sphere>(36, 36, 0.5f);
+	sun = std::make_unique<Sphere>(36, 36, 0.2f);
 
 	auto eventManager = stateManager->getContext()->eventManager;
 
@@ -112,64 +76,68 @@ float angle = 0.0;
 
 void StateSpaceSimulation::draw()
 {
-	auto shader = stateManager->getContext()->shaderManager->getShader("shader");
-
-	if (shader) {
-		stateManager->getContext()->shaderManager->useShader(shader);
-		uniformModel = shader->getModelLocation();
-		uniformProjection = shader->getProjectionLocation();
-		uniformView = shader->getViewLocation();
-		uniformAmbientColour = shader->getAmbientColorLocation();
-		uniformAmbientIntensity = shader->getAmbientIntensityLocation();
-		uniformDirection = shader->getLightDirectionLocation();
-		uniformDiffuseIntensity = shader->getDiffuseIntensityLocation();
-		uniformEyePosition = shader->getCameraPositionLocation();
-		uniformSpecularIntensity = shader->getSpecularIntensityLocation();
-		uniformShininess = shader->getShininessLocation();
-	}
-
-	mainLight.useLight(uniformAmbientIntensity, uniformAmbientColour,
-		uniformDiffuseIntensity, uniformDirection);
-
-	cameraManager->useCamera(uniformView, uniformEyePosition, uniformProjection);
-
+	changeShader("texturedObjectShader");
 
 	glm::mat4 model(1.0f);
-	model = glm::mat4(1.0f);
-
 	model = glm::rotate(model, glm::radians(angle), { 0.0, 0.0f, 1.0 });
 	model = glm::translate(model, glm::vec3(0.0, 0.0f, 0.0f));
-	//angle += 0.01f;
-
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	earthTexture.useTexture();
-	shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-	//meshes[0]->renderMesh();
+
+	if (currentUniformLocations) {
+
+		glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		earthTexture->useTexture();
+		shinyMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
+		//meshes[0]->renderMesh();
+
+		earth->renderMesh();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-5.0f, 0.0f, -2.0f));
+		model = glm::scale(model, glm::vec3(9.0f, 9.0f, 9.0f));
+		glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		sunTexture->useTexture();
+		dullMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
+		sun->renderMesh();
 
 
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		brickTexture->useTexture();
+		shinyMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
+		meshes[0]->renderMesh();
+	}
 
-	earth->renderMesh();
+	changeShader("coloredObjectShader");
 
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-5.0f, 0.0f, -2.0f));
-	model = glm::scale(model, glm::vec3(9.0f, 9.0f, 9.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	sunTexture.useTexture();
-	dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-	sun->renderMesh();
-
-
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(3.0f, 3.0f, 3.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	brickTexture.useTexture();
-	shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-	meshes[0]->renderMesh();
-
-
-
-	glUseProgram(0);
-	stateManager->getContext()->shaderManager->endDrawLoop();
+	if (currentUniformLocations) {
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shinyMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
+		meshes[1]->renderMesh();
+	}
 }
+
+void StateSpaceSimulation::changeShader(const std::string& shaderName)
+{
+	auto shaderManager = stateManager->getContext()->shaderManager;
+
+	auto shader = shaderManager->getShader(shaderName);
+
+	if (shader) {
+		shaderManager->useShader(shader);
+
+		currentUniformLocations = &shader->getUniformLocations();
+		mainLight->useLight(currentUniformLocations->uniformAmbientIntensity, currentUniformLocations->uniformAmbientColor,
+			currentUniformLocations->uniformDiffuseIntensity, currentUniformLocations->uniformLightDirection);
+		cameraManager->useCamera(currentUniformLocations->uniformView,
+			currentUniformLocations->uniformCameraPosition, currentUniformLocations->uniformProjection);
+	}
+	else {
+		currentUniformLocations = nullptr;
+	}
+}
+

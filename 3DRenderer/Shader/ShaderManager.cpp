@@ -51,11 +51,6 @@ void ShaderManager::useShader(const std::shared_ptr<Shader> shader)
 	}
 }
 
-void ShaderManager::endDrawLoop()
-{
-	lastUsedShader = nullptr;
-}
-
 std::shared_ptr<Shader> ShaderManager::getShader(const std::string& shader)
 {
 	if (shaders.contains(shader)) {

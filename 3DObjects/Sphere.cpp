@@ -7,7 +7,6 @@ Sphere::Sphere(GLuint stacks, GLuint sectors, GLfloat radius)
 	std::vector<GLfloat> vertices{};
 	std::vector<GLfloat> textureCoordinates{};
 	std::vector<GLfloat> normals{};
-
 	std::vector<GLuint> indices{};
 
 	const float PI = static_cast<float>(acos(-1.0f));
@@ -60,5 +59,7 @@ Sphere::Sphere(GLuint stacks, GLuint sectors, GLfloat radius)
 		}
 	}
 
-	this->createMesh(vertices, indices, textureCoordinates, normals);
+	BasicMesh::calculateAverageNormals(indices, vertices, normals);
+
+	createMesh(vertices, indices, normals, textureCoordinates);
 }
