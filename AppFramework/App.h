@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Window.h"
-
 #include "StateManager/StateManager.h"
 
 class App

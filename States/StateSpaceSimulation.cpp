@@ -2,6 +2,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../Utils/Functions.h"
+#include "../3DObjects/ColoredSphere.h"
+#include <imgui.h>
 
 void StateSpaceSimulation::onCreate()
 {
@@ -24,8 +26,29 @@ void StateSpaceSimulation::onCreate()
 	shinyMaterial = std::make_unique<Material>(2.0f, 1024.0f);
 	dullMaterial = std::make_unique<Material>(0.3f, 4.0f);
 
-	earth = std::make_unique<Sphere>(36, 36, 0.5f);
-	sun = std::make_unique<Sphere>(36, 36, 0.2f);
+	earth = std::make_unique<TexturedSphere>(36, 36);
+	sun = std::make_unique<TexturedSphere>(36, 36);
+
+	std::vector<GLfloat> ballColors{};
+
+	std::vector<GLfloat> colors((36 + 1) * (36 + 1) * 4);
+	for (size_t i = 0; i < colors.size() / 4; i += 1) {
+
+		if (i > 900 && i < 1600) {
+			colors[i * 4] = 0.0f;
+			colors[i * 4 + 1] = 0.0f;
+			colors[i * 4 + 2] = 1.0f;
+			colors[i * 4 + 3] = 1.0f;
+		}
+		else {
+			colors[i * 4] = 0.0f;
+			colors[i * 4 + 1] = 1.0f;
+			colors[i * 4 + 2] = 0.0f;
+			colors[i * 4 + 3] = 1.0f;
+		}
+	}
+
+	ball = std::make_unique<ColoredSphere>(36, 36, glm::vec4({ 0.8f, 0.0f, 0.2f, 1.0f }));
 
 	auto eventManager = stateManager->getContext()->eventManager;
 
@@ -72,35 +95,43 @@ void StateSpaceSimulation::update(const sf::Time& time)
 	cameraManager->updateCameraPosition(static_cast<GLfloat>(time.asSeconds()));
 }
 
-float angle = 0.0;
+bool renderPlanets = false;
+float scale = 1.0f;
 
 void StateSpaceSimulation::draw()
 {
 	changeShader("texturedObjectShader");
 
+	ImGui::Begin("Camera properties:");;
+	ImGui::Text(cameraManager->getCameraNamePointer()->c_str());
+	ImGui::SliderFloat("Turn speed", cameraManager->getTurnSpeedPointer(), 0.1f, 2.0f);
+	ImGui::SliderFloat("Move speed", cameraManager->getMoveSpeedPointer(), 0.0f, 20.f);
+	ImGui::End();
+
 	glm::mat4 model(1.0f);
-	model = glm::rotate(model, glm::radians(angle), { 0.0, 0.0f, 1.0 });
+	model = glm::rotate(model, glm::radians(23.0f), { 0.0, 0.0f, 1.0 });
 	model = glm::translate(model, glm::vec3(0.0, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
 
 	if (currentUniformLocations) {
 
-		glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		earthTexture->useTexture();
-		shinyMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
-		//meshes[0]->renderMesh();
+		if (renderPlanets) {
+			glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			earthTexture->useTexture();
+			shinyMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
+			//meshes[0]->renderMesh();
 
-		earth->renderMesh();
+			earth->renderMesh();
 
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-5.0f, 0.0f, -2.0f));
-		model = glm::scale(model, glm::vec3(9.0f, 9.0f, 9.0f));
-		glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		sunTexture->useTexture();
-		dullMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
-		sun->renderMesh();
-
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-5.0f, 0.0f, -2.0f));
+			model = glm::scale(model, glm::vec3(scale, scale, scale));
+			glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			sunTexture->useTexture();
+			dullMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
+			sun->renderMesh();
+		}
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(3.0f, 3.0f, 3.0f));
@@ -118,7 +149,15 @@ void StateSpaceSimulation::draw()
 		glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		shinyMaterial->useMaterial(currentUniformLocations->uniformSpecularIntensity, currentUniformLocations->uniformShininess);
 		meshes[1]->renderMesh();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-2.0f, -1.0f, -5.0f));
+		glUniformMatrix4fv(currentUniformLocations->uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ball->renderMesh();
 	}
+
+	stateManager->getContext()->window->start2D();
+	stateManager->getContext()->window->drawImGui();
 }
 
 void StateSpaceSimulation::changeShader(const std::string& shaderName)

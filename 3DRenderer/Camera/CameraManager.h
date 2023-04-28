@@ -5,6 +5,7 @@
 #include "CameraMoveDirection.h"
 
 #include <list>
+#include <string>
 
 class CameraManager
 {
@@ -19,6 +20,10 @@ public:
 	void useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection);
 	void changeCamera();
 	void drawAxis();
+
+	GLfloat* getTurnSpeedPointer();
+	GLfloat* getMoveSpeedPointer();
+	std::string* getCameraNamePointer();
 
 private:
 

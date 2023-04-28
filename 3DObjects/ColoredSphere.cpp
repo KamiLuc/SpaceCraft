@@ -1,13 +1,32 @@
-#include "Sphere.h"
+#include "ColoredSphere.h"
+#include <ctime>
 
-#include <vector>
+ColoredSphere::ColoredSphere(GLuint stacks, GLuint sectors, glm::vec4 color)
+{
+	std::vector<GLfloat> colors((stacks + 1) * (sectors + 1) * 4);
+	GLfloat radius = 1.0f;
+	for (size_t i = 0; i < colors.size() / 4; i += 1) {
+		colors[i * 4] = color[0];
+		colors[i * 4 + 1] = color[1];
+		colors[i * 4 + 2] = color[2];
+		colors[i * 4 + 3] = color[3];
+	}
 
-Sphere::Sphere(GLuint stacks, GLuint sectors, GLfloat radius)
+	createSphere(stacks, sectors, radius, colors);
+}
+
+ColoredSphere::ColoredSphere(GLuint stacks, GLuint sectors, const std::vector<GLfloat>& colors)
+{
+	GLfloat radius = 1.0f;
+	createSphere(stacks, sectors, radius, colors);
+}
+
+void ColoredSphere::createSphere(GLuint stacks, GLuint sectors, GLfloat radius, const std::vector<GLfloat>& colors)
 {
 	std::vector<GLfloat> vertices{};
-	std::vector<GLfloat> textureCoordinates{};
 	std::vector<GLfloat> normals{};
 	std::vector<GLuint> indices{};
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
 	const float PI = static_cast<float>(acos(-1.0f));
 
@@ -25,14 +44,11 @@ Sphere::Sphere(GLuint stacks, GLuint sectors, GLfloat radius)
 
 			auto x = xy * cosf(sectorAngle);
 			auto y = xy * sinf(sectorAngle);
-			auto z = radius * sinf(stackAngle);
 
+			auto z = radius * sinf(stackAngle);
 			vertices.push_back(x);
 			vertices.push_back(y);
 			vertices.push_back(z);
-
-			textureCoordinates.emplace_back(static_cast<GLfloat>(j) / sectors);
-			textureCoordinates.emplace_back(static_cast<GLfloat>(i) / stacks);
 
 			normals.emplace_back(x * lengthInv);
 			normals.emplace_back(y * lengthInv);
@@ -61,5 +77,5 @@ Sphere::Sphere(GLuint stacks, GLuint sectors, GLfloat radius)
 
 	BasicMesh::calculateAverageNormals(indices, vertices, normals);
 
-	createMesh(vertices, indices, normals, textureCoordinates);
+	createMesh(vertices, indices, normals, colors);
 }

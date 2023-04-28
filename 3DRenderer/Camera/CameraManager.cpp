@@ -59,6 +59,21 @@ void CameraManager::drawAxis()
 {
 }
 
+GLfloat* CameraManager::getTurnSpeedPointer()
+{
+	return currentCamera->getTurnSpeedPointer();
+}
+
+GLfloat* CameraManager::getMoveSpeedPointer()
+{
+	return currentCamera->getMoveSpeedPointer();
+}
+
+std::string* CameraManager::getCameraNamePointer()
+{
+	return currentCamera->getCameraNamePointer();
+}
+
 void CameraManager::calculateProjectionMatrix()
 {
 	this->projectionMatrix = glm::perspective(glm::radians(45.0f), this->windowSize.x / this->windowSize.y, 0.1f, 1000.0f);

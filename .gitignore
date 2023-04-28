@@ -38,3 +38,6 @@ SpaceCraft.vcxproj.filters
 SpaceCraft.vcxproj.user
 x64/
 Debug/
+Sumodules/
+Submodules/imgui/
+imgui.ini

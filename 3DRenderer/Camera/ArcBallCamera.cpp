@@ -4,8 +4,10 @@
 
 #include <cmath>
 
-ArcBallCamera::ArcBallCamera(GLfloat distance, glm::vec3 worldUp, glm::vec3 lookAt, GLfloat moveSpeed, GLfloat turnSpeed, glm::vec2 windowSize)
-	: CameraInterface(glm::vec3(0.0f, 0.0f, distance), worldUp, lookAt, moveSpeed, turnSpeed), viewMatrix(1.0f), windowSize(windowSize)
+ArcBallCamera::ArcBallCamera(GLfloat distance, glm::vec3 worldUp, glm::vec3 lookAt,
+	GLfloat moveSpeed, GLfloat turnSpeed, glm::vec2 windowSize)
+	: CameraInterface(glm::vec3(0.0f, 0.0f, distance), worldUp, lookAt, moveSpeed, turnSpeed, "Arc ball camera"),
+	viewMatrix(1.0f), windowSize(windowSize)
 {
 	updateCameraProperties();
 }

@@ -25,6 +25,7 @@ public:
 	void close(EventDetails* details = nullptr);
 	void toggleFullscreen(EventDetails* details);
 	void draw(const sf::Drawable& drawable);
+	void drawImGui();
 
 	void start2D();
 	void start3D();
@@ -51,6 +52,7 @@ private:
 	sf::Vector2u windowSize;
 	std::string windowTitle;
 	sf::Color clearColor;
+	sf::Clock imGuiUpdateClock;
 	bool done;
 	bool fullscreen;
 	bool focused;
