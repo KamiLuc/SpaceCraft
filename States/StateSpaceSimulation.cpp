@@ -11,7 +11,11 @@ void StateSpaceSimulation::onCreate()
 	auto windowSize = window->getWindowSize();
 	window->setClearColor(sf::Color::Black);
 
-	cameraManager = std::make_unique<CameraManagerToSFMLFrameworkAdapter>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 270.0f, 0.0f, 5.0f, 0.5f, window->getRenderWindow());
+	auto& settings = Settings::GlobalSettings::getInstance();
+
+	cameraManager = std::make_unique<CameraManagerToSFMLFrameworkAdapter>(settings.getArcBallCameraSettings(),
+		settings.getFirstPersonCameraSettings(), window->getRenderWindow());
+
 	mainLight = std::make_unique<Light>(1.0f, 1.0f, 1.0f, 0.3f, 0.0f, 0.0f, -1.0f, 0.9f);
 
 	createObjects(meshes);
@@ -102,10 +106,14 @@ void StateSpaceSimulation::draw()
 {
 	changeShader("texturedObjectShader");
 
-	ImGui::Begin("Camera properties:");;
-	ImGui::Text(cameraManager->getCameraNamePointer()->c_str());
-	ImGui::SliderFloat("Turn speed", cameraManager->getTurnSpeedPointer(), 0.1f, 2.0f);
-	ImGui::SliderFloat("Move speed", cameraManager->getMoveSpeedPointer(), 0.0f, 20.f);
+	auto& setting = Settings::GlobalSettings::getInstance();
+
+	ImGui::SetNextWindowSize(ImVec2(300.0f, 120.0f));
+	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+	ImGui::Begin("Camera settings", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+	ImGui::Text(setting.getFirstPersonCameraSettings()->cameraName.c_str());
+	ImGui::SliderFloat("Turn speed", &setting.getFirstPersonCameraSettings()->turnSpeed, 0.1f, 2.0f);
+	ImGui::SliderFloat("Move speed", &setting.getFirstPersonCameraSettings()->moveSpeed, 0.0f, 20.f);
 	ImGui::End();
 
 	glm::mat4 model(1.0f);

@@ -10,7 +10,7 @@
 class CameraManager
 {
 public:
-	CameraManager(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, glm::vec2 windowSize);
+	CameraManager(Settings::CameraSettings* arcBallCameraSettings, Settings::CameraSettings* firstPersonCameraSettings, glm::vec2 windowSize);
 
 	void addCameraMoveDirection(const CameraMoveDirection& direction);
 	void removeCameraMoveDirection(const CameraMoveDirection& direction);
@@ -20,10 +20,6 @@ public:
 	void useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection);
 	void changeCamera();
 	void drawAxis();
-
-	GLfloat* getTurnSpeedPointer();
-	GLfloat* getMoveSpeedPointer();
-	std::string* getCameraNamePointer();
 
 private:
 

@@ -32,6 +32,9 @@ void Window::beginDraw()
 
 void Window::endDraw()
 {
+#ifdef _DEBUG
+	ImGui::SFML::Render();
+#endif
 	this->window.display();
 }
 

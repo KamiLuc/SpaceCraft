@@ -62,15 +62,15 @@ void ColoredSphere::createSphere(GLuint stacks, GLuint sectors, GLfloat radius, 
 
 		for (GLuint j = 0; j < sectors; ++j, ++k1, ++k2) {
 			if (i != 0) {
-				indices.push_back(k1);
-				indices.push_back(k2);
 				indices.push_back(k1 + 1);
+				indices.push_back(k2);
+				indices.push_back(k1);
 			}
 
 			if (i != stacks - 1) {
-				indices.push_back(k1 + 1);
-				indices.push_back(k2);
 				indices.push_back(k2 + 1);
+				indices.push_back(k2);
+				indices.push_back(k1 + 1);
 			}
 		}
 	}

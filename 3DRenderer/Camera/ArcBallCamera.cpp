@@ -4,10 +4,8 @@
 
 #include <cmath>
 
-ArcBallCamera::ArcBallCamera(GLfloat distance, glm::vec3 worldUp, glm::vec3 lookAt,
-	GLfloat moveSpeed, GLfloat turnSpeed, glm::vec2 windowSize)
-	: CameraInterface(glm::vec3(0.0f, 0.0f, distance), worldUp, lookAt, moveSpeed, turnSpeed, "Arc ball camera"),
-	viewMatrix(1.0f), windowSize(windowSize)
+ArcBallCamera::ArcBallCamera(Settings::CameraSettings* settings, glm::vec2 windowSize)
+	: CameraInterface(settings), viewMatrix(1.0f), windowSize(windowSize)
 {
 	updateCameraProperties();
 }
@@ -16,14 +14,14 @@ void ArcBallCamera::updateCameraPosition(const CameraMoveDirection& direction, c
 {
 	if (direction == CameraMoveDirection::Forward)
 	{
-		auto newPosition = position + this->getViewDirection() * timeInSec * moveSpeed;
-		if (glm::distance(newPosition, lookAt) > 0.1f) {
-			position = newPosition;
+		auto newPosition = settings->position + getViewDirection() * timeInSec * settings->moveSpeed;
+		if (glm::distance(newPosition, settings->lookAt) > 0.1f) {
+			settings->position = newPosition;
 		}
 	}
 	else if (direction == CameraMoveDirection::Backward)
 	{
-		position -= this->getViewDirection() * timeInSec * moveSpeed;
+		settings->position -= getViewDirection() * timeInSec * settings->moveSpeed;
 	}
 
 	updateCameraProperties();
@@ -31,16 +29,16 @@ void ArcBallCamera::updateCameraPosition(const CameraMoveDirection& direction, c
 
 void ArcBallCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition)
 {
-	glm::vec4 position(this->position.x, this->position.y, this->position.z, 1);
-	glm::vec4 pivot(this->lookAt.x, this->lookAt.y, this->lookAt.z, 1);
+	glm::vec4 position(settings->position.x, settings->position.y, settings->position.z, 1);
+	glm::vec4 pivot(settings->lookAt.x, settings->lookAt.y, settings->lookAt.z, 1);
 
-	float deltaAngleX = static_cast<float>((2 * M_PI / this->windowSize.x));
-	float deltaAngleY = static_cast<float>((M_PI / this->windowSize.y));
+	float deltaAngleX = static_cast<float>((2 * M_PI / windowSize.x));
+	float deltaAngleY = static_cast<float>((M_PI / windowSize.y));
 
 	float xAngle = (oldMousePosition.x - newMousePosition.x) * deltaAngleX;
 	float yAngle = (oldMousePosition.y - newMousePosition.y) * deltaAngleY;
 
-	float cosAngle = glm::dot(this->getViewDirection(), this->worldUp);
+	float cosAngle = glm::dot(getViewDirection(), settings->worldUp);
 	if (cosAngle < -0.99f) {
 		yAngle = 0.01f;
 	}
@@ -49,40 +47,40 @@ void ArcBallCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::ve
 	}
 
 	glm::mat4x4 rotationMatrixX(1.0f);
-	rotationMatrixX = glm::rotate(rotationMatrixX, xAngle, this->worldUp);
+	rotationMatrixX = glm::rotate(rotationMatrixX, xAngle, settings->worldUp);
 	position = (rotationMatrixX * (position - pivot)) + pivot;
 
 	glm::mat4x4 rotationMatrixY(1.0f);
-	rotationMatrixY = glm::rotate(rotationMatrixY, yAngle, this->getRightVector());
-	this->position = (rotationMatrixY * (position - pivot)) + pivot;
+	rotationMatrixY = glm::rotate(rotationMatrixY, yAngle, getRightVector());
+	settings->position = (rotationMatrixY * (position - pivot)) + pivot;
 
-	this->updateCameraProperties();
+	updateCameraProperties();
 }
 
 glm::mat4 ArcBallCamera::calculateViewMatrix() const
 {
-	return this->viewMatrix;
+	return viewMatrix;
 }
 
 void ArcBallCamera::useImmediateGluLookAt()
 {
-	gluLookAt(position.x, position.y, position.z,
+	gluLookAt(settings->position.x, settings->position.y, settings->position.z,
 		0, 0, 0,
-		worldUp.x, worldUp.y, worldUp.z);
+		settings->worldUp.x, settings->worldUp.y, settings->worldUp.z);
 }
 
 glm::vec3 ArcBallCamera::getViewDirection() const
 {
-	return -glm::transpose(this->viewMatrix)[2];
+	return -glm::transpose(viewMatrix)[2];
 }
 
 glm::vec3 ArcBallCamera::getRightVector() const
 {
-	return glm::transpose(this->viewMatrix)[0];
+	return glm::transpose(viewMatrix)[0];
 }
 
 void ArcBallCamera::updateCameraProperties()
 {
-	this->viewMatrix = glm::lookAt(this->position, this->lookAt, this->worldUp);
+	viewMatrix = glm::lookAt(settings->position, settings->lookAt, settings->worldUp);
 }
 

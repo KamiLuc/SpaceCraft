@@ -1,10 +1,9 @@
 #include "CameraManager.h"
 #include <glm/gtc/type_ptr.hpp>
 
-CameraManager::CameraManager(glm::vec3 position, glm::vec3 worldUp, GLfloat yaw, GLfloat pitch, GLfloat moveSpeed, GLfloat turnSpeed, glm::vec2 windowSize)
-	: fpCamera(position, worldUp, { 0,0,0 }, yaw, pitch, moveSpeed, turnSpeed),
-	cameraMoveDirections{}, arcBallCamera((position.z + 1) * 2.0f, worldUp, { 0,0,0 }, moveSpeed, turnSpeed, windowSize),
-	currentCamera(&arcBallCamera), windowSize(windowSize)
+CameraManager::CameraManager(Settings::CameraSettings* arcBallCameraSettings, Settings::CameraSettings* firstPersonCameraSettings, glm::vec2 windowSize)
+	: fpCamera(firstPersonCameraSettings), arcBallCamera(arcBallCameraSettings, windowSize),
+	windowSize(windowSize), currentCamera(&arcBallCamera)
 {
 	this->calculateProjectionMatrix();
 }
@@ -59,20 +58,6 @@ void CameraManager::drawAxis()
 {
 }
 
-GLfloat* CameraManager::getTurnSpeedPointer()
-{
-	return currentCamera->getTurnSpeedPointer();
-}
-
-GLfloat* CameraManager::getMoveSpeedPointer()
-{
-	return currentCamera->getMoveSpeedPointer();
-}
-
-std::string* CameraManager::getCameraNamePointer()
-{
-	return currentCamera->getCameraNamePointer();
-}
 
 void CameraManager::calculateProjectionMatrix()
 {
