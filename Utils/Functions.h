@@ -8,6 +8,7 @@
 #include "../3DRenderer/Mesh/TexturedMesh.h"
 #include "../3DRenderer/Mesh/ColoredMesh.h"
 
+/*
 void createObjects(std::vector<BasicMesh*>& meshes)
 {
 	std::vector<GLuint> indices{ 0, 3, 1, 1, 3, 2, 2, 3, 0, 0, 1, 2 };
@@ -26,4 +27,5 @@ void createObjects(std::vector<BasicMesh*>& meshes)
 	obj2->createMesh(vertices, indices, normals, verticesColors);
 	meshes.push_back(obj2);
 }
+*/
 

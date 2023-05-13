@@ -2,7 +2,7 @@
 
 #include <vector>
 
-TexturedSphere::TexturedSphere(GLuint stacks, GLuint sectors)
+TexturedSphere::TexturedSphere(std::shared_ptr<Shader> shader, GLuint stacks, GLuint sectors) : TexturedMesh(shader)
 {
 	std::vector<GLfloat> vertices{};
 	std::vector<GLfloat> textureCoordinates{};
@@ -47,15 +47,15 @@ TexturedSphere::TexturedSphere(GLuint stacks, GLuint sectors)
 
 		for (GLuint j = 0; j < sectors; ++j, ++k1, ++k2) {
 			if (i != 0) {
-				indices.push_back(k1);
-				indices.push_back(k2);
 				indices.push_back(k1 + 1);
+				indices.push_back(k2);
+				indices.push_back(k1);
 			}
 
 			if (i != stacks - 1) {
-				indices.push_back(k1 + 1);
-				indices.push_back(k2);
 				indices.push_back(k2 + 1);
+				indices.push_back(k2);
+				indices.push_back(k1 + 1);
 			}
 		}
 	}

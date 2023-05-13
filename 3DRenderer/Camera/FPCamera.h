@@ -5,7 +5,7 @@
 class FPCamera : public CameraInterface
 {
 public:
-	FPCamera(Settings::CameraSettings* settings);
+	FPCamera(const Settings::CameraSettings& settings);
 
 	virtual void handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition) override;
 	virtual void updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec) override;

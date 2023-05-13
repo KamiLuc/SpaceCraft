@@ -9,7 +9,7 @@
 class ArcBallCamera :public CameraInterface
 {
 public:
-	ArcBallCamera(Settings::CameraSettings* settings, glm::vec2 windowSize);
+	ArcBallCamera(const Settings::CameraSettings& settings, const glm::vec2& windowSize);
 
 	virtual void updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec) override;
 	virtual void handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition) override;

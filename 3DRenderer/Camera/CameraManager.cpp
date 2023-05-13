@@ -1,7 +1,7 @@
 #include "CameraManager.h"
 #include <glm/gtc/type_ptr.hpp>
 
-CameraManager::CameraManager(Settings::CameraSettings* arcBallCameraSettings, Settings::CameraSettings* firstPersonCameraSettings, glm::vec2 windowSize)
+CameraManager::CameraManager(const Settings::CameraSettings& arcBallCameraSettings, const Settings::CameraSettings& firstPersonCameraSettings, const glm::vec2& windowSize)
 	: fpCamera(firstPersonCameraSettings), arcBallCamera(arcBallCameraSettings, windowSize),
 	windowSize(windowSize), currentCamera(&arcBallCamera)
 {
@@ -38,7 +38,7 @@ void CameraManager::useCamera(GLuint uniformView, GLuint uniformEyePosition, GLu
 {
 	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(this->currentCamera->calculateViewMatrix()));
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(this->projectionMatrix));
-	auto cPos = this->currentCamera->getPosition();
+	auto cPos = this->currentCamera->getSettings()->position;
 	glUniform3f(uniformEyePosition, cPos.x, cPos.y, cPos.z);
 }
 
@@ -58,8 +58,17 @@ void CameraManager::drawAxis()
 {
 }
 
+Settings::CameraSettings* CameraManager::getArcballCameraSettings()
+{
+	return this->arcBallCamera.getSettings();
+}
+
+Settings::CameraSettings* CameraManager::getFirstPersonCameraSettings()
+{
+	return this->fpCamera.getSettings();
+}
 
 void CameraManager::calculateProjectionMatrix()
 {
-	this->projectionMatrix = glm::perspective(glm::radians(45.0f), this->windowSize.x / this->windowSize.y, 0.1f, 1000.0f);
+	this->projectionMatrix = glm::perspective(glm::radians(45.0f), this->windowSize.x / this->windowSize.y, 0.001f, 100000.0f);
 }

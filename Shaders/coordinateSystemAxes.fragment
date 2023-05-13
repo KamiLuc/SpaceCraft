@@ -1,0 +1,22 @@
+#version 330
+
+in vec3 worldPos;
+
+out vec4 fragColor;
+
+void main()
+{
+    vec3 color;
+
+    if (worldPos.x < worldPos.y) {
+        color = vec3(1.0, 0.0, 0.0); //x
+    }
+    else if (worldPos.x > worldPos.y) {
+        color = vec3(0.0, 1.0, 0.0); //y
+    }
+    else {
+        color = vec3(0.0, 0.0, 1.0); //z
+    }
+
+    fragColor = vec4(color, 1.0);
+}

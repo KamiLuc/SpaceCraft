@@ -5,14 +5,14 @@
 class ColoredMesh : public BasicMesh
 {
 public:
-	ColoredMesh();
+	ColoredMesh(std::shared_ptr<Shader> shader);
 	virtual ~ColoredMesh();
 
 	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
 		const std::vector<GLfloat>& normals, const std::vector<GLfloat>& verticesColorBuffer);
 	void clearMesh();
 
-	virtual void renderMesh();
+	virtual void render() override;
 
 private:
 	void bindBuffers(const std::vector<GLfloat>& verticesColorBuffer);

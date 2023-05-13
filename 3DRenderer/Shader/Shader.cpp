@@ -58,7 +58,7 @@ const UniformLocations& Shader::getUniformLocations() const
 	return uniformLocations;
 }
 
-void Shader::useShader()
+void Shader::useShader() const
 {
 	glUseProgram(this->shaderID);
 }

@@ -1,7 +1,7 @@
 #include "StateManager.h"
 #include "../../States/StateIntro.h"
 #include "../../States/StateMainMenu.h"
-#include "../../States/StateSpaceSimulation.h"
+#include "../../States/StateSpaceSimulation/StateSpaceSimulation.h"
 #include "../../States/StateSimulationLoading.h"
 
 StateManager::StateManager(SharedContext* sharedContext) : sharedContext(sharedContext)

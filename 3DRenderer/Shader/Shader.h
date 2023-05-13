@@ -22,7 +22,7 @@ public:
 
 	const UniformLocations& getUniformLocations() const;
 
-	void useShader();
+	void useShader() const;
 	void clearShader();
 
 private:

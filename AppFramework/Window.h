@@ -25,7 +25,7 @@ public:
 	void close(EventDetails* details = nullptr);
 	void toggleFullscreen(EventDetails* details);
 	void draw(const sf::Drawable& drawable);
-	void drawImGui();
+	void renderImGui();
 
 	void start2D();
 	void start3D();

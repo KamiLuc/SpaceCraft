@@ -1,6 +1,6 @@
 #include "ColoredMesh.h"
 
-ColoredMesh::ColoredMesh() : BasicMesh(), verticesColorBuffer(0)
+ColoredMesh::ColoredMesh(std::shared_ptr<Shader> shader) : BasicMesh(shader), verticesColorBuffer(0)
 {
 }
 
@@ -29,7 +29,7 @@ void ColoredMesh::clearMesh()
 	BasicMesh::clearMesh();
 }
 
-void ColoredMesh::renderMesh()
+void ColoredMesh::render()
 {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);

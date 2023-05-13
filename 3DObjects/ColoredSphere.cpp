@@ -1,7 +1,7 @@
 #include "ColoredSphere.h"
 #include <ctime>
 
-ColoredSphere::ColoredSphere(GLuint stacks, GLuint sectors, glm::vec4 color)
+ColoredSphere::ColoredSphere(std::shared_ptr<Shader>  shader, GLuint stacks, GLuint sectors, glm::vec4 color) : ColoredMesh(shader)
 {
 	std::vector<GLfloat> colors((stacks + 1) * (sectors + 1) * 4);
 	GLfloat radius = 1.0f;
@@ -15,7 +15,7 @@ ColoredSphere::ColoredSphere(GLuint stacks, GLuint sectors, glm::vec4 color)
 	createSphere(stacks, sectors, radius, colors);
 }
 
-ColoredSphere::ColoredSphere(GLuint stacks, GLuint sectors, const std::vector<GLfloat>& colors)
+ColoredSphere::ColoredSphere(std::shared_ptr<Shader>  shader, GLuint stacks, GLuint sectors, const std::vector<GLfloat>& colors) : ColoredMesh(shader)
 {
 	GLfloat radius = 1.0f;
 	createSphere(stacks, sectors, radius, colors);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CameraSettings.h"
+#include "LightSettings.h"
 
 namespace Settings {
 
@@ -12,8 +13,9 @@ namespace Settings {
 			return instance;
 		}
 
-		CameraSettings* getArcBallCameraSettings();
-		CameraSettings* getFirstPersonCameraSettings();
+		CameraSettings getArcBallCameraSettings();
+		CameraSettings getFirstPersonCameraSettings();
+		LightSettings getMainLightSettings();
 
 	private:
 		GlobalSettings();
@@ -23,6 +25,7 @@ namespace Settings {
 
 		CameraSettings arcBallCameraSettings;
 		CameraSettings firstPesonCameraSettings;
+		LightSettings mainLightSettings;
 	};
 }
 

@@ -77,8 +77,9 @@ void Window::draw(const sf::Drawable& drawable)
 	this->window.draw(drawable);
 }
 
-void Window::drawImGui()
+void Window::renderImGui()
 {
+	start2D();
 	ImGui::SFML::Render(window);
 }
 

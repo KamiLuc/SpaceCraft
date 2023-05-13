@@ -2,22 +2,22 @@
 
 #include <GL\glew.h>
 #include <cstdint>
-
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "../Interfaces/Renderable.h"
 
-class BasicMesh
+class BasicMesh : public Renderable
 {
 public:
-	BasicMesh();
+	BasicMesh(std::shared_ptr<Shader> shader);
 	virtual ~BasicMesh();
 
 	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
 		const std::vector<GLfloat>& normals);
 	void clearMesh();
 
-	virtual void renderMesh() = 0;
+	virtual void render() override;
 
 	static void calculateAverageNormals(const std::vector<unsigned int>& indices, const std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals);
 

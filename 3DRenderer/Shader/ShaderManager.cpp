@@ -43,14 +43,6 @@ void ShaderManager::loadAndCompileShaders()
 	shadersCompiled.store(true);
 }
 
-void ShaderManager::useShader(const std::shared_ptr<Shader> shader)
-{
-	if (shader != lastUsedShader) {
-		shader->useShader();
-		lastUsedShader = shader;
-	}
-}
-
 std::shared_ptr<Shader> ShaderManager::getShader(const std::string& shader)
 {
 	if (shaders.contains(shader)) {

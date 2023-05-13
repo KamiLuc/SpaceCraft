@@ -10,7 +10,7 @@
 class CameraManager
 {
 public:
-	CameraManager(Settings::CameraSettings* arcBallCameraSettings, Settings::CameraSettings* firstPersonCameraSettings, glm::vec2 windowSize);
+	CameraManager(const Settings::CameraSettings& arcBallCameraSettings, const Settings::CameraSettings& firstPersonCameraSettings, const glm::vec2& windowSize);
 
 	void addCameraMoveDirection(const CameraMoveDirection& direction);
 	void removeCameraMoveDirection(const CameraMoveDirection& direction);
@@ -20,6 +20,9 @@ public:
 	void useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection);
 	void changeCamera();
 	void drawAxis();
+
+	Settings::CameraSettings* getArcballCameraSettings();
+	Settings::CameraSettings* getFirstPersonCameraSettings();
 
 private:
 

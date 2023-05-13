@@ -12,8 +12,6 @@ public:
 	ShaderManager(const std::filesystem::path& shadersPath);
 
 	void loadAndCompileShaders();
-	void useShader(const std::shared_ptr<Shader> shader);
-	void endDrawLoop();
 
 	std::shared_ptr<Shader> getShader(const std::string& shader);
 	bool areShadersCompiled() const;
