@@ -79,7 +79,7 @@ void BasicMesh::endMeshCreation()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void BasicMesh::render()
+void BasicMesh::render(const UniformLocations& uniformLocations)
 {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);

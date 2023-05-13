@@ -15,7 +15,7 @@ void StateSpaceSimulation::onCreate()
 	auto coloredShader = shaderManager->getShader("coloredObjectShader");
 	auto axisShader = shaderManager->getShader("coordinateSystemAxes");
 
-	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(axisShader);
+	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(axisShader, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	auto window = stateManager->getContext()->window;
 	auto windowSize = window->getWindowSize();
@@ -41,8 +41,8 @@ void StateSpaceSimulation::onCreate()
 	shinyMaterial = std::make_unique<Material>(2.0f, 1024.0f);
 	dullMaterial = std::make_unique<Material>(0.3f, 4.0f);
 
-	objectsToRender.emplace_back(std::make_unique<TexturedSphere>(texturedShader, 36, 36));
-	objectsToRender.emplace_back(std::make_unique<TexturedSphere>(texturedShader, 36, 36));
+	objectsToRender.emplace_back(std::make_unique<TexturedSphere>(texturedShader, glm::vec3(0.0f, 0.0f, 0.0f), 36, 36));
+	objectsToRender.emplace_back(std::make_unique<TexturedSphere>(texturedShader, glm::vec3(0.0f, 2.0f, 2.0f), 36, 36));
 
 	std::vector<GLfloat> ballColors{};
 
@@ -63,7 +63,7 @@ void StateSpaceSimulation::onCreate()
 		}
 	}
 
-	objectsToRender.emplace_back(std::make_unique<ColoredSphere>(coloredShader, 36, 36, glm::vec4({ 0.8f, 0.0f, 0.2f, 1.0f })));
+	objectsToRender.emplace_back(std::make_unique<ColoredSphere>(coloredShader, glm::vec3(.0f, 2.0f, 2.0f), 36, 36, glm::vec4({ 0.8f, 0.0f, 0.2f, 1.0f })));
 	addCallbacks();
 }
 
@@ -98,43 +98,31 @@ void StateSpaceSimulation::draw()
 	model = glm::translate(model, glm::vec3(0.0, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	auto shader1 = objectsToRender[0]->getShader();
+	auto uniforms0 = objectsToRender[0]->getShader();
+	auto uniforms2 = objectsToRender[2]->getShader();
+	auto uniforms3 = coordinateSystemAxes->getShader();
 
-	if (lastUsedShader != shader1) {
-		auto& uniforms = shader1->getUniformLocations();
+	uniforms0->useShader();
+	earthTexture->useTexture();
+	auto& uniVals = uniforms0->getUniformLocations();
 
-		shader1->useShader();
+	mainLight->useLight(uniVals.uniformAmbientIntensity, uniVals.uniformAmbientColor, uniVals.uniformDiffuseIntensity, uniVals.uniformLightDirection);
+	cameraManager->useCamera(uniVals.uniformView, uniVals.uniformCameraPosition, uniVals.uniformProjection);
 
-		earthTexture->useTexture();
-		shinyMaterial->useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
-		glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-
-		mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor,
-			uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
-		cameraManager->useCamera(uniforms.uniformView,
-			uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	}
+	objectsToRender[1]->render(uniVals);
+	objectsToRender[0]->render(uniVals);
 
 
-
-	objectsToRender[0]->render();
-	stateManager->getContext()->window->renderImGui();
-
-	lastUsedShader = nullptr;
-
-	/*
 	if (simulationGui->shouldRenderCoordinateSystemAxis()) {
-		auto axisShader = this->coordinateSystemAxes->getShader();
-		shaderManager->useShader(axisShader);
 
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		GLfloat m = 100000.0f;
-		model = glm::scale(model, glm::vec3(m, m, m));
-		glUniformMatrix4fv(axisShader->getUniformLocations().uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		coordinateSystemAxes->render();
+		coordinateSystemAxes->getShader()->useShader();
+
+		this->cameraManager->useCamera(uniforms3->getUniformLocations().uniformView, uniforms3->getUniformLocations().uniformCameraPosition, uniforms3->getUniformLocations().uniformProjection);
+
+		this->coordinateSystemAxes->render(uniforms3->getUniformLocations());
 	}
-	*/
+
+	this->stateManager->getContext()->window->renderImGui();
 }
 
 void StateSpaceSimulation::addCallbacks()

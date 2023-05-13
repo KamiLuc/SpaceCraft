@@ -17,7 +17,7 @@ public:
 		const std::vector<GLfloat>& normals);
 	void clearMesh();
 
-	virtual void render() override;
+	virtual void render(const UniformLocations& uniformLocations) override;
 
 	static void calculateAverageNormals(const std::vector<unsigned int>& indices, const std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals);
 

@@ -9,7 +9,7 @@ class Renderable {
 public:
 	Renderable(std::shared_ptr<Shader> shader) : shader(shader) {};
 	virtual ~Renderable() {}
-	virtual void render() = 0;
+	virtual void render(const UniformLocations& uniformLocations) = 0;
 	std::shared_ptr<Shader> getShader() { return shader; }
 
 protected:

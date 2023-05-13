@@ -1,8 +1,11 @@
 #include "TexturedSphere.h"
 
 #include <vector>
+#include <glm/gtc/type_ptr.hpp>
 
-TexturedSphere::TexturedSphere(std::shared_ptr<Shader> shader, GLuint stacks, GLuint sectors) : TexturedMesh(shader)
+TexturedSphere::TexturedSphere(std::shared_ptr<Shader> shader, const::glm::vec3& position,
+	GLuint stacks, GLuint sectors)
+	: TexturedMesh(shader), Moveable(position)
 {
 	std::vector<GLfloat> vertices{};
 	std::vector<GLfloat> textureCoordinates{};
@@ -63,4 +66,14 @@ TexturedSphere::TexturedSphere(std::shared_ptr<Shader> shader, GLuint stacks, GL
 	BasicMesh::calculateAverageNormals(indices, vertices, normals);
 
 	createMesh(vertices, indices, normals, textureCoordinates);
+}
+
+void TexturedSphere::render(const UniformLocations& uniformLocations)
+{
+	glm::mat4 model(1.0f);
+	model = glm::translate(model, position);
+	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
 }
