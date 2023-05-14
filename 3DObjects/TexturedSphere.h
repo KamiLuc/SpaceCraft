@@ -6,7 +6,7 @@
 class TexturedSphere : public TexturedMesh, public Moveable
 {
 public:
-	TexturedSphere(std::shared_ptr<Shader> shader, const::glm::vec3& position, GLuint stacks, GLuint sectors);
+	TexturedSphere(const Shader& shader, const::glm::vec3& position, GLuint stacks, GLuint sectors);
 	virtual void render(const UniformLocations& uniformLocations) override;
 
 private:

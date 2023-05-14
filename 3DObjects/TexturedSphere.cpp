@@ -3,7 +3,7 @@
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
-TexturedSphere::TexturedSphere(std::shared_ptr<Shader> shader, const::glm::vec3& position,
+TexturedSphere::TexturedSphere(const Shader& shader, const::glm::vec3& position,
 	GLuint stacks, GLuint sectors)
 	: TexturedMesh(shader), Moveable(position)
 {

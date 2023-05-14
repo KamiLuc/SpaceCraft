@@ -8,7 +8,7 @@
 class CoordinateSystemAxes : public Renderable, public Moveable
 {
 public:
-	CoordinateSystemAxes(std::shared_ptr<Shader> shader, const glm::vec3& position);
+	CoordinateSystemAxes(const Shader& shader, const glm::vec3& position);
 	void render(const UniformLocations& uniformLocations) override;
 
 private:

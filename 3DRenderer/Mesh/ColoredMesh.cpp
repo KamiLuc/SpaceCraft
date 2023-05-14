@@ -1,6 +1,6 @@
 #include "ColoredMesh.h"
 
-ColoredMesh::ColoredMesh(std::shared_ptr<Shader> shader) : BasicMesh(shader), verticesColorBuffer(0)
+ColoredMesh::ColoredMesh(const Shader& shader) : BasicMesh(shader), verticesColorBuffer(0)
 {
 }
 

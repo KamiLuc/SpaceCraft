@@ -10,7 +10,7 @@
 class BasicMesh : public Renderable
 {
 public:
-	BasicMesh(std::shared_ptr<Shader> shader);
+	BasicMesh(const Shader& shader);
 	virtual ~BasicMesh();
 
 	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,

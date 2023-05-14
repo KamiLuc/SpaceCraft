@@ -3,7 +3,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<Shader> shader, const glm::vec3& position)
+CoordinateSystemAxes::CoordinateSystemAxes(const Shader& shader, const glm::vec3& position)
 	: VAO(-1), VBO(-1), Renderable(shader), Moveable(position), model(1.0f)
 {
 	model = glm::translate(model, position);

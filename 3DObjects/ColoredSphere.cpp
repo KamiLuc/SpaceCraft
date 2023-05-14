@@ -4,8 +4,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-ColoredSphere::ColoredSphere(std::shared_ptr<Shader> shader, const::glm::vec3& position,
-	GLuint stacks, GLuint sectors, glm::vec4 color)
+ColoredSphere::ColoredSphere(const Shader& shader, const::glm::vec3& position,
+	GLuint stacks, GLuint sectors, const glm::vec4& color)
 	: ColoredMesh(shader), Moveable(position)
 {
 	std::vector<GLfloat> colors((stacks + 1) * (sectors + 1) * 4);
@@ -20,7 +20,7 @@ ColoredSphere::ColoredSphere(std::shared_ptr<Shader> shader, const::glm::vec3& p
 	createSphere(stacks, sectors, radius, colors);
 }
 
-ColoredSphere::ColoredSphere(std::shared_ptr<Shader> shader, const::glm::vec3& position,
+ColoredSphere::ColoredSphere(const Shader& shader, const::glm::vec3& position,
 	GLuint stacks, GLuint sectors, const std::vector<GLfloat>& colors)
 	: ColoredMesh(shader), Moveable(position)
 {

@@ -1,6 +1,6 @@
 #include "BasicMesh.h"
 
-BasicMesh::BasicMesh(std::shared_ptr<Shader> shader) : VAO(0), vertexBuffer(0), indicesBuffer(0), normalsBuffer(0), indexCount(0), Renderable(shader)
+BasicMesh::BasicMesh(const Shader& shader) : VAO(0), vertexBuffer(0), indicesBuffer(0), normalsBuffer(0), indexCount(0), Renderable(shader)
 {
 }
 

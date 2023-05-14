@@ -1,6 +1,6 @@
 #include "TexturedMesh.h"
 
-TexturedMesh::TexturedMesh(std::shared_ptr<Shader> shader) : BasicMesh(shader), textureCoordinatesBuffer(0)
+TexturedMesh::TexturedMesh(const Shader& shader) : BasicMesh(shader), textureCoordinatesBuffer(0)
 {
 }
 

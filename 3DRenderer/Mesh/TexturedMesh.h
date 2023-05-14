@@ -5,7 +5,7 @@
 class TexturedMesh : public BasicMesh
 {
 public:
-	TexturedMesh(std::shared_ptr<Shader> shader);
+	TexturedMesh(const Shader& shader);
 	virtual ~TexturedMesh();
 
 	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,

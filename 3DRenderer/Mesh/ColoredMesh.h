@@ -5,7 +5,7 @@
 class ColoredMesh : public BasicMesh
 {
 public:
-	ColoredMesh(std::shared_ptr<Shader> shader);
+	ColoredMesh(const Shader& shader);
 	virtual ~ColoredMesh();
 
 	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
