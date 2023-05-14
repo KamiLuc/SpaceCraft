@@ -23,6 +23,7 @@ private:
 	Window window;
 	StateManager stateManager;
 	ShaderManager shaderManager;
+	TextureManager texturesManager;
 
 	SharedContext sharedContext;
 

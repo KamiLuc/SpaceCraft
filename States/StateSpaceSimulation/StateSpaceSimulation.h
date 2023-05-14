@@ -5,7 +5,7 @@
 #include "../../3DRenderer/Camera/CameraManagerToSFMLFrameworkAdapter.h"
 #include "../../3DRenderer/Light.h"
 #include "../../3DObjects/TexturedSphere.h"
-#include "../../3DRenderer/Texture.h"
+#include "../../3DRenderer/Texture/Texture.h"
 #include "../../3DRenderer/Material.h"
 #include "../../3DRenderer/Mesh/TexturedMesh.h"
 #include "../../3DRenderer/Mesh/ColoredMesh.h"

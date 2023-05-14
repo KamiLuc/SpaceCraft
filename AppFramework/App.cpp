@@ -1,14 +1,17 @@
 #include "App.h"
 
-App::App() : window("SpaceCraft", { 1366,768 }, sf::Color::White), sharedContext(),
-stateManager(&this->sharedContext), shaderManager("Shaders")
+App::App()
+	: window("SpaceCraft", { 1366,768 }, sf::Color::White), sharedContext(),
+	stateManager(&this->sharedContext), shaderManager("Shaders"), texturesManager("Textures")
 {
 	this->sharedContext.window = &this->window;
 	this->sharedContext.eventManager = this->window.getEventManager();
 	this->sharedContext.shaderManager = &this->shaderManager;
+	this->sharedContext.textureManager = &this->texturesManager;
 
 	this->window.start3D();
 	this->shaderManager.loadAndCompileShaders();
+	this->texturesManager.loadTexturesAsync();
 
 	this->stateManager.switchTo(StateType::Intro);
 }

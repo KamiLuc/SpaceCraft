@@ -20,7 +20,10 @@ void StateSimulationLoading::deactivate()
 
 void StateSimulationLoading::update(const sf::Time& time)
 {
-	if (this->timePassed.asSeconds() >= this->animationTimeInSec)
+	auto sharedContext = this->stateManager->getContext();
+
+	if (this->timePassed.asSeconds() >= this->animationTimeInSec &&
+		sharedContext->shaderManager->areShadersCompiled() && sharedContext->textureManager->areTexturesLoaded())
 	{
 		this->stateManager->switchTo(StateType::SpaceSimulation);
 		this->stateManager->remove(StateType::SimulationLoading);
