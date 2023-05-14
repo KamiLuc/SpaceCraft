@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Window.h"
-
 #include "StateManager/StateManager.h"
 
 class App
@@ -24,6 +23,7 @@ private:
 	Window window;
 	StateManager stateManager;
 	ShaderManager shaderManager;
+	TextureManager texturesManager;
 
 	SharedContext sharedContext;
 

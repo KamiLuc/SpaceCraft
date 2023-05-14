@@ -1,4 +1,6 @@
 #include "Window.h"
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 Window::Window() : Window("No name", { 640, 480 }, sf::Color::White)
 {
@@ -6,7 +8,7 @@ Window::Window() : Window("No name", { 640, 480 }, sf::Color::White)
 
 Window::Window(const std::string& title, const sf::Vector2u& size, const sf::Color& clearColor)
 	: windowTitle(title), windowSize(size), done(false), fullscreen(false), focused(true),
-	clearColor(clearColor), currentRender(Render::twoDimensional)
+	clearColor(clearColor), currentRender(Render::twoDimensional), imGuiUpdateClock()
 {
 	this->create();
 
@@ -14,11 +16,11 @@ Window::Window(const std::string& title, const sf::Vector2u& size, const sf::Col
 		&Window::toggleFullscreen, this);
 	this->eventManager.addCallback(StateType(0), "Window_close",
 		&Window::close, this);
-
 }
 
 Window::~Window()
 {
+	ImGui::SFML::Shutdown();
 	this->window.close();
 }
 
@@ -30,6 +32,9 @@ void Window::beginDraw()
 
 void Window::endDraw()
 {
+#ifdef _DEBUG
+	ImGui::SFML::Render();
+#endif
 	this->window.display();
 }
 
@@ -38,6 +43,7 @@ void Window::update()
 	sf::Event event;
 	while (this->window.pollEvent(event))
 	{
+		ImGui::SFML::ProcessEvent(event);
 		if (event.type == sf::Event::LostFocus)
 		{
 			this->focused = false;
@@ -50,6 +56,7 @@ void Window::update()
 		}
 		this->eventManager.handleEvent(event);
 	}
+	ImGui::SFML::Update(window, imGuiUpdateClock.restart());
 	this->eventManager.update();
 }
 
@@ -68,6 +75,12 @@ void Window::toggleFullscreen(EventDetails* details)
 void Window::draw(const sf::Drawable& drawable)
 {
 	this->window.draw(drawable);
+}
+
+void Window::renderImGui()
+{
+	start2D();
+	ImGui::SFML::Render(window);
 }
 
 void Window::start2D()
@@ -152,6 +165,7 @@ void Window::create()
 	auto style = (this->fullscreen ? sf::Style::Fullscreen : sf::Style::Close | sf::Style::Titlebar);
 	window.create({ this->windowSize.x, this->windowSize.y, 32 }, this->windowTitle, style, settings);
 	window.setKeyRepeatEnabled(false);
+	ImGui::SFML::Init(this->window);
 
 	this->window.setActive(true);
 	this->initGLEW();

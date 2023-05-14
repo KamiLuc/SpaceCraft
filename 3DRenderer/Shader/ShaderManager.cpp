@@ -1,6 +1,6 @@
 #include "ShaderManager.h"
 
-ShaderManager::ShaderManager(const std::filesystem::path& shadersPath) : shadersPath(shadersPath), shadersCompiled(false), lastUsedShader(nullptr)
+ShaderManager::ShaderManager(const std::filesystem::path& shadersPath) : shadersPath(shadersPath), shadersCompiled(false)
 {
 	if (!std::filesystem::exists(shadersPath)) {
 		std::string exceptionMessage{ std::move(std::string(__func__).append(" Failed to open ").
@@ -40,20 +40,8 @@ void ShaderManager::loadAndCompileShaders()
 			}
 		}
 	}
+
 	shadersCompiled.store(true);
-}
-
-void ShaderManager::useShader(const std::shared_ptr<Shader> shader)
-{
-	if (shader != lastUsedShader) {
-		shader->useShader();
-		lastUsedShader = shader;
-	}
-}
-
-void ShaderManager::endDrawLoop()
-{
-	lastUsedShader = nullptr;
 }
 
 std::shared_ptr<Shader> ShaderManager::getShader(const std::string& shader)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "UniformLocations.h"
+
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -18,32 +20,14 @@ public:
 
 	std::optional<std::string> readFile(const std::filesystem::path& filePath);
 
-	GLuint getProjectionLocation() const;
-	GLuint getModelLocation() const;
-	GLuint getViewLocation() const;
-	GLuint getAmbientIntensityLocation() const;
-	GLuint getAmbientColorLocation() const;
-	GLuint getDiffuseIntensityLocation() const;
-	GLuint getLightDirectionLocation() const;
-	GLuint getSpecularIntensityLocation() const;
-	GLuint getShininessLocation() const;
-	GLuint getCameraPositionLocation() const;
+	const UniformLocations& getUniformLocations() const;
 
-	void useShader();
+	void useShader() const;
 	void clearShader();
 
 private:
 	GLuint shaderID;
-	GLuint uniformProjection;
-	GLuint uniformModel;
-	GLuint uniformView;
-	GLuint uniformAmbientIntensity;
-	GLuint uniformAmbientColor;
-	GLuint uniformDiffuseIntensity;
-	GLuint uniformLightDirection;
-	GLuint uniformCameraPosition;
-	GLuint uniformSpecularIntensity;
-	GLuint uniformShininess;
+	UniformLocations uniformLocations;
 
 	void compileShader(const char* vertexCode, const char* fragmentCode);
 	void addShader(GLuint programID, const char* shaderCode, GLenum shaderType);

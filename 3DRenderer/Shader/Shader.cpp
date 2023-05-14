@@ -1,8 +1,6 @@
 #include "Shader.h"
 
-Shader::Shader()
-	: shaderID(0), uniformModel(-1), uniformProjection(-1), uniformView(-1), uniformAmbientColor(-1), uniformAmbientIntensity(-1), uniformCameraPosition(-1),
-	uniformDiffuseIntensity(-1), uniformLightDirection(-1), uniformSpecularIntensity(-1), uniformShininess(-1)
+Shader::Shader() : shaderID(0)
 {
 }
 
@@ -55,57 +53,12 @@ std::optional<std::string> Shader::readFile(const std::filesystem::path& filePat
 	return fileContent;
 }
 
-GLuint Shader::getProjectionLocation() const
+const UniformLocations& Shader::getUniformLocations() const
 {
-	return this->uniformProjection;
+	return uniformLocations;
 }
 
-GLuint Shader::getModelLocation() const
-{
-	return this->uniformModel;
-}
-
-GLuint Shader::getViewLocation() const
-{
-	return this->uniformView;
-}
-
-GLuint Shader::getAmbientIntensityLocation() const
-{
-	return this->uniformAmbientIntensity;
-}
-
-GLuint Shader::getAmbientColorLocation() const
-{
-	return this->uniformAmbientColor;
-}
-
-GLuint Shader::getDiffuseIntensityLocation() const
-{
-	return this->uniformDiffuseIntensity;
-}
-
-GLuint Shader::getLightDirectionLocation() const
-{
-	return this->uniformLightDirection;
-}
-
-GLuint Shader::getSpecularIntensityLocation() const
-{
-	return this->uniformSpecularIntensity;
-}
-
-GLuint Shader::getShininessLocation() const
-{
-	return this->uniformShininess;
-}
-
-GLuint Shader::getCameraPositionLocation() const
-{
-	return this->uniformCameraPosition;
-}
-
-void Shader::useShader()
+void Shader::useShader() const
 {
 	glUseProgram(this->shaderID);
 }
@@ -117,8 +70,7 @@ void Shader::clearShader()
 		this->shaderID = 0;
 	}
 
-	this->uniformModel = 0;
-	this->uniformProjection = 0;
+	uniformLocations.clear();
 }
 
 void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
@@ -140,7 +92,7 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 	glGetProgramiv(shaderID, GL_LINK_STATUS, &result);
 	if (!result) {
 		glGetProgramInfoLog(shaderID, sizeof(eLog), nullptr, eLog);
-		
+		printf("Error linking program: %s\n", eLog);
 		return;
 	}
 
@@ -152,16 +104,16 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 		return;
 	}
 
-	this->uniformModel = glGetUniformLocation(shaderID, "model");
-	this->uniformProjection = glGetUniformLocation(shaderID, "projection");
-	this->uniformView = glGetUniformLocation(shaderID, "view");
-	this->uniformAmbientColor = glGetUniformLocation(shaderID, "directionalLight.color");
-	this->uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
-	this->uniformLightDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
-	this->uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
-	this->uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity"); //d on purpose
-	this->uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
-	this->uniformCameraPosition = glGetUniformLocation(shaderID, "cameraPosition");
+	uniformLocations.uniformModel = glGetUniformLocation(shaderID, "model");
+	uniformLocations.uniformProjection = glGetUniformLocation(shaderID, "projection");
+	uniformLocations.uniformView = glGetUniformLocation(shaderID, "view");
+	uniformLocations.uniformAmbientColor = glGetUniformLocation(shaderID, "directionalLight.color");
+	uniformLocations.uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
+	uniformLocations.uniformLightDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
+	uniformLocations.uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
+	uniformLocations.uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
+	uniformLocations.uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
+	uniformLocations.uniformCameraPosition = glGetUniformLocation(shaderID, "cameraPosition");
 }
 
 void Shader::addShader(GLuint programID, const char* shaderCode, GLenum shaderType)
