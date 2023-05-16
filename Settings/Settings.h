@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+
 #include "CameraSettings.h"
 #include "LightSettings.h"
 
@@ -16,6 +18,8 @@ namespace Settings {
 		CameraSettings getArcBallCameraSettings();
 		CameraSettings getFirstPersonCameraSettings();
 		LightSettings getMainLightSettings();
+		std::filesystem::path getTexturesPath();
+		std::filesystem::path getShadersPath();
 
 	private:
 		GlobalSettings();
@@ -26,6 +30,9 @@ namespace Settings {
 		CameraSettings arcBallCameraSettings;
 		CameraSettings firstPesonCameraSettings;
 		LightSettings mainLightSettings;
+
+		const std::filesystem::path texturesPath;
+		const std::filesystem::path shadersPath;
 	};
 }
 

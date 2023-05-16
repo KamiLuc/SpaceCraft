@@ -1,17 +1,22 @@
 #include "App.h"
+#include "../Settings/Settings.h"
 
 App::App()
 	: window("SpaceCraft", { 1366,768 }, sf::Color::White), sharedContext(),
-	stateManager(&this->sharedContext), shaderManager("Shaders"), texturesManager("Textures")
+	stateManager(&this->sharedContext)
 {
 	this->sharedContext.window = &this->window;
 	this->sharedContext.eventManager = this->window.getEventManager();
 	this->sharedContext.shaderManager = &this->shaderManager;
 	this->sharedContext.textureManager = &this->texturesManager;
 
+	auto& settings = Settings::GlobalSettings::getInstance();
+
+	this->shaderManager.setPath(settings.getShadersPath());
+	this->texturesManager.setPath(settings.getTexturesPath());
+
 	this->window.start3D();
 	this->shaderManager.loadAndCompileShaders();
-	this->texturesManager.loadTexturesAsync();
 
 	this->stateManager.switchTo(StateType::Intro);
 }

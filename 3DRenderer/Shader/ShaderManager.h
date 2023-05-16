@@ -9,16 +9,20 @@
 class ShaderManager
 {
 public:
-	ShaderManager(const std::filesystem::path& shadersPath);
+	ShaderManager();
 
 	void loadAndCompileShaders();
+	void setPath(const std::filesystem::path& shadersPath);
+
 	std::shared_ptr<Shader> getShader(const std::string& shader);
 	bool areShadersCompiled() const;
 
 private:
-	std::filesystem::path shadersPath;
 	std::map<std::string, std::shared_ptr<Shader>> shaders;
 	std::atomic<bool> shadersCompiled;
+	std::filesystem::path shadersPath;
+
+	void checkPath(const std::filesystem::path& shadersPath);
 };
 
 

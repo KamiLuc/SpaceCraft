@@ -3,10 +3,10 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-CoordinateSystemAxes::CoordinateSystemAxes(const Shader& shader, const glm::vec3& position)
+CoordinateSystemAxes::CoordinateSystemAxes(const Shader& shader, const glm::vec<3, Measure>& position)
 	: VAO(-1), VBO(-1), Renderable(shader), Moveable(position), model(1.0f)
 {
-	model = glm::translate(model, position);
+	model = glm::translate(model, glm::vec3(position));
 
 	GLfloat axisVertices[] = {
 		0.0f, 0.0f, 0.0f,

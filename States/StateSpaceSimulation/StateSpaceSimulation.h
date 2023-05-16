@@ -29,9 +29,7 @@ private:
 	std::unique_ptr<Light> mainLight;
 	std::unique_ptr<Material> shinyMaterial;
 	std::unique_ptr<Material> dullMaterial;
-	std::unique_ptr<Texture> earthTexture;
-	std::unique_ptr<Texture> sunTexture;
-	std::unique_ptr<Texture> brickTexture;
+
 	std::unique_ptr<CoordinateSystemAxes> coordinateSystemAxes;
 
 	std::shared_ptr<Shader> lastUsedShader;

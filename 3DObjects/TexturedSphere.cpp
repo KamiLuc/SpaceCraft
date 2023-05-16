@@ -3,9 +3,9 @@
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
-TexturedSphere::TexturedSphere(const Shader& shader, const::glm::vec3& position,
+TexturedSphere::TexturedSphere(const Shader& shader, const Texture& texture, const glm::vec<3, Measure>& position,
 	GLuint stacks, GLuint sectors)
-	: TexturedMesh(shader), Moveable(position)
+	: TexturedMesh(shader, texture), Moveable(position)
 {
 	std::vector<GLfloat> vertices{};
 	std::vector<GLfloat> textureCoordinates{};
@@ -70,8 +70,10 @@ TexturedSphere::TexturedSphere(const Shader& shader, const::glm::vec3& position,
 
 void TexturedSphere::render(const UniformLocations& uniformLocations)
 {
+	this->texture->useTexture();
 	glm::mat4 model(1.0f);
-	model = glm::translate(model, position);
+	model = glm::translate(model, glm::vec3(position.x, position.y, position.z));
+	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);

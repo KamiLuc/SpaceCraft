@@ -54,7 +54,7 @@ void Texture::loadTexture()
 	stbi_image_free(textureData);
 }
 
-void Texture::useTexture()
+void Texture::useTexture() const
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->textureID);

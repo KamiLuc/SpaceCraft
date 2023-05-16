@@ -13,7 +13,7 @@ public:
 	~Texture();
 
 	void loadTexture();
-	void useTexture();
+	void useTexture() const;
 	void clearTexture();
 
 private:

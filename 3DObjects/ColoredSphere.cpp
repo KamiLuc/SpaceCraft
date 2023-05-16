@@ -4,7 +4,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-ColoredSphere::ColoredSphere(const Shader& shader, const::glm::vec3& position,
+ColoredSphere::ColoredSphere(const Shader& shader, const glm::vec<3, Measure>& position,
 	GLuint stacks, GLuint sectors, const glm::vec4& color)
 	: ColoredMesh(shader), Moveable(position)
 {
@@ -20,7 +20,7 @@ ColoredSphere::ColoredSphere(const Shader& shader, const::glm::vec3& position,
 	createSphere(stacks, sectors, radius, colors);
 }
 
-ColoredSphere::ColoredSphere(const Shader& shader, const::glm::vec3& position,
+ColoredSphere::ColoredSphere(const Shader& shader, const glm::vec<3, Measure>& position,
 	GLuint stacks, GLuint sectors, const std::vector<GLfloat>& colors)
 	: ColoredMesh(shader), Moveable(position)
 {
@@ -31,7 +31,7 @@ ColoredSphere::ColoredSphere(const Shader& shader, const::glm::vec3& position,
 void ColoredSphere::render(const UniformLocations& uniformLocations)
 {
 	glm::mat4 model(1.0f);
-	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(glm::translate(model, position)));
+	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(glm::translate(model, glm::vec3(position.x, position.y, position.z))));
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINES, 0, 6);
 	glBindVertexArray(0);

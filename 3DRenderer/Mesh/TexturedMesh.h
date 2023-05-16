@@ -1,11 +1,12 @@
 #pragma once
 
 #include "BasicMesh.h"
+#include "../../3DObjects/Interfaces/Textured.h"
 
-class TexturedMesh : public BasicMesh
+class TexturedMesh : public BasicMesh, public Textured
 {
 public:
-	TexturedMesh(const Shader& shader);
+	TexturedMesh(const Shader& shader, const Texture& texture);
 	virtual ~TexturedMesh();
 
 	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
@@ -14,9 +15,8 @@ public:
 
 	virtual void render(const UniformLocations& uniformLocations) override;
 
-private:
+protected:
 	void bindBuffers(const std::vector<GLfloat>& textureCoordinates);
-
 	GLuint textureCoordinatesBuffer;
 };
 

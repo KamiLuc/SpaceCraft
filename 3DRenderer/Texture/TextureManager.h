@@ -8,17 +8,20 @@
 class TextureManager
 {
 public:
-	TextureManager(const std::filesystem::path& texturesPath);
+	TextureManager();
 
 	void loadTextures();
 	void loadTexturesAsync();
+	void setPath(const std::filesystem::path& texturesPath);
 
 	std::shared_ptr<Texture> getTexture(const std::string& texture);
 	bool areTexturesLoaded() const;
 
 private:
-	std::filesystem::path texturesPath;
 	std::map<std::string, std::shared_ptr<Texture>> textures;
 	std::atomic<bool> texturesLoaded;
+	std::filesystem::path texturesPath;
+
+	void checkPath(const std::filesystem::path& texturesPath);
 };
 
