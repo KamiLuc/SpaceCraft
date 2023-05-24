@@ -13,7 +13,7 @@ public:
 		const std::vector<GLfloat>& normals, const std::vector<GLfloat>& textureCoordinates);
 	void clearMesh();
 
-	virtual void render(const UniformLocations& uniformLocations) override;
+	virtual void render(const UniformLocations& uniformLocations) const override;
 
 protected:
 	void bindBuffers(const std::vector<GLfloat>& textureCoordinates);

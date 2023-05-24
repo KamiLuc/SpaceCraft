@@ -28,7 +28,7 @@ CoordinateSystemAxes::CoordinateSystemAxes(const Shader& shader, const glm::vec<
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
 }
 
-void CoordinateSystemAxes::render(const UniformLocations& uniformLocations)
+void CoordinateSystemAxes::render(const UniformLocations& uniformLocations) const
 {
 	GLfloat m = 100000.0f;
 	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(glm::scale(model, glm::vec3(m, m, m))));

@@ -1,12 +1,13 @@
 #include "ColoredSphere.h"
+#include "../3DRenderer/Shader/Shader.h"
 
 #include <ctime>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-ColoredSphere::ColoredSphere(const Shader& shader, const glm::vec<3, Measure>& position,
-	GLuint stacks, GLuint sectors, const glm::vec4& color)
-	: ColoredMesh(shader), Moveable(position)
+
+ColoredSphere::ColoredSphere(const Shader& shader, const glm::vec4& color, GLuint stacks, GLuint sectors)
+	: ColoredMesh(shader)
 {
 	std::vector<GLfloat> colors((stacks + 1) * (sectors + 1) * 4);
 	GLfloat radius = 1.0f;
@@ -20,20 +21,17 @@ ColoredSphere::ColoredSphere(const Shader& shader, const glm::vec<3, Measure>& p
 	createSphere(stacks, sectors, radius, colors);
 }
 
-ColoredSphere::ColoredSphere(const Shader& shader, const glm::vec<3, Measure>& position,
-	GLuint stacks, GLuint sectors, const std::vector<GLfloat>& colors)
-	: ColoredMesh(shader), Moveable(position)
+ColoredSphere::ColoredSphere(const Shader& shader, const std::vector<GLfloat>& colors, GLuint stacks, GLuint sectors)
+	: ColoredMesh(shader)
 {
 	GLfloat radius = 1.0f;
 	createSphere(stacks, sectors, radius, colors);
 }
 
-void ColoredSphere::render(const UniformLocations& uniformLocations)
+void ColoredSphere::render(const UniformLocations& uniformLocations) const
 {
-	glm::mat4 model(1.0f);
-	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(glm::translate(model, glm::vec3(position.x, position.y, position.z))));
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_LINES, 0, 6);
+	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }
 

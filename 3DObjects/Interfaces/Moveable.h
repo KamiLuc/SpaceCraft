@@ -11,6 +11,9 @@ public:
 	virtual ~Moveable() {}
 	void moveBy(const glm::vec<3, Measure>& position) { this->position += position; }
 	void setPosition(const glm::vec<3, Measure>& position) { this->position = position; }
+	void setPosition(const glm::vec3 position, int exponent) {
+		this->position = glm::vec<3, Measure>({ position.x, exponent }, { position.y, exponent }, { position.z, exponent });
+	}
 
 protected:
 	glm::vec<3, Measure> position;

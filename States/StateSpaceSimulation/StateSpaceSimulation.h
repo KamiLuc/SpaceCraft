@@ -10,7 +10,11 @@
 #include "../../3DRenderer/Mesh/TexturedMesh.h"
 #include "../../3DRenderer/Mesh/ColoredMesh.h"
 #include "../../3DObjects/CoordinateSystemAxes.h"
+#include "../../3DObjects/Interfaces/Planet.h"
 #include "SpaceSimulationImGui.h"
+
+
+class SpaceSimulationImGui;
 
 class StateSpaceSimulation : public BaseState
 {
@@ -23,6 +27,15 @@ public:
 	virtual void deactivate() override;
 	virtual void update(const sf::Time& time) override;
 	virtual void draw() override;
+	void renderObject(const Renderable& renderable);
+
+	std::shared_ptr<Planet> createTexturedPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass,
+		float scale, const std::string& identifier, const Texture& texture);
+	std::shared_ptr<Planet> createColoredPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass,
+		float scale, const std::string& identifier, const glm::vec4& color);
+
+	void addPlanetToSimulation(std::shared_ptr<Planet> planet);
+	void removePlanetFromSimulation(std::shared_ptr<Planet> planet);
 
 private:
 	std::unique_ptr<CameraManagerToSFMLFrameworkAdapter> cameraManager;
@@ -30,13 +43,17 @@ private:
 	std::unique_ptr<Material> shinyMaterial;
 	std::unique_ptr<Material> dullMaterial;
 
-	std::unique_ptr<CoordinateSystemAxes> coordinateSystemAxes;
+	std::shared_ptr<CoordinateSystemAxes> coordinateSystemAxes;
 
-	std::shared_ptr<Shader> lastUsedShader;
+	const Shader* lastUsedShader;
 
-	std::vector<std::unique_ptr<Renderable>> objectsToRender;
+	std::vector<std::shared_ptr<Renderable>> objectsToRender;
+	std::vector<std::shared_ptr<Planet>> planets;
 
 	std::unique_ptr<SpaceSimulationImGui> simulationGui;
+
+	TextureManager* texturesManager;
+	ShaderManager* shaderManager;
 
 	void addCallbacks();
 	void removeCallbacks();

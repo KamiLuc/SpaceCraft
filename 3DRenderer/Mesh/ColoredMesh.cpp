@@ -29,7 +29,7 @@ void ColoredMesh::clearMesh()
 	BasicMesh::clearMesh();
 }
 
-void ColoredMesh::render(const UniformLocations& uniformLocations)
+void ColoredMesh::render(const UniformLocations& uniformLocations) const
 {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);

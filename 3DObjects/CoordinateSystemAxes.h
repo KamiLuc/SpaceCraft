@@ -9,7 +9,7 @@ class CoordinateSystemAxes : public Renderable, public Moveable
 {
 public:
 	CoordinateSystemAxes(const Shader& shader, const glm::vec<3, Measure>& position);
-	void render(const UniformLocations& uniformLocations) override;
+	void render(const UniformLocations& uniformLocations) const override;
 
 private:
 	GLuint VAO;

@@ -62,6 +62,17 @@ bool TextureManager::areTexturesLoaded() const
 	return texturesLoaded.load();
 }
 
+std::vector<std::string> TextureManager::getTexturesNames() const
+{
+	std::vector<std::string> result{};
+
+	for (const auto& el : textures) {
+		result.emplace_back(el.first);
+	}
+
+	return result;
+}
+
 void TextureManager::checkPath(const std::filesystem::path& texturesPath)
 {
 	if (!std::filesystem::exists(texturesPath)) {

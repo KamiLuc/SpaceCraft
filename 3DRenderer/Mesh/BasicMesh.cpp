@@ -1,6 +1,7 @@
 #include "BasicMesh.h"
 
-BasicMesh::BasicMesh(const Shader& shader) : VAO(0), vertexBuffer(0), indicesBuffer(0), normalsBuffer(0), indexCount(0), Renderable(shader)
+BasicMesh::BasicMesh(const Shader& shader)
+	: VAO(0), vertexBuffer(0), indicesBuffer(0), normalsBuffer(0), indexCount(0), Renderable(shader)
 {
 }
 
@@ -79,7 +80,7 @@ void BasicMesh::endMeshCreation()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void BasicMesh::render(const UniformLocations& uniformLocations)
+void BasicMesh::render(const UniformLocations& uniformLocations) const
 {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);

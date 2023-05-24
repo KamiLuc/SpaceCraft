@@ -1,19 +1,14 @@
 #include "StateSpaceSimulation.h"
 
-#include "../../Utils/Functions.h"
-#include "../../3DObjects/ColoredSphere.h"
+#include "../../3DObjects/ColoredPlanet.h"
+#include "../../3DObjects/TexturedPlanet.h"
 
-
-#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-
 
 void StateSpaceSimulation::onCreate()
 {
-	auto shaderManager = stateManager->getContext()->shaderManager;
-
-	auto texturedShader = shaderManager->getShader("texturedObjectShader");
-	auto coloredShader = shaderManager->getShader("coloredObjectShader");
+	this->shaderManager = stateManager->getContext()->shaderManager;
+	this->texturesManager = stateManager->getContext()->textureManager;
 	auto axisShader = shaderManager->getShader("coordinateSystemAxes");
 
 	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(*axisShader, glm::vec<3, Measure>{ 0.0f, 0.0f, 0.0f });
@@ -28,36 +23,11 @@ void StateSpaceSimulation::onCreate()
 		settings.getFirstPersonCameraSettings(), window->getRenderWindow());
 
 	mainLight = std::make_unique<Light>(settings.getMainLightSettings());
-	simulationGui = std::make_unique<SpaceSimulationImGui>(cameraManager->getArcballCameraSettings(), cameraManager->getFirstPersonCameraSettings(), mainLight->getSettings());
-
-	auto texturesManager = stateManager->getContext()->textureManager;
+	simulationGui = std::make_unique<SpaceSimulationImGui>(*this, cameraManager->getArcballCameraSettings(), cameraManager->getFirstPersonCameraSettings(), mainLight->getSettings(), *texturesManager);
 
 	shinyMaterial = std::make_unique<Material>(2.0f, 1024.0f);
 	dullMaterial = std::make_unique<Material>(0.3f, 4.0f);
 
-	objectsToRender.emplace_back(std::make_unique<TexturedSphere>(*texturedShader, *texturesManager->getTexture("brick"), glm::vec<3, Measure>{ 0.0f, 0.0f, 0.0f }, 36, 36));
-	objectsToRender.emplace_back(std::make_unique<TexturedSphere>(*texturedShader, *texturesManager->getTexture("earth"), glm::vec<3, Measure>{ 2.0f, 3.0f, 4.0f }, 36, 36));
-
-	std::vector<GLfloat> ballColors{};
-
-	std::vector<GLfloat> colors((36 + 1) * (36 + 1) * 4);
-	for (size_t i = 0; i < colors.size() / 4; i += 1) {
-
-		if (i > 900 && i < 1600) {
-			colors[i * 4] = 0.0f;
-			colors[i * 4 + 1] = 0.0f;
-			colors[i * 4 + 2] = 1.0f;
-			colors[i * 4 + 3] = 1.0f;
-		}
-		else {
-			colors[i * 4] = 0.0f;
-			colors[i * 4 + 1] = 1.0f;
-			colors[i * 4 + 2] = 0.0f;
-			colors[i * 4 + 3] = 1.0f;
-		}
-	}
-
-	objectsToRender.emplace_back(std::make_unique<ColoredSphere>(*coloredShader, glm::vec<3, Measure>{ 0.0f, 0.0f, 0.0f }, 36, 36, glm::vec4({ 0.8f, 0.0f, 0.2f, 1.0f })));
 	addCallbacks();
 }
 
@@ -82,40 +52,50 @@ void StateSpaceSimulation::update(const sf::Time& time)
 void StateSpaceSimulation::draw()
 {
 	simulationGui->draw();
-	auto shaderManager = stateManager->getContext()->shaderManager;
-	auto textureManager = stateManager->getContext()->textureManager;
 
-	glm::mat4 model(1.0f);
-	model = glm::rotate(model, glm::radians(23.0f), { 0.0, 0.0f, 1.0 });
-	model = glm::translate(model, glm::vec3(0.0, 0.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-
-	auto& uniforms0 = objectsToRender[0]->getShader();
-	auto& uniforms2 = objectsToRender[2]->getShader();
-	auto& uniforms3 = coordinateSystemAxes->getShader();
-
-	uniforms0.useShader();
-
-	auto& uniVals = uniforms0.getUniformLocations();
-
-	mainLight->useLight(uniVals.uniformAmbientIntensity, uniVals.uniformAmbientColor, uniVals.uniformDiffuseIntensity, uniVals.uniformLightDirection);
-	cameraManager->useCamera(uniVals.uniformView, uniVals.uniformCameraPosition, uniVals.uniformProjection);
-	this->dullMaterial->useMaterial(uniVals.uniformSpecularIntensity, uniVals.uniformShininess);
-
-	objectsToRender[1]->render(uniVals);
-	objectsToRender[0]->render(uniVals);
-
+	for (const auto& el : objectsToRender) {
+		renderObject(*el);
+	}
 
 	if (simulationGui->shouldRenderCoordinateSystemAxis()) {
-
-		coordinateSystemAxes->getShader().useShader();
-
-		this->cameraManager->useCamera(uniforms3.getUniformLocations().uniformView, uniforms3.getUniformLocations().uniformCameraPosition, uniforms3.getUniformLocations().uniformProjection);
-
-		this->coordinateSystemAxes->render(uniforms3.getUniformLocations());
+		renderObject(*coordinateSystemAxes);
 	}
 
 	this->stateManager->getContext()->window->renderImGui();
+}
+
+std::shared_ptr<Planet> StateSpaceSimulation::createTexturedPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass, float scale, const std::string& identifier, const Texture& texture)
+{
+	return std::make_shared<TexturedPlanet>(position, velocity, mass, scale, identifier, *shaderManager->getShader("texturedObjectShader"), texture);
+}
+
+std::shared_ptr<Planet> StateSpaceSimulation::createColoredPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass, float scale, const std::string& identifier, const glm::vec4& color)
+{
+	return std::make_shared<ColoredPlanet>(position, velocity, mass, scale, identifier, *shaderManager->getShader("coloredObjectShader"), color);
+
+}
+
+void StateSpaceSimulation::addPlanetToSimulation(std::shared_ptr<Planet> planet)
+{
+	planets.emplace_back(planet);
+	objectsToRender.emplace_back(planet);
+}
+
+void StateSpaceSimulation::removePlanetFromSimulation(std::shared_ptr<Planet> planet)
+{
+	planets.emplace_back(planet);
+	objectsToRender.emplace_back(planet);
+}
+
+void StateSpaceSimulation::renderObject(const Renderable& renderable)
+{
+	auto& shader = renderable.getShader();
+	shader.useShader();
+	auto& uniVals = shader.getUniformLocations();
+	mainLight->useLight(uniVals.uniformAmbientIntensity, uniVals.uniformAmbientColor, uniVals.uniformDiffuseIntensity, uniVals.uniformLightDirection);
+	cameraManager->useCamera(uniVals.uniformView, uniVals.uniformCameraPosition, uniVals.uniformProjection);
+	this->dullMaterial->useMaterial(uniVals.uniformSpecularIntensity, uniVals.uniformShininess);
+	renderable.render(uniVals);
 }
 
 void StateSpaceSimulation::addCallbacks()

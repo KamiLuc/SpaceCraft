@@ -15,6 +15,7 @@ public:
 	void setPath(const std::filesystem::path& texturesPath);
 
 	std::shared_ptr<Texture> getTexture(const std::string& texture);
+	std::vector<std::string> getTexturesNames() const;
 	bool areTexturesLoaded() const;
 
 private:

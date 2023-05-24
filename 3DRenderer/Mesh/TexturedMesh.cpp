@@ -29,7 +29,7 @@ void TexturedMesh::clearMesh()
 	BasicMesh::clearMesh();
 }
 
-void TexturedMesh::render(const UniformLocations& uniformLocations)
+void TexturedMesh::render(const UniformLocations& uniformLocations) const
 {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
