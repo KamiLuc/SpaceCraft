@@ -14,6 +14,6 @@ public:
 		return this->color;
 	}
 
-private:
+protected:
 	glm::vec4 color;
 };

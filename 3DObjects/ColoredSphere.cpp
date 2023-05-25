@@ -30,17 +30,13 @@ ColoredSphere::ColoredSphere(const Shader& shader, const std::vector<GLfloat>& c
 
 void ColoredSphere::render(const UniformLocations& uniformLocations) const
 {
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-	glBindVertexArray(0);
+	ColoredMesh::render(uniformLocations);
 }
-
 void ColoredSphere::createSphere(GLuint stacks, GLuint sectors, GLfloat radius, const std::vector<GLfloat>& colors)
 {
 	std::vector<GLfloat> vertices{};
 	std::vector<GLfloat> normals{};
 	std::vector<GLuint> indices{};
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
 	const float PI = static_cast<float>(acos(-1.0f));
 
@@ -75,6 +71,21 @@ void ColoredSphere::createSphere(GLuint stacks, GLuint sectors, GLfloat radius, 
 		GLuint k2 = k1 + sectors + 1;
 
 		for (GLuint j = 0; j < sectors; ++j, ++k1, ++k2) {
+
+			/*
+			if (i != 0) {
+				indices.push_back(k1 + 1);
+				indices.push_back(k2);
+				indices.push_back(k1);
+			}
+
+			if (i != stacks - 1) {
+				indices.push_back(k2 + 1);
+				indices.push_back(k2);
+				indices.push_back(k1 + 1);
+			}
+			*/
+
 			if (i != 0) {
 				indices.push_back(k1 + 1);
 				indices.push_back(k2);

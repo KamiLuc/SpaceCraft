@@ -1,10 +1,15 @@
 #pragma once
 
+#include <string>
+
+#include "ImGuiEditableObjectsHandler.h"
+
+class ImGuiEditableObjectsHandler;
+
 class EditableViaImGui {
 public:
-
-	//when edit finished, return false
-	virtual bool editViaImGui() = 0;
+	virtual void editViaImGui(ImGuiEditableObjectsHandler* objectHandler, unsigned int windowID) = 0;
 
 private:
 };
+

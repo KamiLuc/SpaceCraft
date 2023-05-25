@@ -1,4 +1,5 @@
 #include "AppFramework/App.h"
+#include "Utils/Measure.h"
 
 int main(int argc, char** argvp[])
 {

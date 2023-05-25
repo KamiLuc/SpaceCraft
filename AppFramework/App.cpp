@@ -2,7 +2,7 @@
 #include "../Settings/Settings.h"
 
 App::App()
-	: window("SpaceCraft", { 1366,768 }, sf::Color::White), sharedContext(),
+	: window("SpaceCraft", { 1620, 900 }, sf::Color::White), sharedContext(),
 	stateManager(&this->sharedContext)
 {
 	this->sharedContext.window = &this->window;

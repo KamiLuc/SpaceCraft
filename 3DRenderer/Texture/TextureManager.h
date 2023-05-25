@@ -5,6 +5,8 @@
 
 #include "Texture.h"
 
+class Texture;
+
 class TextureManager
 {
 public:
@@ -14,7 +16,7 @@ public:
 	void loadTexturesAsync();
 	void setPath(const std::filesystem::path& texturesPath);
 
-	std::shared_ptr<Texture> getTexture(const std::string& texture);
+	std::shared_ptr<Texture> getTexture(const std::string& texture) const;
 	std::vector<std::string> getTexturesNames() const;
 	bool areTexturesLoaded() const;
 

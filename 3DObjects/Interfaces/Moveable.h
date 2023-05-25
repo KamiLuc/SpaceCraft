@@ -7,14 +7,14 @@
 
 class Moveable {
 public:
-	Moveable(const glm::vec<3, Measure>& position) : position(position) {};
+	Moveable(const Measure<3>& position) : position(position) {};
 	virtual ~Moveable() {}
-	void moveBy(const glm::vec<3, Measure>& position) { this->position += position; }
-	void setPosition(const glm::vec<3, Measure>& position) { this->position = position; }
+	void moveBy(const Measure<3>& position) { this->position += position; }
+	void setPosition(const Measure<3>& position) { this->position = position; }
 	void setPosition(const glm::vec3 position, int exponent) {
-		this->position = glm::vec<3, Measure>({ position.x, exponent }, { position.y, exponent }, { position.z, exponent });
+		this->position = Measure<3>(position, exponent);
 	}
 
 protected:
-	glm::vec<3, Measure> position;
+	Measure<3> position;
 };

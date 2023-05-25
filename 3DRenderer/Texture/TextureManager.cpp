@@ -19,7 +19,7 @@ void TextureManager::loadTextures()
 		if (std::find(texturesAlreadyLoaded.begin(), texturesAlreadyLoaded.end(), fileName) == texturesAlreadyLoaded.end()) {
 
 			try {
-				auto texture = std::make_shared<Texture>(path);
+				auto texture = std::make_shared<Texture>(path, fileName, *this);
 				texture->loadTexture();
 				textures[fileName] = std::move(texture);
 				texturesAlreadyLoaded.emplace_back(std::move(fileName));
@@ -47,10 +47,10 @@ void TextureManager::setPath(const std::filesystem::path& texturesPath)
 	this->texturesPath = texturesPath;
 }
 
-std::shared_ptr<Texture> TextureManager::getTexture(const std::string& texture)
+std::shared_ptr<Texture> TextureManager::getTexture(const std::string& texture) const
 {
 	if (textures.contains(texture)) {
-		return textures[texture];
+		return textures.at(texture);
 	}
 	else {
 		return nullptr;

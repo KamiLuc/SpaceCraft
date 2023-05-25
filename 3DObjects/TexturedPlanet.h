@@ -6,13 +6,12 @@
 class TexturedPlanet : public Planet, public TexturedSphere
 {
 public:
-	TexturedPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass,
+	TexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		float scale, const std::string& identifier, const Shader& shader, const Texture& texture);
 
 	virtual void render(const UniformLocations& uniformLocations) const override;
-	virtual bool editViaImGui();
+	virtual void editViaImGui(ImGuiEditableObjectsHandler* objectHandler, unsigned int windowID);
 
 private:
 };
 
-#pragma once

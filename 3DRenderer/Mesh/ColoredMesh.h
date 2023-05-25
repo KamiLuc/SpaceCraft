@@ -13,6 +13,7 @@ public:
 	void clearMesh();
 
 	virtual void render(const UniformLocations& uniformLocations) const override;
+	void bindSingleColor(const glm::vec<4, GLfloat>& color);
 
 private:
 	void bindBuffers(const std::vector<GLfloat>& verticesColorBuffer);

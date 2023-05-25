@@ -71,7 +71,5 @@ TexturedSphere::TexturedSphere(const Shader& shader, const Texture& texture,
 void TexturedSphere::render(const UniformLocations& uniformLocations) const
 {
 	this->texture->useTexture();
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-	glBindVertexArray(0);
+	TexturedMesh::render(uniformLocations);
 }

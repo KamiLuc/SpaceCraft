@@ -9,6 +9,6 @@ public:
 	ColoredSphere(const Shader& shader, const std::vector<GLfloat>& colors, GLuint stacks, GLuint sectors);
 	virtual void render(const UniformLocations& uniformLocations) const override;
 
-private:
+protected:
 	void createSphere(GLuint stacks, GLuint sectors, GLfloat radius, const std::vector<GLfloat>& colors);
 };

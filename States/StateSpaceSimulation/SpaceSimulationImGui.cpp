@@ -11,24 +11,8 @@ SpaceSimulationImGui::SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation
 	mainLightSettings(mainLightSettings),
 	textureManager(textureManager),
 	renderCoordinateSystemAxis(false),
-	newObjectPosition{ 0.0f, 0.0f, 0.0f },
-	newObjectPositionExponent(1),
-	newObjectVelocity{ 0.0f, 0.0f, 0.0f },
-	newObjectVelocityExponent(1),
-	newObjectMass(1.0f),
-	newObjectMassExponent(1),
-	newObjectScale(1.0f),
-	newObjectIdentifier{ "planet" },
-	newObjectTexture{ "" },
-	newObjectTextureIndex(0),
-	objectToEditIndex(0),
-	newObjectColor{ 0.2f, 0.8f, 0.4f, 1.0f },
-	b_showCreateTexturedPlanetWindow(false),
-	b_showCreateColoredPlanetWindow(false),
-	previewPlanet(nullptr)
-{
-	this->textures = textureManager.getTexturesNames();
-}
+	previewPlanets()
+{}
 
 void SpaceSimulationImGui::draw()
 {
@@ -48,16 +32,10 @@ void SpaceSimulationImGui::draw()
 		ImGui::EndMainMenuBar();
 	}
 
-	if (b_showCreateColoredPlanetWindow) {
-		showCreateColoredPlanetWindow();
-	}
+	this->update();
 
-	if (b_showCreateTexturedPlanetWindow) {
-		showCreateTexturedPlanetWindow();
-	}
-
-	if (previewPlanet) {
-		this->spaceSimulation.renderObject(*previewPlanet);
+	for (const auto& planet : previewPlanets) {
+		this->spaceSimulation.renderObject(*planet);
 	}
 }
 
@@ -68,124 +46,45 @@ bool SpaceSimulationImGui::shouldRenderCoordinateSystemAxis()
 
 void SpaceSimulationImGui::createPreviewColoredPlanet()
 {
-	this->previewPlanet = this->spaceSimulation.createColoredPlanet(
-		glm::vec<3, Measure>({ newObjectPosition[0], newObjectPositionExponent }, { newObjectPosition[1], newObjectPositionExponent }, { newObjectPosition[2], newObjectPositionExponent }),
-		glm::vec<3, Measure>({ newObjectVelocity[0],  newObjectVelocityExponent }, { newObjectVelocity[1],  newObjectVelocityExponent }, { newObjectVelocity[2],  newObjectVelocityExponent }),
-		{ newObjectMass, newObjectMassExponent },
-		newObjectScale,
-		newObjectIdentifier,
-		glm::vec4(newObjectColor[0], newObjectColor[1], newObjectColor[2], newObjectColor[3])
-	);
+	auto temp = this->spaceSimulation.createColoredPlanet(
+		{ {0.0f, 0.0f, 0.0f}, 0 },
+		{ {0.0f, 0.0f, 0.0f}, 0 },
+		0.0f,
+		1.0f,
+		"Planet",
+		{ 0.3f, 0.2f, 0.8f, 1.0f });
+
+	this->previewPlanets.emplace_back(temp);
+	this->addObjectToEdit(temp.get());
 }
 
 void SpaceSimulationImGui::createPreviewTexturedPlanet()
 {
-	this->previewPlanet = this->spaceSimulation.createTexturedPlanet(
-		glm::vec<3, Measure>({ newObjectPosition[0], newObjectPositionExponent }, { newObjectPosition[1], newObjectPositionExponent }, { newObjectPosition[2], newObjectPositionExponent }),
-		glm::vec<3, Measure>({ newObjectVelocity[0],  newObjectVelocityExponent }, { newObjectVelocity[1],  newObjectVelocityExponent }, { newObjectVelocity[2],  newObjectVelocityExponent }),
-		{ newObjectMass, newObjectMassExponent },
-		newObjectScale,
-		newObjectIdentifier,
-		*textureManager.getTexture(this->textures[this->newObjectTextureIndex])
-	);
+	auto temp = this->spaceSimulation.createTexturedPlanet(
+		{ {0.0f, 0.0f, 0.0f}, 0 },
+		{ {0.0f, 0.0f, 0.0f}, 0 },
+		0.0f,
+		1.0f,
+		"Planet",
+		*this->textureManager.getTexture(this->textureManager.getTexturesNames()[0]));
+
+	this->previewPlanets.emplace_back(temp);
+	this->addObjectToEdit(temp.get());
 }
 
 void SpaceSimulationImGui::showFileMenu()
 {
 }
 
-void SpaceSimulationImGui::showBaseCreatePlanet()
-{
-	ImGui::InputText("Identifier", newObjectIdentifier, sizeof(newObjectIdentifier));
-	previewPlanet->setIdentifier(std::string(newObjectIdentifier));
-	ImGui::Separator();
-
-	ImGui::InputFloat3("Position", newObjectPosition);
-	ImGui::InputInt("Position", &newObjectPositionExponent);
-	previewPlanet->setPosition(glm::vec3(newObjectPosition[0], newObjectPosition[1], newObjectPosition[2]), newObjectPositionExponent);
-	ImGui::Separator();
-
-	ImGui::InputFloat3("Velocity", newObjectVelocity);
-	ImGui::InputInt("Velocity", &newObjectVelocityExponent);
-	ImGui::Separator();
-
-	ImGui::InputFloat("Mass", &newObjectMass);
-	ImGui::InputInt("Mass", &newObjectMassExponent);
-	previewPlanet->setMass({ newObjectMass, newObjectMassExponent });
-	ImGui::Separator();
-
-	ImGui::SliderFloat("Scale", &newObjectScale, 0.01f, 10.0f);
-	previewPlanet->setScale(newObjectScale);
-	ImGui::Separator();
-}
-
-void SpaceSimulationImGui::showCreateTexturedPlanetWindow()
-{
-	ImGui::Begin("Textured planet");
-	this->showBaseCreatePlanet();
-
-	if (ImGui::BeginCombo("Texture", textures[newObjectTextureIndex].c_str()))
-	{
-		for (int i = 0; i < textures.size(); i++)
-		{
-			const bool isSelected = (newObjectTextureIndex == i);
-			if (ImGui::Selectable(textures[i].c_str(), isSelected))
-			{
-				newObjectTextureIndex = i;
-			}
-			if (isSelected)
-			{
-				ImGui::SetItemDefaultFocus();
-			}
-		}
-		ImGui::EndCombo();
-	}
-
-	ImGui::Separator();
-	if (ImGui::Button("Create", { ImGui::GetWindowWidth(), 20 })) {
-		//createPreviewTexturedPlanet();
-	}
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
-		b_showCreateTexturedPlanetWindow = false;
-	}
-
-	ImGui::End();
-}
-
-void SpaceSimulationImGui::showCreateColoredPlanetWindow()
-{
-	this->previewPlanet->editViaImGui();
-	/*
-	ImGui::Begin("Colored planet");
-	this->showBaseCreatePlanet();
-
-	ImGui::ColorPicker4("Planet color", newObjectColor, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar);
-
-	ImGui::Separator();
-	if (ImGui::Button("Create", { ImGui::GetWindowWidth(), 20 })) {
-		//createPreviewColoredPlanet();
-	}
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
-		b_showCreateColoredPlanetWindow = false;
-	}
-
-	ImGui::End();
-	*/
-}
 
 void SpaceSimulationImGui::showObjectsMenu()
 {
 	if (ImGui::Button("Create colored planet")) {
-		b_showCreateColoredPlanetWindow = true;
-		b_showCreateTexturedPlanetWindow = false;
 		this->createPreviewColoredPlanet();
 	}
 	if (ImGui::Button("Create textured planet")) {
-		b_showCreateTexturedPlanetWindow = true;
-		b_showCreateColoredPlanetWindow = false;
 		this->createPreviewTexturedPlanet();
 	}
-
 	ImGui::Separator();
 }
 

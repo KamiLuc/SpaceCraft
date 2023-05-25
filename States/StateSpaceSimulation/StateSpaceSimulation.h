@@ -29,9 +29,10 @@ public:
 	virtual void draw() override;
 	void renderObject(const Renderable& renderable);
 
-	std::shared_ptr<Planet> createTexturedPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass,
+	std::shared_ptr<Planet> createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		float scale, const std::string& identifier, const Texture& texture);
-	std::shared_ptr<Planet> createColoredPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass,
+
+	std::shared_ptr<Planet> createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		float scale, const std::string& identifier, const glm::vec4& color);
 
 	void addPlanetToSimulation(std::shared_ptr<Planet> planet);

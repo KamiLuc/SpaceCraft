@@ -7,20 +7,20 @@
 
 class PhysicalObject : public Moveable, public Scaleable {
 public:
-	PhysicalObject(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass, float scale, const std::string& identifier)
+	PhysicalObject(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, float scale, const std::string& identifier)
 		: Moveable(position), Scaleable(scale), velocity(velocity), mass(mass), identifier(identifier) {}
 
-	glm::vec<3, Measure> getVelocity() const { return this->velocity; }
-	void setVelocity(glm::vec<3, Measure> velocity) { this->velocity = velocity; }
+	Measure<3> getVelocity() const { return this->velocity; }
+	void setVelocity(const Measure<3>& velocity) { this->velocity = velocity; }
 
-	void setMass(const Measure& mass) { this->mass = mass; }
-	Measure getMass() const { return this->mass; }
+	void setMass(const Measure<1>& mass) { this->mass = mass; }
+	Measure<1> getMass() const { return this->mass; }
 
 	void setIdentifier(const std::string& identifier) { this->identifier = identifier; }
 	std::string getIdentifier() const { return this->identifier; }
 
 protected:
-	glm::vec<3, Measure> velocity;
-	Measure mass;
+	Measure<3> velocity;
+	Measure<1> mass;
 	std::string identifier;
 };

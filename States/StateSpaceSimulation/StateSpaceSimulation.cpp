@@ -11,7 +11,7 @@ void StateSpaceSimulation::onCreate()
 	this->texturesManager = stateManager->getContext()->textureManager;
 	auto axisShader = shaderManager->getShader("coordinateSystemAxes");
 
-	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(*axisShader, glm::vec<3, Measure>{ 0.0f, 0.0f, 0.0f });
+	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(*axisShader, Measure<3>({ 0.0f, 0.0f, 0.0f }));
 
 	auto window = stateManager->getContext()->window;
 	auto windowSize = window->getWindowSize();
@@ -64,12 +64,13 @@ void StateSpaceSimulation::draw()
 	this->stateManager->getContext()->window->renderImGui();
 }
 
-std::shared_ptr<Planet> StateSpaceSimulation::createTexturedPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass, float scale, const std::string& identifier, const Texture& texture)
+std::shared_ptr<Planet> StateSpaceSimulation::createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, float scale, const std::string& identifier, const Texture& texture)
 {
 	return std::make_shared<TexturedPlanet>(position, velocity, mass, scale, identifier, *shaderManager->getShader("texturedObjectShader"), texture);
 }
 
-std::shared_ptr<Planet> StateSpaceSimulation::createColoredPlanet(const glm::vec<3, Measure>& position, const glm::vec<3, Measure>& velocity, const Measure& mass, float scale, const std::string& identifier, const glm::vec4& color)
+std::shared_ptr<Planet> StateSpaceSimulation::createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
+	float scale, const std::string& identifier, const glm::vec4& color)
 {
 	return std::make_shared<ColoredPlanet>(position, velocity, mass, scale, identifier, *shaderManager->getShader("coloredObjectShader"), color);
 

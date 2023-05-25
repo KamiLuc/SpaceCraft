@@ -2,6 +2,8 @@
 
 #include "../../3DRenderer/Texture/Texture.h"
 
+#include <memory>
+
 class Textured {
 public:
 	Textured(const Texture& texture) : texture(&texture) {};
