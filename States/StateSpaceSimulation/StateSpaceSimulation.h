@@ -35,6 +35,9 @@ public:
 	std::shared_ptr<Planet> createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		float scale, const std::string& identifier, const glm::vec4& color);
 
+	std::vector<std::shared_ptr<Planet>>& getPlanets();
+
+
 	void addPlanetToSimulation(std::shared_ptr<Planet> planet);
 	void removePlanetFromSimulation(std::shared_ptr<Planet> planet);
 

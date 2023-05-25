@@ -11,11 +11,13 @@ SpaceSimulationImGui::SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation
 	mainLightSettings(mainLightSettings),
 	textureManager(textureManager),
 	renderCoordinateSystemAxis(false),
-	previewPlanets()
+	planets(spaceSimulation.getPlanets())
 {}
 
 void SpaceSimulationImGui::draw()
 {
+	this->update();
+
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 			showFileMenu();
@@ -31,12 +33,6 @@ void SpaceSimulationImGui::draw()
 		}
 		ImGui::EndMainMenuBar();
 	}
-
-	this->update();
-
-	for (const auto& planet : previewPlanets) {
-		this->spaceSimulation.renderObject(*planet);
-	}
 }
 
 bool SpaceSimulationImGui::shouldRenderCoordinateSystemAxis()
@@ -44,7 +40,7 @@ bool SpaceSimulationImGui::shouldRenderCoordinateSystemAxis()
 	return renderCoordinateSystemAxis;
 }
 
-void SpaceSimulationImGui::createPreviewColoredPlanet()
+void SpaceSimulationImGui::createColoredPlanet()
 {
 	auto temp = this->spaceSimulation.createColoredPlanet(
 		{ {0.0f, 0.0f, 0.0f}, 0 },
@@ -54,11 +50,11 @@ void SpaceSimulationImGui::createPreviewColoredPlanet()
 		"Planet",
 		{ 0.3f, 0.2f, 0.8f, 1.0f });
 
-	this->previewPlanets.emplace_back(temp);
+	this->spaceSimulation.addPlanetToSimulation(temp);
 	this->addObjectToEdit(temp.get());
 }
 
-void SpaceSimulationImGui::createPreviewTexturedPlanet()
+void SpaceSimulationImGui::createTexturedPlanet()
 {
 	auto temp = this->spaceSimulation.createTexturedPlanet(
 		{ {0.0f, 0.0f, 0.0f}, 0 },
@@ -68,7 +64,7 @@ void SpaceSimulationImGui::createPreviewTexturedPlanet()
 		"Planet",
 		*this->textureManager.getTexture(this->textureManager.getTexturesNames()[0]));
 
-	this->previewPlanets.emplace_back(temp);
+	this->spaceSimulation.addPlanetToSimulation(temp);
 	this->addObjectToEdit(temp.get());
 }
 
@@ -80,12 +76,53 @@ void SpaceSimulationImGui::showFileMenu()
 void SpaceSimulationImGui::showObjectsMenu()
 {
 	if (ImGui::Button("Create colored planet")) {
-		this->createPreviewColoredPlanet();
+		this->createColoredPlanet();
 	}
 	if (ImGui::Button("Create textured planet")) {
-		this->createPreviewTexturedPlanet();
+		this->createTexturedPlanet();
 	}
 	ImGui::Separator();
+
+	if (planets.size() > 0) {
+		if (ImGui::BeginMenu("Delete planets")) {
+			showDestroyPlanetsMenu();
+			ImGui::EndMenu();
+		}
+	}
+}
+
+void SpaceSimulationImGui::showDestroyPlanetsMenu()
+{
+	if (ImGui::ListBoxHeader("Planets to delete"))
+	{
+		for (int i = 0; i < planets.size(); ++i)
+		{
+			bool isSelected = std::find(planetsToDelete.begin(), planetsToDelete.end(), i) != planetsToDelete.end();
+			if (ImGui::Selectable((std::to_string(i + 1) + ". " + planets[i]->getIdentifier()).c_str(), isSelected))
+			{
+				if (isSelected)
+				{
+					planetsToDelete.erase(std::remove(planetsToDelete.begin(), planetsToDelete.end(), i), planetsToDelete.end());
+				}
+				else
+				{
+					planetsToDelete.push_back(i);
+				}
+			}
+		}
+
+		ImGui::ListBoxFooter();
+	}
+
+	if (ImGui::Button("Delete marked planets"))
+	{
+		while (planetsToDelete.size()) {
+			auto toDelete = (planets.begin() + *planetsToDelete.rbegin());
+			removeObjectFromEdit(toDelete->get());
+			spaceSimulation.removePlanetFromSimulation(*toDelete);
+			planetsToDelete.pop_back();
+		}
+	}
 }
 
 void SpaceSimulationImGui::showSettingsMenu()

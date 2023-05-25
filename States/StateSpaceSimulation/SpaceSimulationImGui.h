@@ -22,8 +22,8 @@ public:
 
 	bool shouldRenderCoordinateSystemAxis();
 
-	void createPreviewColoredPlanet();
-	void createPreviewTexturedPlanet();
+	void createColoredPlanet();
+	void createTexturedPlanet();
 
 private:
 	StateSpaceSimulation& spaceSimulation;
@@ -31,12 +31,14 @@ private:
 	CameraSettings* arcBallCameraSettings;
 	LightSettings* mainLightSettings;
 	TextureManager& textureManager;
-	std::vector<std::shared_ptr<Planet>> previewPlanets;
+	std::vector<std::shared_ptr<Planet>>& planets;
+	std::vector<unsigned int> planetsToDelete;
 
 	bool renderCoordinateSystemAxis;
 
 	void showFileMenu();
 	void showSettingsMenu();
 	void showObjectsMenu();
+	void showDestroyPlanetsMenu();
 };
 

@@ -76,6 +76,11 @@ std::shared_ptr<Planet> StateSpaceSimulation::createColoredPlanet(const Measure<
 
 }
 
+std::vector<std::shared_ptr<Planet>>& StateSpaceSimulation::getPlanets()
+{
+	return planets;
+}
+
 void StateSpaceSimulation::addPlanetToSimulation(std::shared_ptr<Planet> planet)
 {
 	planets.emplace_back(planet);
@@ -84,8 +89,19 @@ void StateSpaceSimulation::addPlanetToSimulation(std::shared_ptr<Planet> planet)
 
 void StateSpaceSimulation::removePlanetFromSimulation(std::shared_ptr<Planet> planet)
 {
-	planets.emplace_back(planet);
-	objectsToRender.emplace_back(planet);
+	for (auto i = planets.begin(); i != planets.end(); i++) {
+		if (*i == planet) {
+			planets.erase(i);
+			break;
+		}
+	}
+
+	for (auto i = objectsToRender.begin(); i != objectsToRender.end(); i++) {
+		if (*i == planet) {
+			objectsToRender.erase(i);
+			break;
+		}
+	}
 }
 
 void StateSpaceSimulation::renderObject(const Renderable& renderable)
