@@ -5,6 +5,7 @@
 class Colored {
 public:
 	Colored(const glm::vec4& color) : color(color) {}
+	virtual ~Colored() {};
 
 	void setColor(const glm::vec4& color) {
 		this->color = color;

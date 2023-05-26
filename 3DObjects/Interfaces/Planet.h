@@ -13,6 +13,7 @@ public:
 		:
 		PhysicalObject(position, velocity, mass, scale, identifier),
 		Renderable(shader) {}
+	virtual ~Planet() {}
 
 	virtual void editViaImGui(ImGuiEditableObjectsHandler* objectHandler, unsigned int windowID) override = 0;
 

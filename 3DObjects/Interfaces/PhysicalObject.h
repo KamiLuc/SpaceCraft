@@ -18,6 +18,7 @@ public:
 
 	void setIdentifier(const std::string& identifier) { this->identifier = identifier; }
 	std::string getIdentifier() const { return this->identifier; }
+	virtual ~PhysicalObject() {}
 
 protected:
 	Measure<3> velocity;

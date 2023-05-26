@@ -13,12 +13,11 @@ EventManager::~EventManager()
 {
 	for (auto& bind : this->bindings)
 	{
-		delete bind.second;
 		bind.second = nullptr;
 	}
 }
 
-bool EventManager::addBinding(Binding* binding)
+bool EventManager::addBinding(std::shared_ptr<Binding> binding)
 {
 	if (this->bindings.find(binding->name) != this->bindings.end())
 	{
@@ -39,7 +38,7 @@ bool EventManager::removeBinding(std::string bindingName)
 	}
 	else
 	{
-		delete it->second;
+		it->second = nullptr;
 		this->bindings.erase(it);
 		return true;
 	}
@@ -77,7 +76,7 @@ void EventManager::handleEvent(sf::Event& event)
 {
 	for (auto& bindingIt : bindings)
 	{
-		Binding* bind = bindingIt.second;
+		auto& bind = bindingIt.second;
 		for (auto& eventIt : bind->events)
 		{
 			EventType sfmlEvent = static_cast<EventType>(event.type);
@@ -144,7 +143,7 @@ void EventManager::update()
 	}
 	for (auto& bindingIt : this->bindings)
 	{
-		Binding* bind = bindingIt.second;
+		auto& bind = bindingIt.second;
 		for (auto& eventIt : bind->events)
 		{
 			switch (eventIt.first)
@@ -228,7 +227,12 @@ void EventManager::loadBindings()
 		std::stringstream keyStream(line);
 		std::string callbackName;
 		keyStream >> callbackName;
-		Binding* bind = new Binding(callbackName);
+
+		if (callbackName.empty()) {
+			continue;
+		}
+
+		auto bind = std::make_shared<Binding>(callbackName);
 		while (!keyStream.eof())
 		{
 			std::string keyValue{};
@@ -238,7 +242,6 @@ void EventManager::loadBindings()
 
 			if (end == std::string::npos)
 			{
-				delete bind;
 				bind = nullptr;
 				break;
 			}
@@ -252,7 +255,6 @@ void EventManager::loadBindings()
 		}
 		if (bind != nullptr && !this->addBinding(bind))
 		{
-			delete bind;
 			bind = nullptr;
 		}
 	}

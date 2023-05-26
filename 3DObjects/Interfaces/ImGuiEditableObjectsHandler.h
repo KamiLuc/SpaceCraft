@@ -10,6 +10,7 @@ class EditableViaImGui;
 class ImGuiEditableObjectsHandler {
 public:
 	ImGuiEditableObjectsHandler() {}
+	virtual ~ImGuiEditableObjectsHandler() {}
 
 	void addObjectToEdit(EditableViaImGui* object);
 	void removeObjectFromEdit(EditableViaImGui* object);
