@@ -5,6 +5,17 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+StateSpaceSimulation::StateSpaceSimulation(StateManager* stateManager, Render render)
+	: BaseState(stateManager, render)
+	, simulationSpeed(8.64f, 4)
+	, gravitationalConstant(6.67430f, -11)
+	, pauseSimulation(true)
+	, renderCoordinateAxes(true)
+	, shaderManager(nullptr)
+	, texturesManager(nullptr)
+{
+}
+
 void StateSpaceSimulation::onCreate()
 {
 	this->shaderManager = stateManager->getContext()->shaderManager;
@@ -23,7 +34,7 @@ void StateSpaceSimulation::onCreate()
 		settings.getFirstPersonCameraSettings(), window->getRenderWindow());
 
 	mainLight = std::make_unique<Light>(settings.getMainLightSettings());
-	simulationGui = std::make_unique<SpaceSimulationImGui>(*this, cameraManager->getArcballCameraSettings(), cameraManager->getFirstPersonCameraSettings(), mainLight->getSettings(), *texturesManager);
+	simulationGui = std::make_unique<SpaceSimulationImGui>(*this, *texturesManager);
 
 	shinyMaterial = std::make_unique<Material>(2.0f, 1024.0f);
 	dullMaterial = std::make_unique<Material>(0.3f, 4.0f);
@@ -46,7 +57,41 @@ void StateSpaceSimulation::deactivate()
 
 void StateSpaceSimulation::update(const sf::Time& time)
 {
-	cameraManager->updateCameraPosition(static_cast<GLfloat>(time.asSeconds()));
+	auto timeInSec = static_cast<float>(time.asSeconds());
+	cameraManager->updateCameraPosition(timeInSec);
+
+	float simTime = timeInSec * static_cast<float>(this->simulationSpeed.getGlmVec()[0]);
+
+	Measure<1> gc(6.67430f, -11);
+
+	if (!pauseSimulation && planets.size() > 1) {
+
+		for (size_t i = 0; i < planets.size(); ++i) {
+
+			for (size_t j = i + 1; j < planets.size(); ++j) {
+
+				auto& planet = planets[i];
+				auto& otherPlanet = planets[j];
+
+				glm::vec3 direction = otherPlanet->getPosition() - planet->getPosition();
+				float distance = glm::length(direction);
+
+				auto t1 = planet->getMass() * gravitationalConstant * otherPlanet->getMass();
+				auto t2 = distance * distance;
+
+				glm::vec1 gravityForce = t1 / t2;
+				glm::vec3 force = gravityForce * glm::normalize(direction);
+
+				glm::vec3 acceleration = force / planet->getMass().getGlmVec();
+				glm::vec3 otherAcceleration = -force / otherPlanet->getMass().getGlmVec();
+
+				planet->setVelocity(planet->getVelocity() + acceleration * simTime);
+				otherPlanet->setVelocity(otherPlanet->getVelocity() + otherAcceleration * simTime);
+			}
+
+			planets[i]->updatePosition(simTime);
+		}
+	}
 }
 
 void StateSpaceSimulation::draw()
@@ -57,28 +102,44 @@ void StateSpaceSimulation::draw()
 		renderObject(*el);
 	}
 
-	if (simulationGui->shouldRenderCoordinateSystemAxis()) {
+	if (renderCoordinateAxes) {
 		renderObject(*coordinateSystemAxes);
 	}
 
 	this->stateManager->getContext()->window->renderImGui();
 }
 
-std::shared_ptr<Planet> StateSpaceSimulation::createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, float scale, const std::string& identifier, const Texture& texture)
+std::shared_ptr<Planet> StateSpaceSimulation::createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
+	const Measure<1>& radius, float scale, const std::string& identifier, const Texture& texture)
 {
-	return std::make_shared<TexturedPlanet>(position, velocity, mass, scale, identifier, *shaderManager->getShader("texturedObjectShader"), texture);
+	return std::make_shared<TexturedPlanet>(position, velocity, mass, radius, scale, identifier, *shaderManager->getShader("texturedObjectShader"), texture);
 }
 
 std::shared_ptr<Planet> StateSpaceSimulation::createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
-	float scale, const std::string& identifier, const glm::vec4& color)
+	const Measure<1>& radius, float scale, const std::string& identifier, const glm::vec4& color)
 {
-	return std::make_shared<ColoredPlanet>(position, velocity, mass, scale, identifier, *shaderManager->getShader("coloredObjectShader"), color);
+	return std::make_shared<ColoredPlanet>(position, velocity, mass, radius, scale, identifier, *shaderManager->getShader("coloredObjectShader"), color);
 
 }
 
-std::vector<std::shared_ptr<Planet>>& StateSpaceSimulation::getPlanets()
+std::vector<std::shared_ptr<Planet>>& StateSpaceSimulation::getPlanetsRef()
 {
 	return planets;
+}
+
+Light& StateSpaceSimulation::getMainLightRef()
+{
+	return *mainLight;
+}
+
+CameraManager& StateSpaceSimulation::getCameraManagerRef()
+{
+	return *cameraManager;
+}
+
+Measure<1>& StateSpaceSimulation::getSimulationSpeedRef()
+{
+	return simulationSpeed;
 }
 
 void StateSpaceSimulation::addPlanetToSimulation(std::shared_ptr<Planet> planet)
@@ -102,6 +163,25 @@ void StateSpaceSimulation::removePlanetFromSimulation(std::shared_ptr<Planet> pl
 			break;
 		}
 	}
+}
+
+void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+{
+	ImGui::Begin(("Simulation settings " + std::to_string(windowID)).c_str());
+
+	ImGui::Checkbox("Render coordinate system axis", &renderCoordinateAxes);
+	ImGui::Checkbox("Pause simulation", &pauseSimulation);
+
+	ImGui::Separator();
+	ImGui::InputFloat("Simulation speed", simulationSpeed.getValuesPtr());
+	ImGui::InputInt("Simulation speed exponent", simulationSpeed.getExponentPtr());
+
+	ImGui::Separator();
+	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
+		objectHandler.removeObjectFromEdit(this);
+	}
+
+	ImGui::End();
 }
 
 void StateSpaceSimulation::renderObject(const Renderable& renderable)

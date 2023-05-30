@@ -38,7 +38,7 @@ void CameraManager::useCamera(GLuint uniformView, GLuint uniformEyePosition, GLu
 {
 	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(this->currentCamera->calculateViewMatrix()));
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(this->projectionMatrix));
-	auto cPos = this->currentCamera->getSettings()->position;
+	auto cPos = this->currentCamera->getPosition();
 	glUniform3f(uniformEyePosition, cPos.x, cPos.y, cPos.z);
 }
 
@@ -54,18 +54,14 @@ void CameraManager::changeCamera()
 	}
 }
 
-void CameraManager::drawAxis()
+FPCamera& CameraManager::getFirstPersonCameraRef()
 {
+	return fpCamera;
 }
 
-Settings::CameraSettings* CameraManager::getArcballCameraSettings()
+ArcBallCamera& CameraManager::getArcBallCameraRef()
 {
-	return this->arcBallCamera.getSettings();
-}
-
-Settings::CameraSettings* CameraManager::getFirstPersonCameraSettings()
-{
-	return this->fpCamera.getSettings();
+	return arcBallCamera;
 }
 
 void CameraManager::calculateProjectionMatrix()

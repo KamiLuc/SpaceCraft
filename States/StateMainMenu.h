@@ -10,7 +10,7 @@
 class StateMainMenu : public BaseState
 {
 public:
-	using BaseState::BaseState;
+	StateMainMenu(StateManager* stateManager, Render render = Render::twoDimensional);
 
 	virtual void onCreate() override;
 	virtual void onDestroy() override;

@@ -5,7 +5,8 @@
 
 class Renderable {
 public:
-	Renderable(const Shader& shader) : shader(&shader) {};
+	Renderable(const Shader& shader)
+		: shader(&shader) {};
 	virtual ~Renderable() {}
 	virtual void render(const UniformLocations& uniformLocations) const = 0;
 

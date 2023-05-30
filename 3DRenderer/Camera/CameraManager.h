@@ -19,13 +19,11 @@ public:
 	void updateCameraPosition(const GLfloat& timeInSec);
 	void useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection);
 	void changeCamera();
-	void drawAxis();
 
-	Settings::CameraSettings* getArcballCameraSettings();
-	Settings::CameraSettings* getFirstPersonCameraSettings();
+	FPCamera& getFirstPersonCameraRef();
+	ArcBallCamera& getArcBallCameraRef();
 
 private:
-
 	CameraInterface* currentCamera;
 	FPCamera fpCamera;
 	ArcBallCamera arcBallCamera;

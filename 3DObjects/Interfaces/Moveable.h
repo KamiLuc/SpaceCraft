@@ -14,6 +14,7 @@ public:
 	void setPosition(const glm::vec3 position, int exponent) {
 		this->position = Measure<3>(position, exponent);
 	}
+	Measure<3> getPosition() const { return position; }
 
 protected:
 	Measure<3> position;

@@ -1,5 +1,10 @@
 #include "StateSimulationLoading.h"
 
+StateSimulationLoading::StateSimulationLoading(StateManager* stateManager, Render render)
+	: BaseState(stateManager, render)
+{
+}
+
 void StateSimulationLoading::onCreate()
 {
 	this->firstBackgroundColor = this->stateManager->getContext()->window->getClearColor();

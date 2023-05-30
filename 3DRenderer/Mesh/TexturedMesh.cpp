@@ -31,9 +31,7 @@ void TexturedMesh::clearMesh()
 
 void TexturedMesh::render(const UniformLocations& uniformLocations) const
 {
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-	glBindVertexArray(0);
+	BasicMesh::render(uniformLocations);
 }
 
 void TexturedMesh::bindBuffers(const std::vector<GLfloat>& textureCoordinates)

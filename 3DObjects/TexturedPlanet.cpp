@@ -2,12 +2,11 @@
 
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <imgui.h>
 
-TexturedPlanet::TexturedPlanet(const Measure<3>& position, const Measure<3>& velocity,
-	const Measure<1>& mass, float scale, const std::string& identifier, const Shader& shader, const Texture& texture)
+TexturedPlanet::TexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
+	const Measure<1>& radius, float scale, const std::string& identifier, const Shader& shader, const Texture& texture)
 	:
-	Planet(position, velocity, mass, scale, identifier, shader),
+	Planet(position, velocity, mass, radius, scale, identifier, shader),
 	TexturedSphere(shader, texture, 64, 64)
 {
 }
@@ -15,19 +14,24 @@ TexturedPlanet::TexturedPlanet(const Measure<3>& position, const Measure<3>& vel
 void TexturedPlanet::render(const UniformLocations& uniformLocations) const
 {
 	glm::mat4 model(1.0f);
-	model = glm::translate(model, position.getGlmVec());
-	model = glm::scale(model, glm::vec3(this->scale, this->scale, this->scale));
+
+	auto pos = position / worldScale3;
+	auto sc = ((radius / worldScale1) * scale).getValuesInDesiredExponent(0)[0];
+
+	model = glm::translate(model, pos.getGlmVec());
+	model = glm::scale(model, glm::vec3(sc, sc, sc));
 	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	TexturedSphere::render(uniformLocations);
 }
 
-void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler* objectHandler, unsigned int windowID)
+void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
 {
 	ImGui::Begin(("Edit textured planet " + std::to_string(windowID)).c_str());
 
 	Planet::editViaImGui(objectHandler, windowID);
 
+	ImGui::Separator();
 	if (ImGui::BeginCombo("Texture", texture->getName().c_str()))
 	{
 		auto& tm = texture->getTextureManager();
@@ -59,7 +63,7 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler* objectHandler, un
 
 	ImGui::Separator();
 	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
-		objectHandler->removeObjectFromEdit(this);
+		objectHandler.removeObjectFromEdit(this);
 	}
 
 	ImGui::End();

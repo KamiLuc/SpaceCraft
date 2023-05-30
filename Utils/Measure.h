@@ -4,6 +4,7 @@
 #include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 
 template<typename T>
 concept PositiveInt = std::is_integral_v<T> && std::is_unsigned_v<T>;
@@ -29,11 +30,14 @@ public:
 	Measure<elements> operator/(const Measure& other) const;
 	void operator/= (const Measure& other);
 
+	operator glm::vec<elements, float>() {
+		return getGlmVec();
+	}
+
 	glm::vec<elements, float> getGlmVec() const;
 	glm::vec<elements, float> getValuesInDesiredExponent(int desiredExponent) const;
 
-
-	float* getValuePtr();
+	float* getValuesPtr();
 	int* getExponentPtr();
 
 private:
@@ -113,13 +117,13 @@ inline glm::vec<elements, float> Measure<elements>::getValuesInDesiredExponent(i
 }
 
 template<>
-inline float* Measure<1>::getValuePtr()
+inline float* Measure<1>::getValuesPtr()
 {
 	return &values.x;
 }
 
 template<unsigned int elements>
-inline float* Measure<elements>::getValuePtr()
+inline float* Measure<elements>::getValuesPtr()
 {
 	return glm::value_ptr(values);
 }
@@ -129,3 +133,4 @@ inline int* Measure<elements>::getExponentPtr()
 {
 	return &exponent;
 }
+

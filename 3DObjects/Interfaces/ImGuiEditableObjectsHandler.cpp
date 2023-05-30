@@ -4,7 +4,9 @@
 
 void ImGuiEditableObjectsHandler::addObjectToEdit(EditableViaImGui* object)
 {
-	objectsToEdit.push_back(object);
+	if (std::find(objectsToEdit.begin(), objectsToEdit.end(), object) == objectsToEdit.end()) {
+		objectsToEdit.push_back(object);
+	}
 }
 
 void ImGuiEditableObjectsHandler::removeObjectFromEdit(EditableViaImGui* object)
@@ -18,6 +20,6 @@ void ImGuiEditableObjectsHandler::removeObjectFromEdit(EditableViaImGui* object)
 void ImGuiEditableObjectsHandler::update()
 {
 	for (unsigned int i = 0; i < objectsToEdit.size(); i++) {
-		objectsToEdit[i]->editViaImGui(this, i);
+		objectsToEdit[i]->editViaImGui(*this, i);
 	}
 }

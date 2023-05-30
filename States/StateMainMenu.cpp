@@ -1,6 +1,11 @@
 #include "StateMainMenu.h"
 #include "../AppFramework/StateManager/StateManager.h"
 
+StateMainMenu::StateMainMenu(StateManager* stateManager, Render render)
+	: BaseState(stateManager, render)
+{
+}
+
 void StateMainMenu::onCreate()
 {
 	auto window = this->stateManager->getContext()->window;

@@ -17,7 +17,6 @@ StateManager::~StateManager()
 	for (auto& state : this->states)
 	{
 		state.second->onDestroy();
-		delete state.second;
 	}
 }
 
@@ -85,7 +84,7 @@ void StateManager::draw()
 	}
 	else
 	{
-		auto state = this->states.back().second;
+		auto& state = this->states.back().second;
 		if (state->getRender() == Render::twoDimensional)
 		{
 			this->sharedContext->window->start2D();
@@ -137,10 +136,10 @@ void StateManager::switchTo(const StateType& type)
 		{
 			this->states.back().second->deactivate();
 			auto tempType = it->first;
-			auto& tempState = it->second;
+			std::unique_ptr<BaseState> tempState = std::move(it->second);
 			this->states.erase(it);
-			this->states.emplace_back(tempType, tempState);
 			tempState->activate();
+			this->states.emplace_back(tempType, std::move(tempState));
 			return;
 		}
 	}
@@ -162,8 +161,8 @@ void StateManager::createState(const StateType& type)
 		return;
 	}
 	auto state = newState->second();
-	this->states.emplace_back(type, state);
 	state->onCreate();
+	this->states.emplace_back(type, std::move(state));
 }
 
 void StateManager::removeState(const StateType& type)
@@ -173,7 +172,6 @@ void StateManager::removeState(const StateType& type)
 		if (it->first == type)
 		{
 			it->second->onDestroy();
-			delete it->second;
 			this->states.erase(it);
 			return;
 		}

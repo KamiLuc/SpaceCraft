@@ -16,22 +16,28 @@ class StateSpaceSimulation;
 class SpaceSimulationImGui : public ImGuiEditableObjectsHandler
 {
 public:
-	SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, CameraSettings* arcBallCameraSettings, CameraSettings* fpsCameraSettings,
-		LightSettings* mainLightSettings, TextureManager& textureManager);
+	SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, TextureManager& textureManager);
 	void draw();
-
-	bool shouldRenderCoordinateSystemAxis();
 
 	void createColoredPlanet();
 	void createTexturedPlanet();
 
+	void createSolarSystem();
+
+	void createEarth();
+	void createSun();
+	void createMercury();
+	void createVenus();
+	void createJupiter();
+	void createSaturn();
+	void createUranus();
+	void createNeptune();
+	void createMars();
+
 private:
 	StateSpaceSimulation& spaceSimulation;
-	CameraSettings* fpsCameraSettings;
-	CameraSettings* arcBallCameraSettings;
-	LightSettings* mainLightSettings;
 	TextureManager& textureManager;
-	std::vector<std::shared_ptr<Planet>>& planets;
+
 	std::vector<unsigned int> planetsToDelete;
 
 	bool renderCoordinateSystemAxis;
@@ -40,5 +46,6 @@ private:
 	void showSettingsMenu();
 	void showObjectsMenu();
 	void showDestroyPlanetsMenu();
+	void showEditPlanetsMenu();
 };
 
