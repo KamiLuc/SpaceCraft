@@ -110,7 +110,8 @@ void StateIntro::draw()
 void StateIntro::skip(EventDetails* details)
 {
 	if (stateManager->getContext()->shaderManager->areShadersCompiled()) {
-		stateManager->switchTo(StateType::MainMenu);
+		//stateManager->switchTo(StateType::MainMenu);
+		stateManager->switchTo(StateType::SimulationLoading);
 		stateManager->remove(StateType::Intro);
 	}
 }

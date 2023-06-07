@@ -5,7 +5,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "../../3DObjects/Interfaces/Renderable.h"
+#include "../../Interfaces/Renderable.h"
 #include "../Shader/Shader.h"
 
 class BasicMesh : public Renderable

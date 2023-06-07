@@ -99,6 +99,7 @@ void SpaceSimulationImGui::createSun()
 		"Sun",
 		*this->textureManager.getTexture("sun"));
 
+	temp->setCanMove(false);
 	this->spaceSimulation.addPlanetToSimulation(temp);
 	this->addObjectToEdit(temp.get());
 }
@@ -308,7 +309,6 @@ void SpaceSimulationImGui::showDestroyPlanetsMenu()
 		ImGui::ListBoxFooter();
 	}
 
-	ImGui::SameLine();
 	if (ImGui::Button("Delete marked"))
 	{
 		while (planetsToDelete.size()) {

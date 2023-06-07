@@ -3,8 +3,8 @@
 #include "../../Settings/CameraSettings.h" 
 #include "../../Settings/LightSettings.h"
 #include "../../3DRenderer/Texture/TextureManager.h"
-#include "../../3DObjects/Interfaces/Planet.h"
-#include "../../3DObjects/Interfaces/ImGuiEditableObjectsHandler.h"
+#include "../../Interfaces/Planet.h"
+#include "../../Interfaces/ImGuiEditableObjectsHandler.h"
 #include "StateSpaceSimulation.h"
 
 #include <vector>

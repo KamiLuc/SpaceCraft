@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Interfaces/Planet.h"
-#include "Interfaces/Colored.h"
-#include "Interfaces/Renderable.h"
+#include "../Interfaces/Planet.h"
+#include "../Interfaces/Colored.h"
+#include "../Interfaces/Renderable.h"
 #include "ColoredSphere.h"
 
 class ColoredPlanet : public Planet, public ColoredSphere, public Colored

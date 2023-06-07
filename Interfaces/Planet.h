@@ -20,9 +20,7 @@ public:
 	{}
 	virtual ~Planet() {}
 
-	void updatePosition(float timeInSec) {
-		this->position += this->velocity * timeInSec;
-	}
+	void update(float timeInSec);
 
 	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override = 0;
 

@@ -1,19 +1,14 @@
 #pragma once
 
+#include "SpaceSimulationImGui.h"
 #include "../../AppFramework/StateManager/StateManager.h"
-#include "../../AppFramework/StateManager/BaseState.h"
 #include "../../3DRenderer/Camera/CameraManagerToSFMLFrameworkAdapter.h"
 #include "../../3DRenderer/Light/Light.h"
 #include "../../3DObjects/TexturedSphere.h"
-#include "../../3DRenderer/Texture/Texture.h"
 #include "../../3DRenderer/Material.h"
-#include "../../3DRenderer/Mesh/TexturedMesh.h"
-#include "../../3DRenderer/Mesh/ColoredMesh.h"
 #include "../../3DObjects/CoordinateSystemAxes.h"
-#include "../../3DObjects/Interfaces/Planet.h"
-#include "SpaceSimulationImGui.h"
-#include "../../3DObjects/Interfaces/EditableViaImGui.h"
-
+#include "../../3DObjects/ColoredPlanet.h"
+#include "../../3DObjects/TexturedPlanet.h"
 
 class SpaceSimulationImGui;
 
@@ -29,6 +24,7 @@ public:
 	virtual void update(const sf::Time& time) override;
 	virtual void draw() override;
 	void renderObject(const Renderable& renderable);
+	void switchSimulationState(EventDetails* e);
 
 	std::shared_ptr<Planet> createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		const Measure<1>& radius, float scale, const std::string& identifier, const Texture& texture);

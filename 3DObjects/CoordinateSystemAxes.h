@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../3DObjects/Interfaces/Moveable.h"
-#include "../../3DObjects/Interfaces/Renderable.h"
+#include "../../Interfaces/Moveable.h"
+#include "../../Interfaces/Renderable.h"
 
 #include <glm/glm.hpp>
 

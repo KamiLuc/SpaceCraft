@@ -3,7 +3,6 @@
 #include "ArcBallCamera.h"
 
 #include <cmath>
-#include <imgui.h>
 
 ArcBallCamera::ArcBallCamera(const Settings::CameraSettings& settings, const glm::vec2& windowSize)
 	: CameraInterface(settings)

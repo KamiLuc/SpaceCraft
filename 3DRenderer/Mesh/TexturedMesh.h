@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BasicMesh.h"
-#include "../../3DObjects/Interfaces/Textured.h"
+#include "../../Interfaces/Textured.h"
 
 class TexturedMesh : public BasicMesh, public Textured
 {

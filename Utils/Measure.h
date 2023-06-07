@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include <concepts>
 #include <cmath>
@@ -39,6 +40,7 @@ public:
 
 	float* getValuesPtr();
 	int* getExponentPtr();
+	void normalize();
 
 private:
 	glm::vec<elements, float> values;
@@ -132,5 +134,48 @@ template<unsigned int elements>
 inline int* Measure<elements>::getExponentPtr()
 {
 	return &exponent;
+}
+
+template<unsigned int elements>
+inline void Measure<elements>::normalize()
+{
+	while (true) {
+		unsigned int tooBig = 0;
+		unsigned int tooSmall = 0;
+
+		for (unsigned int i = 0; i < elements; ++i) {
+			if ((values[i] > 10.0f || values[i] < -10.0f) && values[i] != 0) {
+				++tooBig;
+				continue;
+			}
+
+			else if ((values[i] < 0.1f && values[i] > 0.0f) || (values[i] > -0.1f && values[i] < 0.0f)) {
+				++tooSmall;
+				continue;
+			}
+
+			else {
+				return;
+			}
+		}
+
+		if (tooBig == elements) {
+			for (unsigned int i = 0; i < elements; ++i) {
+				values[i] /= 10.0f;
+			}
+			++exponent;
+		}
+
+		else if (tooSmall == elements) {
+			for (unsigned int i = 0; i < elements; ++i) {
+				values[i] *= 10.0f;
+			}
+			--exponent;
+		}
+
+		else {
+			return;
+		}
+	}
 }
 

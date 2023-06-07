@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../3DObjects/Interfaces/EditableViaImGui.h"
+#include "../../Interfaces/EditableViaImGui.h"
 #include "../../Settings/LightSettings.h"
 
 #include <glm\glm.hpp>

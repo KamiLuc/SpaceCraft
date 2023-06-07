@@ -1,10 +1,5 @@
 #include "StateSpaceSimulation.h"
 
-#include "../../3DObjects/ColoredPlanet.h"
-#include "../../3DObjects/TexturedPlanet.h"
-
-#include <glm/gtc/type_ptr.hpp>
-
 StateSpaceSimulation::StateSpaceSimulation(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
 	, simulationSpeed(8.64f, 4)
@@ -64,7 +59,7 @@ void StateSpaceSimulation::update(const sf::Time& time)
 
 	Measure<1> gc(6.67430f, -11);
 
-	if (!pauseSimulation && planets.size() > 1) {
+	if (!pauseSimulation) {
 
 		for (size_t i = 0; i < planets.size(); ++i) {
 
@@ -89,7 +84,7 @@ void StateSpaceSimulation::update(const sf::Time& time)
 				otherPlanet->setVelocity(otherPlanet->getVelocity() + otherAcceleration * simTime);
 			}
 
-			planets[i]->updatePosition(simTime);
+			planets[i]->update(simTime);
 		}
 	}
 }
@@ -195,6 +190,11 @@ void StateSpaceSimulation::renderObject(const Renderable& renderable)
 	renderable.render(uniVals);
 }
 
+void StateSpaceSimulation::switchSimulationState(EventDetails* e)
+{
+	pauseSimulation = !pauseSimulation;
+}
+
 void StateSpaceSimulation::addCallbacks()
 {
 	auto eventManager = stateManager->getContext()->eventManager;
@@ -210,6 +210,7 @@ void StateSpaceSimulation::addCallbacks()
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::enableMouseCameraMove, cameraManager.get());
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, cameraManager.get());
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, cameraManager.get());
+	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Pause_Simulation", &StateSpaceSimulation::switchSimulationState, this);
 }
 
 void StateSpaceSimulation::removeCallbacks()
@@ -227,5 +228,6 @@ void StateSpaceSimulation::removeCallbacks()
 	eventManager->removeCallback(StateType::SpaceSimulation, "Enable_Mouse_Camera_Move");
 	eventManager->removeCallback(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move");
 	eventManager->removeCallback(StateType::SpaceSimulation, "Change_Camera");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Pause_Simulation");
 }
 

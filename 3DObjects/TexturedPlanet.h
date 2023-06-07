@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Interfaces/Planet.h"
+#include "../Interfaces/Planet.h"
 #include "TexturedSphere.h"
 
 class TexturedPlanet : public Planet, public TexturedSphere
