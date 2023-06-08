@@ -18,12 +18,12 @@ public:
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;
 
 	void useImmediateGluLookAt() override;
+	virtual void updateCameraProperties() override;
 
 	glm::vec3 getViewDirection() const;
 	glm::vec3 getRightVector() const;
 
 private:
-	virtual void updateCameraProperties() override;
 
 	glm::mat4 viewMatrix;
 	glm::vec2 windowSize;

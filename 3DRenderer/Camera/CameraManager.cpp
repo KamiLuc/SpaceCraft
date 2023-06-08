@@ -53,6 +53,13 @@ void CameraManager::changeCamera()
 	}
 }
 
+void CameraManager::observePoint(const glm::vec3& point, const GLfloat& distance)
+{
+	arcBallCamera.setLookAt(point);
+	arcBallCamera.updateCameraProperties();
+	fpCamera.setLookAt(point);
+}
+
 FPCamera& CameraManager::getFirstPersonCameraRef()
 {
 	return fpCamera;

@@ -35,6 +35,7 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 	ImGui::Separator();
 
 	ImGui::SliderFloat("Scale", &scale, 0.01f, 100.0f);
+	ImGui::Separator();
 
 	if (ImGui::Button("Normalize values")) {
 		position.normalize();
@@ -42,5 +43,9 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 		mass.normalize();
 		radius.normalize();
 	}
-	ImGui::Separator();
+}
+
+Measure<3> Planet::getPositionInWorldSpace() const
+{
+	return getPosition() / this->worldScale3;
 }

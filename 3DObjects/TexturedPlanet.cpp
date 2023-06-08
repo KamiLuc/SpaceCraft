@@ -62,8 +62,12 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 		ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
 
 	ImGui::Separator();
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
+	if (ImGui::Button("Close", { ImGui::GetWindowWidth() / 2, 20 })) {
 		objectHandler.removeObjectFromEdit(this);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete planet", { ImGui::GetWindowWidth() / 2, 20 })) {
+		objectHandler.deleteObject(this);
 	}
 
 	ImGui::End();

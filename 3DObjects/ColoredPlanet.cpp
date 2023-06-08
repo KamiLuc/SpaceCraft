@@ -38,8 +38,13 @@ void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, uns
 	}
 	ImGui::Separator();
 
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
+	if (ImGui::Button("Close", { ImGui::GetWindowWidth() / 2, 20 })) {
 		objectHandler.removeObjectFromEdit(this);
 	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete planet", { ImGui::GetWindowWidth() / 2, 20 })) {
+		objectHandler.deleteObject(this);
+	}
+
 	ImGui::End();
 }

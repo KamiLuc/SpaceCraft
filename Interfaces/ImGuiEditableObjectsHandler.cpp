@@ -2,11 +2,21 @@
 
 #include "EditableViaImGui.h"
 
+void ImGuiEditableObjectsHandler::addObjectToEdit(std::shared_ptr<EditableViaImGui> object)
+{
+	addObjectToEdit(object.get());
+}
+
 void ImGuiEditableObjectsHandler::addObjectToEdit(EditableViaImGui* object)
 {
 	if (std::find(objectsToEdit.begin(), objectsToEdit.end(), object) == objectsToEdit.end()) {
 		objectsToEdit.push_back(object);
 	}
+}
+
+void ImGuiEditableObjectsHandler::removeObjectFromEdit(std::shared_ptr<EditableViaImGui> object)
+{
+	removeObjectFromEdit(object.get());
 }
 
 void ImGuiEditableObjectsHandler::removeObjectFromEdit(EditableViaImGui* object)

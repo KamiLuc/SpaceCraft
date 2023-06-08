@@ -23,6 +23,7 @@ public:
 	void update(float timeInSec);
 
 	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override = 0;
+	Measure<3> getPositionInWorldSpace() const;
 
 protected:
 	Measure<1> radius;

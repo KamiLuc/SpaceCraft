@@ -45,7 +45,11 @@ private:
 	void showFileMenu();
 	void showSettingsMenu();
 	void showObjectsMenu();
-	void showDestroyPlanetsMenu();
+	void showDeletePlanetsMenu();
 	void showEditPlanetsMenu();
+	void showObjectFocusMenu();
+
+	virtual void deleteObject(std::shared_ptr<EditableViaImGui> object);
+	virtual void deleteObject(EditableViaImGui* object);
 };
 

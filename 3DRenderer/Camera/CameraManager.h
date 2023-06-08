@@ -19,6 +19,7 @@ public:
 	void updateCameraPosition(const GLfloat& timeInSec);
 	void useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection);
 	void changeCamera();
+	void observePoint(const glm::vec3& point, const GLfloat& distance);
 
 	FPCamera& getFirstPersonCameraRef();
 	ArcBallCamera& getArcBallCameraRef();

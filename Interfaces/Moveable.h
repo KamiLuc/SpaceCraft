@@ -9,7 +9,7 @@ class Moveable {
 public:
 	Moveable(const Measure<3>& position)
 		: position(position)
-		, canMove(false) {};
+		, canMove(true) {};
 
 	virtual ~Moveable() {}
 	void moveBy(const Measure<3>& position) { this->position += position; }

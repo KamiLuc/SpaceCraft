@@ -33,6 +33,7 @@ public:
 	virtual glm::mat4 calculateViewMatrix() const = 0;
 
 	glm::vec3 getPosition() const { return position; }
+	void setLookAt(const glm::vec3& lookAt) { this->lookAt = lookAt; }
 
 	virtual ~CameraInterface() {}
 

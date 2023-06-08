@@ -116,7 +116,7 @@ void SpaceSimulationImGui::createMercury()
 		*this->textureManager.getTexture("mercury"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createVenus()
@@ -131,7 +131,7 @@ void SpaceSimulationImGui::createVenus()
 		*this->textureManager.getTexture("venus"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createJupiter()
@@ -146,7 +146,7 @@ void SpaceSimulationImGui::createJupiter()
 		*this->textureManager.getTexture("jupiter"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createSaturn()
@@ -161,7 +161,7 @@ void SpaceSimulationImGui::createSaturn()
 		*this->textureManager.getTexture("saturn"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createUranus()
@@ -176,7 +176,7 @@ void SpaceSimulationImGui::createUranus()
 		*this->textureManager.getTexture("uranus"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createNeptune()
@@ -191,7 +191,7 @@ void SpaceSimulationImGui::createNeptune()
 		*this->textureManager.getTexture("neptune"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createMars()
@@ -206,7 +206,7 @@ void SpaceSimulationImGui::createMars()
 		*this->textureManager.getTexture("mars"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::showFileMenu()
@@ -274,7 +274,7 @@ void SpaceSimulationImGui::showObjectsMenu()
 	if (planets.size() > 0) {
 		ImGui::Separator();
 		if (ImGui::BeginMenu("Delete planets")) {
-			showDestroyPlanetsMenu();
+			showDeletePlanetsMenu();
 			ImGui::EndMenu();
 		}
 
@@ -282,28 +282,38 @@ void SpaceSimulationImGui::showObjectsMenu()
 			showEditPlanetsMenu();
 			ImGui::EndMenu();
 		}
+
+		ImGui::Separator();
+		if (ImGui::BeginMenu("Focus planet")) {
+			showObjectFocusMenu();
+			ImGui::EndMenu();
+		}
 	}
 }
 
-void SpaceSimulationImGui::showDestroyPlanetsMenu()
+void SpaceSimulationImGui::showDeletePlanetsMenu()
 {
 	auto& planets = spaceSimulation.getPlanetsRef();
 	if (ImGui::ListBoxHeader("Planets to delete"))
 	{
-		for (int i = 0; i < planets.size(); ++i)
+		unsigned int index = 0;
+
+		for (auto& planet : planets)
 		{
-			bool isSelected = std::find(planetsToDelete.begin(), planetsToDelete.end(), i) != planetsToDelete.end();
-			if (ImGui::Selectable((std::to_string(i + 1) + ". " + planets[i]->getIdentifier()).c_str(), isSelected))
+			bool isSelected = std::find(planetsToDelete.begin(), planetsToDelete.end(), index) != planetsToDelete.end();
+			if (ImGui::Selectable((std::to_string(index + 1) + ". " + planet->getIdentifier()).c_str(), isSelected))
 			{
 				if (isSelected)
 				{
-					planetsToDelete.erase(std::remove(planetsToDelete.begin(), planetsToDelete.end(), i), planetsToDelete.end());
+					planetsToDelete.erase(std::remove(planetsToDelete.begin(), planetsToDelete.end(), index), planetsToDelete.end());
 				}
 				else
 				{
-					planetsToDelete.push_back(i);
+					planetsToDelete.push_back(index);
 				}
 			}
+
+			++index;
 		}
 
 		ImGui::ListBoxFooter();
@@ -312,7 +322,12 @@ void SpaceSimulationImGui::showDestroyPlanetsMenu()
 	if (ImGui::Button("Delete marked"))
 	{
 		while (planetsToDelete.size()) {
-			auto toDelete = (planets.begin() + *planetsToDelete.rbegin());
+			auto toDelete = planets.begin();
+
+			for (unsigned int i = 0; i < *planetsToDelete.rbegin(); ++i) {
+				toDelete++;
+			}
+
 			removeObjectFromEdit(toDelete->get());
 			spaceSimulation.removePlanetFromSimulation(*toDelete);
 			planetsToDelete.pop_back();
@@ -330,11 +345,44 @@ void SpaceSimulationImGui::showDestroyPlanetsMenu()
 void SpaceSimulationImGui::showEditPlanetsMenu()
 {
 	auto& planets = spaceSimulation.getPlanetsRef();
+	unsigned int index = 1;
 
-	for (size_t i = 0; i < planets.size(); ++i)
+	for (const auto& planet : planets)
 	{
-		if (ImGui::Selectable((std::to_string(i + 1) + ". " + planets[i]->getIdentifier()).c_str())) {
-			addObjectToEdit(planets[i].get());
+		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str())) {
+			addObjectToEdit(planet.get());
+		}
+		++index;
+	}
+}
+
+void SpaceSimulationImGui::showObjectFocusMenu()
+{
+	auto& planets = spaceSimulation.getPlanetsRef();
+	unsigned int index = 1;
+
+	for (const auto& planet : planets)
+	{
+		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str())) {
+			this->spaceSimulation.focusPlanet(planet);
+		}
+		++index;
+	}
+}
+
+void SpaceSimulationImGui::deleteObject(std::shared_ptr<EditableViaImGui> object)
+{
+	deleteObject(object.get());
+}
+
+void SpaceSimulationImGui::deleteObject(EditableViaImGui* object)
+{
+	auto& planets = spaceSimulation.getPlanetsRef();
+	for (auto it = planets.begin(); it != planets.end(); ++it) {
+		if ((*it).get() == object) {
+			this->removeObjectFromEdit(object);
+			spaceSimulation.removePlanetFromSimulation(*it);
+			break;
 		}
 	}
 }
@@ -362,5 +410,4 @@ void SpaceSimulationImGui::showSettingsMenu()
 		auto& light = spaceSimulation.getMainLightRef();
 		addObjectToEdit(&light);
 	}
-
 }

@@ -60,13 +60,16 @@ void StateSpaceSimulation::update(const sf::Time& time)
 	Measure<1> gc(6.67430f, -11);
 
 	if (!pauseSimulation) {
+		auto it = planets.begin();
+		for (; it != planets.end()--; ++it) {
 
-		for (size_t i = 0; i < planets.size(); ++i) {
+			std::list<std::shared_ptr<Planet>>::iterator it2 = it;
+			it2++;
 
-			for (size_t j = i + 1; j < planets.size(); ++j) {
+			for (; it2 != planets.end(); ++it2) {
 
-				auto& planet = planets[i];
-				auto& otherPlanet = planets[j];
+				auto& planet = *it;
+				auto& otherPlanet = *it2;
 
 				glm::vec3 direction = otherPlanet->getPosition() - planet->getPosition();
 				float distance = glm::length(direction);
@@ -83,8 +86,10 @@ void StateSpaceSimulation::update(const sf::Time& time)
 				planet->setVelocity(planet->getVelocity() + acceleration * simTime);
 				otherPlanet->setVelocity(otherPlanet->getVelocity() + otherAcceleration * simTime);
 			}
+		}
 
-			planets[i]->update(simTime);
+		for (auto& el : planets) {
+			el->update(simTime);
 		}
 	}
 }
@@ -117,7 +122,7 @@ std::shared_ptr<Planet> StateSpaceSimulation::createColoredPlanet(const Measure<
 
 }
 
-std::vector<std::shared_ptr<Planet>>& StateSpaceSimulation::getPlanetsRef()
+std::list<std::shared_ptr<Planet>>& StateSpaceSimulation::getPlanetsRef()
 {
 	return planets;
 }
@@ -158,6 +163,11 @@ void StateSpaceSimulation::removePlanetFromSimulation(std::shared_ptr<Planet> pl
 			break;
 		}
 	}
+}
+
+void StateSpaceSimulation::focusPlanet(std::shared_ptr<Planet> planet)
+{
+	this->cameraManager->observePoint(planet->getPositionInWorldSpace().getGlmVec(), 0.0f);
 }
 
 void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
