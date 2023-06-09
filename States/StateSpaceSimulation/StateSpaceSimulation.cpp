@@ -57,8 +57,6 @@ void StateSpaceSimulation::update(const sf::Time& time)
 
 	float simTime = timeInSec * static_cast<float>(this->simulationSpeed.getGlmVec()[0]);
 
-	Measure<1> gc(6.67430f, -11);
-
 	if (!pauseSimulation) {
 		auto it = planets.begin();
 		for (; it != planets.end()--; ++it) {
@@ -205,6 +203,16 @@ void StateSpaceSimulation::switchSimulationState(EventDetails* e)
 	pauseSimulation = !pauseSimulation;
 }
 
+#include <iostream>
+
+void StateSpaceSimulation::mouseClick(EventDetails* details)
+{
+	if (!ImGui::GetIO().WantCaptureMouse) {
+		std::cout << details->mouse.x << "  " << details->mouse.y << "\n";
+
+	}
+}
+
 void StateSpaceSimulation::addCallbacks()
 {
 	auto eventManager = stateManager->getContext()->eventManager;
@@ -221,6 +229,7 @@ void StateSpaceSimulation::addCallbacks()
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, cameraManager.get());
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, cameraManager.get());
 	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Pause_Simulation", &StateSpaceSimulation::switchSimulationState, this);
+	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Mouse_Left_Click", &StateSpaceSimulation::mouseClick, this);
 }
 
 void StateSpaceSimulation::removeCallbacks()
@@ -239,5 +248,6 @@ void StateSpaceSimulation::removeCallbacks()
 	eventManager->removeCallback(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move");
 	eventManager->removeCallback(StateType::SpaceSimulation, "Change_Camera");
 	eventManager->removeCallback(StateType::SpaceSimulation, "Pause_Simulation");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Mouse_Left_Click");
 }
 

@@ -8,6 +8,7 @@ class TexturedSphere : public TexturedMesh
 public:
 	TexturedSphere(const Shader& shader, const Texture& texture, GLuint stacks, GLuint sectors);
 	virtual void render(const UniformLocations& uniformLocations) const override;
+	virtual ~TexturedSphere() {};
 
 private:
 };

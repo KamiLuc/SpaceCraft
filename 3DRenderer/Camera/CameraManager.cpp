@@ -43,13 +43,15 @@ void CameraManager::useCamera(GLuint uniformView, GLuint uniformEyePosition, GLu
 
 void CameraManager::changeCamera()
 {
-	if (this->currentCamera == &this->arcBallCamera)
-	{
-		this->currentCamera = &this->fpCamera;
-	}
-	else
-	{
-		this->currentCamera = &this->arcBallCamera;
+	if (!ImGui::GetIO().WantCaptureKeyboard) {
+		if (this->currentCamera == &this->arcBallCamera)
+		{
+			this->currentCamera = &this->fpCamera;
+		}
+		else
+		{
+			this->currentCamera = &this->arcBallCamera;
+		}
 	}
 }
 

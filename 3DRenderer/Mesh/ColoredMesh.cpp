@@ -25,8 +25,6 @@ void ColoredMesh::clearMesh()
 		glDeleteBuffers(1, &verticesColorBuffer);
 		verticesColorBuffer = 0;
 	}
-
-	BasicMesh::clearMesh();
 }
 
 void ColoredMesh::render(const UniformLocations& uniformLocations) const

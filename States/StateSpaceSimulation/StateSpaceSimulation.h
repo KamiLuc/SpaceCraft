@@ -25,6 +25,7 @@ public:
 	virtual void draw() override;
 	void renderObject(const Renderable& renderable);
 	void switchSimulationState(EventDetails* e);
+	void mouseClick(EventDetails* details);
 
 	std::shared_ptr<Planet> createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		const Measure<1>& radius, float scale, const std::string& identifier, const Texture& texture);

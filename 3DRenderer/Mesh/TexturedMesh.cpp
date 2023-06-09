@@ -1,7 +1,9 @@
 #include "TexturedMesh.h"
 
 TexturedMesh::TexturedMesh(const Shader& shader, const Texture& texture)
-	: BasicMesh(shader), Textured(texture), textureCoordinatesBuffer(0)
+	: BasicMesh(shader)
+	, Textured(texture)
+	, textureCoordinatesBuffer(0)
 {
 }
 
@@ -25,8 +27,6 @@ void TexturedMesh::clearMesh()
 		glDeleteBuffers(1, &textureCoordinatesBuffer);
 		textureCoordinatesBuffer = 0;
 	}
-
-	BasicMesh::clearMesh();
 }
 
 void TexturedMesh::render(const UniformLocations& uniformLocations) const
