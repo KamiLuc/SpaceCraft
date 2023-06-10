@@ -107,17 +107,16 @@ void StateSpaceSimulation::draw()
 	this->stateManager->getContext()->window->renderImGui();
 }
 
-std::shared_ptr<Planet> StateSpaceSimulation::createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
+std::shared_ptr<TexturedPlanet> StateSpaceSimulation::createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 	const Measure<1>& radius, float scale, const std::string& identifier, const Texture& texture)
 {
 	return std::make_shared<TexturedPlanet>(position, velocity, mass, radius, scale, identifier, *shaderManager->getShader("texturedObjectShader"), texture);
 }
 
-std::shared_ptr<Planet> StateSpaceSimulation::createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
+std::shared_ptr<ColoredPlanet> StateSpaceSimulation::createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 	const Measure<1>& radius, float scale, const std::string& identifier, const glm::vec4& color)
 {
 	return std::make_shared<ColoredPlanet>(position, velocity, mass, radius, scale, identifier, *shaderManager->getShader("coloredObjectShader"), color);
-
 }
 
 std::list<std::shared_ptr<Planet>>& StateSpaceSimulation::getPlanetsRef()
@@ -143,20 +142,37 @@ Measure<1>& StateSpaceSimulation::getSimulationSpeedRef()
 void StateSpaceSimulation::addPlanetToSimulation(std::shared_ptr<Planet> planet)
 {
 	planets.emplace_back(planet);
-	objectsToRender.emplace_back(planet);
+}
+
+void StateSpaceSimulation::addPlanetToRender(std::shared_ptr<Renderable> renderable)
+{
+	this->objectsToRender.emplace_back(renderable);
 }
 
 void StateSpaceSimulation::removePlanetFromSimulation(std::shared_ptr<Planet> planet)
 {
+	removePlanetFromSimulation(planet.get());
+}
+
+void StateSpaceSimulation::removePlanetFromSimulation(Planet* planet)
+{
 	for (auto i = planets.begin(); i != planets.end(); i++) {
-		if (*i == planet) {
+		if (i->get() == planet) {
 			planets.erase(i);
 			break;
 		}
 	}
+}
 
+void StateSpaceSimulation::removePlanetFromRender(std::shared_ptr<Renderable> renderable)
+{
+	removePlanetFromRender(renderable.get());
+}
+
+void StateSpaceSimulation::removePlanetFromRender(Renderable* renderable)
+{
 	for (auto i = objectsToRender.begin(); i != objectsToRender.end(); i++) {
-		if (*i == planet) {
+		if (i->get() == renderable) {
 			objectsToRender.erase(i);
 			break;
 		}
@@ -204,12 +220,29 @@ void StateSpaceSimulation::switchSimulationState(EventDetails* e)
 }
 
 #include <iostream>
+#include <glm/common.hpp>
 
 void StateSpaceSimulation::mouseClick(EventDetails* details)
 {
 	if (!ImGui::GetIO().WantCaptureMouse) {
-		std::cout << details->mouse.x << "  " << details->mouse.y << "\n";
+		float x = static_cast<float>(details->mouse.x);
+		float y = -static_cast<float>(details->mouse.y);
+		float z = 0.5f;
+		auto winSize = stateManager->getContext()->window->getRenderWindow()->getSize();
+		glm::vec4 viewPort{ 0.0f, 0.0f, winSize.x, winSize.y };
+		glm::mat4 projectionMatrix = cameraManager->getProjectionMatrix();
 
+		for (const auto& planet : objectsToRender) {
+			glm::vec3 objectPos = glm::unProject(glm::vec3(x, y, z), cameraManager->getViewMatrix() * planet->getModelMatrix(), projectionMatrix, viewPort);
+			printf("%f  %f  %f\n", objectPos.x, objectPos.y, objectPos.z);
+
+			auto c = dynamic_cast<Planet*>(planet.get());
+
+			if (c) {
+				std::cout << c->getIdentifier() << "\n";
+			}
+		}
+		std::cout << "\n";
 	}
 }
 

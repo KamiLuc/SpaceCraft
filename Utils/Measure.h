@@ -40,7 +40,7 @@ public:
 
 	float* getValuesPtr();
 	int* getExponentPtr();
-	void normalize();
+	Measure<elements>& normalize();
 
 private:
 	glm::vec<elements, float> values;
@@ -137,7 +137,7 @@ inline int* Measure<elements>::getExponentPtr()
 }
 
 template<unsigned int elements>
-inline void Measure<elements>::normalize()
+inline Measure<elements>& Measure<elements>::normalize()
 {
 	while (true) {
 		unsigned int tooBig = 0;
@@ -155,7 +155,7 @@ inline void Measure<elements>::normalize()
 			}
 
 			else {
-				return;
+				return *this;
 			}
 		}
 
@@ -174,7 +174,7 @@ inline void Measure<elements>::normalize()
 		}
 
 		else {
-			return;
+			return *this;
 		}
 	}
 }

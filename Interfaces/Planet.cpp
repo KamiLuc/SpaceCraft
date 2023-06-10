@@ -1,8 +1,5 @@
 #include "Planet.h"
 
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
-
 void Planet::update(float timeInSec)
 {
 	if (this->canMove) {
@@ -47,5 +44,10 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 
 Measure<3> Planet::getPositionInWorldSpace() const
 {
-	return getPosition() / this->worldScale3;
+	return (getPosition() / this->worldScale3).normalize();
+}
+
+Measure<1> Planet::getRadiusInWorldSpace() const
+{
+	return (this->radius / this->worldScale1).normalize();
 }

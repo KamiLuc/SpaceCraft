@@ -40,6 +40,7 @@ void SpaceSimulationImGui::createColoredPlanet()
 		{ 0.3f, 0.2f, 0.8f, 1.0f });
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp.get());
 }
 
@@ -55,6 +56,7 @@ void SpaceSimulationImGui::createTexturedPlanet()
 		*this->textureManager.getTexture(this->textureManager.getTexturesNames()[0]));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp.get());
 }
 
@@ -85,6 +87,7 @@ void SpaceSimulationImGui::createEarth()
 		*this->textureManager.getTexture("earth"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp.get());
 }
 
@@ -101,6 +104,7 @@ void SpaceSimulationImGui::createSun()
 
 	temp->setCanMove(false);
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp.get());
 }
 
@@ -116,6 +120,7 @@ void SpaceSimulationImGui::createMercury()
 		*this->textureManager.getTexture("mercury"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp);
 }
 
@@ -131,6 +136,7 @@ void SpaceSimulationImGui::createVenus()
 		*this->textureManager.getTexture("venus"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp);
 }
 
@@ -146,6 +152,7 @@ void SpaceSimulationImGui::createJupiter()
 		*this->textureManager.getTexture("jupiter"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp);
 }
 
@@ -161,6 +168,7 @@ void SpaceSimulationImGui::createSaturn()
 		*this->textureManager.getTexture("saturn"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp);
 }
 
@@ -176,6 +184,7 @@ void SpaceSimulationImGui::createUranus()
 		*this->textureManager.getTexture("uranus"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp);
 }
 
@@ -191,6 +200,7 @@ void SpaceSimulationImGui::createNeptune()
 		*this->textureManager.getTexture("neptune"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp);
 }
 
@@ -206,6 +216,7 @@ void SpaceSimulationImGui::createMars()
 		*this->textureManager.getTexture("mars"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
+	this->spaceSimulation.addPlanetToRender(temp);
 	this->addObjectToEdit(temp);
 }
 
@@ -378,6 +389,15 @@ void SpaceSimulationImGui::deleteObject(std::shared_ptr<EditableViaImGui> object
 void SpaceSimulationImGui::deleteObject(EditableViaImGui* object)
 {
 	auto& planets = spaceSimulation.getPlanetsRef();
+	for (auto it = planets.begin(); it != planets.end(); ++it) {
+		if ((*it).get() == object) {
+			this->removeObjectFromEdit(object);
+			spaceSimulation.removePlanetFromSimulation(*it);
+			break;
+		}
+	}
+
+	auto& renderables = spaceSimulation.getPlanetsRef();
 	for (auto it = planets.begin(); it != planets.end(); ++it) {
 		if ((*it).get() == object) {
 			this->removeObjectFromEdit(object);

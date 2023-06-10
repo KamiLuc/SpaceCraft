@@ -4,7 +4,6 @@
 #include "../../AppFramework/StateManager/StateManager.h"
 #include "../../3DRenderer/Camera/CameraManagerToSFMLFrameworkAdapter.h"
 #include "../../3DRenderer/Light/Light.h"
-#include "../../3DObjects/TexturedSphere.h"
 #include "../../3DRenderer/Material.h"
 #include "../../3DObjects/CoordinateSystemAxes.h"
 #include "../../3DObjects/ColoredPlanet.h"
@@ -27,10 +26,10 @@ public:
 	void switchSimulationState(EventDetails* e);
 	void mouseClick(EventDetails* details);
 
-	std::shared_ptr<Planet> createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
+	std::shared_ptr<TexturedPlanet> createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		const Measure<1>& radius, float scale, const std::string& identifier, const Texture& texture);
 
-	std::shared_ptr<Planet> createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
+	std::shared_ptr<ColoredPlanet> createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		const Measure<1>& radius, float scale, const std::string& identifier, const glm::vec4& color);
 
 	std::list<std::shared_ptr<Planet>>& getPlanetsRef();
@@ -40,7 +39,14 @@ public:
 	Measure<1>& getSimulationSpeedRef();
 
 	void addPlanetToSimulation(std::shared_ptr<Planet> planet);
+	void addPlanetToRender(std::shared_ptr<Renderable> renderable);
+
 	void removePlanetFromSimulation(std::shared_ptr<Planet> planet);
+	void removePlanetFromSimulation(Planet* planet);
+
+	void removePlanetFromRender(std::shared_ptr<Renderable> renderable);
+	void removePlanetFromRender(Renderable* renderable);
+
 	void focusPlanet(std::shared_ptr<Planet> planet);
 
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;

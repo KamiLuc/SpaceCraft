@@ -9,6 +9,7 @@ public:
 		: shader(&shader) {};
 	virtual ~Renderable() {}
 	virtual void render(const UniformLocations& uniformLocations) const = 0;
+	virtual glm::mat4 getModelMatrix() const = 0;
 
 	void setShader(const Shader& shader) { this->shader = &shader; }
 	const Shader& getShader() const { return *shader; }

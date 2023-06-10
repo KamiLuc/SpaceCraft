@@ -72,7 +72,17 @@ ArcBallCamera& CameraManager::getArcBallCameraRef()
 	return arcBallCamera;
 }
 
+glm::mat4 CameraManager::getProjectionMatrix() const
+{
+	return projectionMatrix;
+}
+
+glm::mat4 CameraManager::getViewMatrix() const
+{
+	return currentCamera->calculateViewMatrix();
+}
+
 void CameraManager::calculateProjectionMatrix()
 {
-	this->projectionMatrix = glm::perspective(glm::radians(45.0f), this->windowSize.x / this->windowSize.y, 0.001f, 100000.0f);
+	projectionMatrix = glm::perspective(glm::radians(45.0f), windowSize.x / windowSize.y, 0.001f, 100000.0f);
 }

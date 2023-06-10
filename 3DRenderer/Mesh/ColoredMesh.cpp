@@ -1,6 +1,7 @@
 #include "ColoredMesh.h"
 
-ColoredMesh::ColoredMesh(const Shader& shader) : BasicMesh(shader), verticesColorBuffer(0)
+ColoredMesh::ColoredMesh()
+	: verticesColorBuffer(0)
 {
 }
 
@@ -25,13 +26,6 @@ void ColoredMesh::clearMesh()
 		glDeleteBuffers(1, &verticesColorBuffer);
 		verticesColorBuffer = 0;
 	}
-}
-
-void ColoredMesh::render(const UniformLocations& uniformLocations) const
-{
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-	glBindVertexArray(0);
 }
 
 void ColoredMesh::bindSingleColor(const glm::vec<4, GLfloat>& color)

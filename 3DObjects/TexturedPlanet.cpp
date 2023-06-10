@@ -5,24 +5,32 @@
 
 TexturedPlanet::TexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 	const Measure<1>& radius, float scale, const std::string& identifier, const Shader& shader, const Texture& texture)
-	:
-	Planet(position, velocity, mass, radius, scale, identifier, shader),
-	TexturedSphere(shader, texture, 64, 64)
+	: Planet(position, velocity, mass, radius, scale, identifier)
+	, Textured(texture)
+	, Renderable(shader)
 {
+	std::vector<GLfloat> vertices{};
+	std::vector<GLfloat> normals{};
+	std::vector<GLfloat> textureCoordinates{};
+	std::vector<unsigned int> indices{};
+
+	for (GLuint i = 0; i <= stacks; ++i) {
+		for (GLuint j = 0; j <= sectors; ++j) {
+			textureCoordinates.emplace_back(static_cast<GLfloat>(j) / sectors);
+			textureCoordinates.emplace_back(static_cast<GLfloat>(i) / stacks);
+		}
+	}
+
+	Sphere::createSphere(vertices, normals, indices);
+	this->mesh.createMesh(vertices, indices, normals, textureCoordinates);
+
 }
 
 void TexturedPlanet::render(const UniformLocations& uniformLocations) const
 {
-	glm::mat4 model(1.0f);
-
-	auto pos = position / worldScale3;
-	auto sc = ((radius / worldScale1) * scale).getValuesInDesiredExponent(0)[0];
-
-	model = glm::translate(model, pos.getGlmVec());
-	model = glm::scale(model, glm::vec3(sc, sc, sc));
-	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	TexturedSphere::render(uniformLocations);
+	texture->useTexture();
+	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
+	mesh.useMesh();
 }
 
 void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
@@ -71,4 +79,18 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 	}
 
 	ImGui::End();
+}
+
+glm::mat4 TexturedPlanet::getModelMatrix() const
+{
+	glm::mat4 model(1.0f);
+
+	auto pos = position / worldScale3;
+	auto sc = ((radius / worldScale1) * scale).getValuesInDesiredExponent(0)[0];
+
+	model = glm::translate(model, pos.getGlmVec());
+	model = glm::scale(model, glm::vec3(sc, sc, sc));
+	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	return model;
 }

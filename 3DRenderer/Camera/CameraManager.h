@@ -23,6 +23,8 @@ public:
 
 	FPCamera& getFirstPersonCameraRef();
 	ArcBallCamera& getArcBallCameraRef();
+	glm::mat4 getProjectionMatrix() const;
+	glm::mat4 getViewMatrix() const;
 
 private:
 	CameraInterface* currentCamera;

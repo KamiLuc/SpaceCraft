@@ -10,6 +10,7 @@ class CoordinateSystemAxes : public Renderable, public Moveable
 public:
 	CoordinateSystemAxes(const Shader& shader, const Measure<3>& position);
 	void render(const UniformLocations& uniformLocations) const override;
+	glm::mat4 getModelMatrix() const override;
 
 private:
 	GLuint VAO;
