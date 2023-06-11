@@ -61,7 +61,7 @@ void StateSpaceSimulation::update(const sf::Time& time)
 		auto it = planets.begin();
 		for (; it != planets.end()--; ++it) {
 
-			std::list<std::shared_ptr<Planet>>::iterator it2 = it;
+			std::list<std::shared_ptr<RenderablePlanet>>::iterator it2 = it;
 			it2++;
 
 			for (; it2 != planets.end(); ++it2) {
@@ -119,7 +119,7 @@ std::shared_ptr<ColoredPlanet> StateSpaceSimulation::createColoredPlanet(const M
 	return std::make_shared<ColoredPlanet>(position, velocity, mass, radius, scale, identifier, *shaderManager->getShader("coloredObjectShader"), color);
 }
 
-std::list<std::shared_ptr<Planet>>& StateSpaceSimulation::getPlanetsRef()
+std::list<std::shared_ptr<RenderablePlanet>>& StateSpaceSimulation::getPlanetsRef()
 {
 	return planets;
 }
@@ -139,44 +139,26 @@ Measure<1>& StateSpaceSimulation::getSimulationSpeedRef()
 	return simulationSpeed;
 }
 
-void StateSpaceSimulation::addPlanetToSimulation(std::shared_ptr<Planet> planet)
+void StateSpaceSimulation::addPlanetToSimulation(std::shared_ptr<RenderablePlanet> planet)
 {
-	planets.emplace_back(planet);
+	planets.push_back(planet);
+	addObjectToRender(planet);
 }
 
-void StateSpaceSimulation::addPlanetToRender(std::shared_ptr<Renderable> renderable)
+void StateSpaceSimulation::removePlanetFromSimulation(std::shared_ptr<RenderablePlanet> planet)
 {
-	this->objectsToRender.emplace_back(renderable);
+	planets.remove(planet);
+	removeObjectToRender(planet);
 }
 
-void StateSpaceSimulation::removePlanetFromSimulation(std::shared_ptr<Planet> planet)
+void StateSpaceSimulation::addObjectToRender(std::shared_ptr<Renderable> object)
 {
-	removePlanetFromSimulation(planet.get());
+	objectsToRender.push_back(object);
 }
 
-void StateSpaceSimulation::removePlanetFromSimulation(Planet* planet)
+void StateSpaceSimulation::removeObjectToRender(std::shared_ptr<Renderable> object)
 {
-	for (auto i = planets.begin(); i != planets.end(); i++) {
-		if (i->get() == planet) {
-			planets.erase(i);
-			break;
-		}
-	}
-}
-
-void StateSpaceSimulation::removePlanetFromRender(std::shared_ptr<Renderable> renderable)
-{
-	removePlanetFromRender(renderable.get());
-}
-
-void StateSpaceSimulation::removePlanetFromRender(Renderable* renderable)
-{
-	for (auto i = objectsToRender.begin(); i != objectsToRender.end(); i++) {
-		if (i->get() == renderable) {
-			objectsToRender.erase(i);
-			break;
-		}
-	}
+	objectsToRender.remove(object);
 }
 
 void StateSpaceSimulation::focusPlanet(std::shared_ptr<Planet> planet)
@@ -226,23 +208,29 @@ void StateSpaceSimulation::mouseClick(EventDetails* details)
 {
 	if (!ImGui::GetIO().WantCaptureMouse) {
 		float x = static_cast<float>(details->mouse.x);
-		float y = -static_cast<float>(details->mouse.y);
+		float y = static_cast<float>(details->mouse.y);
 		float z = 0.5f;
 		auto winSize = stateManager->getContext()->window->getRenderWindow()->getSize();
 		glm::vec4 viewPort{ 0.0f, 0.0f, winSize.x, winSize.y };
 		glm::mat4 projectionMatrix = cameraManager->getProjectionMatrix();
+		glm::mat4 viewMatrix = cameraManager->getViewMatrix();
 
-		for (const auto& planet : objectsToRender) {
-			glm::vec3 objectPos = glm::unProject(glm::vec3(x, y, z), cameraManager->getViewMatrix() * planet->getModelMatrix(), projectionMatrix, viewPort);
-			printf("%f  %f  %f\n", objectPos.x, objectPos.y, objectPos.z);
+		glm::vec3 nearPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.0f), viewMatrix, projectionMatrix, viewPort);
+		glm::vec3 farPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.99f), viewMatrix, projectionMatrix, viewPort);
+		glm::vec3 rayDirection = glm::normalize(farPlane - nearPlane);
 
-			auto c = dynamic_cast<Planet*>(planet.get());
+		for (const auto& planet : planets) {
 
-			if (c) {
-				std::cout << c->getIdentifier() << "\n";
+			glm::vec3 objectToClick = planet->getPositionInWorldSpace() - nearPlane;
+
+			float intersectionDistance = glm::dot(objectToClick, rayDirection);
+			glm::vec3 intersectionPoint = nearPlane + (rayDirection * intersectionDistance);
+			float distanceToIntersection = glm::distance(planet->getPositionInWorldSpace().getGlmVec(), intersectionPoint);
+
+			if (distanceToIntersection < planet->getRadiusInWorldSpace().getGlmVec().x) {
+				simulationGui->addObjectToEdit(planet);
 			}
 		}
-		std::cout << "\n";
 	}
 }
 

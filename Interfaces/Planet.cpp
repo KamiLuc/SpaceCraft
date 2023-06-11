@@ -49,5 +49,5 @@ Measure<3> Planet::getPositionInWorldSpace() const
 
 Measure<1> Planet::getRadiusInWorldSpace() const
 {
-	return (this->radius / this->worldScale1).normalize();
+	return (this->radius / this->worldScale1).normalize() * this->scale;
 }

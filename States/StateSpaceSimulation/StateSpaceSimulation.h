@@ -32,20 +32,17 @@ public:
 	std::shared_ptr<ColoredPlanet> createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		const Measure<1>& radius, float scale, const std::string& identifier, const glm::vec4& color);
 
-	std::list<std::shared_ptr<Planet>>& getPlanetsRef();
+	std::list<std::shared_ptr<RenderablePlanet>>& getPlanetsRef();
 
 	Light& getMainLightRef();
 	CameraManager& getCameraManagerRef();
 	Measure<1>& getSimulationSpeedRef();
 
-	void addPlanetToSimulation(std::shared_ptr<Planet> planet);
-	void addPlanetToRender(std::shared_ptr<Renderable> renderable);
+	void addPlanetToSimulation(std::shared_ptr<RenderablePlanet> planet);
+	void removePlanetFromSimulation(std::shared_ptr<RenderablePlanet> planet);
 
-	void removePlanetFromSimulation(std::shared_ptr<Planet> planet);
-	void removePlanetFromSimulation(Planet* planet);
-
-	void removePlanetFromRender(std::shared_ptr<Renderable> renderable);
-	void removePlanetFromRender(Renderable* renderable);
+	void addObjectToRender(std::shared_ptr<Renderable> object);
+	void removeObjectToRender(std::shared_ptr<Renderable> object);
 
 	void focusPlanet(std::shared_ptr<Planet> planet);
 
@@ -67,7 +64,7 @@ private:
 	std::shared_ptr<CoordinateSystemAxes> coordinateSystemAxes;
 
 	std::list<std::shared_ptr<Renderable>> objectsToRender;
-	std::list<std::shared_ptr<Planet>> planets;
+	std::list<std::shared_ptr<RenderablePlanet>> planets;
 
 	std::unique_ptr<SpaceSimulationImGui> simulationGui;
 
