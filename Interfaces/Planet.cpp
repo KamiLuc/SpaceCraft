@@ -15,23 +15,23 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 	ImGui::InputText("Identifier", const_cast<char*>(identifier.c_str()), sizeof(const_cast<char*>(identifier.c_str())));
 	ImGui::Separator();
 
-	ImGui::InputFloat3("Position", position.getValuesPtr());
+	ImGui::DragFloat3("Position", position.getValuesPtr(), 0.01f);
 	ImGui::InputInt("Position exponent", position.getExponentPtr());
 	ImGui::Separator();
 
-	ImGui::InputFloat3("Velocity", velocity.getValuesPtr());
+	ImGui::DragFloat3("Velocity", velocity.getValuesPtr(), 0.01f);
 	ImGui::InputInt("Velocity Exponent", velocity.getExponentPtr());
 	ImGui::Separator();
 
-	ImGui::InputFloat("Mass", mass.getValuesPtr());
+	ImGui::DragFloat("Mass", mass.getValuesPtr(), 0.01f, 0.0f, 1000.0f);
 	ImGui::InputInt("Mass Exponent", mass.getExponentPtr());
 	ImGui::Separator();
 
-	ImGui::InputFloat("Radius", radius.getValuesPtr());
+	ImGui::DragFloat("Radius", radius.getValuesPtr(), 0.01f, 0.0f, 1000.0f);
 	ImGui::InputInt("Radius Exponent", radius.getExponentPtr());
 	ImGui::Separator();
 
-	ImGui::SliderFloat("Scale", &scale, 0.01f, 100.0f);
+	ImGui::DragFloat("Scale", &scale, 0.1f, 1.0f, 10000.0f);
 	ImGui::Separator();
 
 	if (ImGui::Button("Normalize values")) {

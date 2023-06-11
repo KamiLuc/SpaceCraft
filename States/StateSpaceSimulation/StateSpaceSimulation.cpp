@@ -90,6 +90,13 @@ void StateSpaceSimulation::update(const sf::Time& time)
 			el->update(simTime);
 		}
 	}
+
+	if (this->focusedPlanet != nullptr) {
+		this->cameraManager->observePoint(focusedPlanet->getPositionInWorldSpace().getGlmVec());
+	}
+	else {
+		this->cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
+	}
 }
 
 void StateSpaceSimulation::draw()
@@ -163,7 +170,7 @@ void StateSpaceSimulation::removeObjectToRender(std::shared_ptr<Renderable> obje
 
 void StateSpaceSimulation::focusPlanet(std::shared_ptr<Planet> planet)
 {
-	this->cameraManager->observePoint(planet->getPositionInWorldSpace().getGlmVec(), 0.0f);
+	this->cameraManager->observePoint(planet->getPositionInWorldSpace().getGlmVec());
 }
 
 void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
@@ -196,15 +203,17 @@ void StateSpaceSimulation::renderObject(const Renderable& renderable)
 	renderable.render(uniVals);
 }
 
+void StateSpaceSimulation::focusCenter(EventDetails* details)
+{
+	cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
+}
+
 void StateSpaceSimulation::switchSimulationState(EventDetails* e)
 {
 	pauseSimulation = !pauseSimulation;
 }
 
-#include <iostream>
-#include <glm/common.hpp>
-
-void StateSpaceSimulation::mouseClick(EventDetails* details)
+void StateSpaceSimulation::mouseLeftClick(EventDetails* details)
 {
 	if (!ImGui::GetIO().WantCaptureMouse) {
 		float x = static_cast<float>(details->mouse.x);
@@ -228,7 +237,38 @@ void StateSpaceSimulation::mouseClick(EventDetails* details)
 			float distanceToIntersection = glm::distance(planet->getPositionInWorldSpace().getGlmVec(), intersectionPoint);
 
 			if (distanceToIntersection < planet->getRadiusInWorldSpace().getGlmVec().x) {
+
 				simulationGui->addObjectToEdit(planet);
+			}
+		}
+	}
+}
+
+void StateSpaceSimulation::mouseRightClick(EventDetails* details)
+{
+	if (!ImGui::GetIO().WantCaptureMouse) {
+		float x = static_cast<float>(details->mouse.x);
+		float y = static_cast<float>(details->mouse.y);
+		float z = 0.5f;
+		auto winSize = stateManager->getContext()->window->getRenderWindow()->getSize();
+		glm::vec4 viewPort{ 0.0f, 0.0f, winSize.x, winSize.y };
+		glm::mat4 projectionMatrix = cameraManager->getProjectionMatrix();
+		glm::mat4 viewMatrix = cameraManager->getViewMatrix();
+
+		glm::vec3 nearPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.0f), viewMatrix, projectionMatrix, viewPort);
+		glm::vec3 farPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.99f), viewMatrix, projectionMatrix, viewPort);
+		glm::vec3 rayDirection = glm::normalize(farPlane - nearPlane);
+
+		for (const auto& planet : planets) {
+
+			glm::vec3 objectToClick = planet->getPositionInWorldSpace() - nearPlane;
+
+			float intersectionDistance = glm::dot(objectToClick, rayDirection);
+			glm::vec3 intersectionPoint = nearPlane + (rayDirection * intersectionDistance);
+			float distanceToIntersection = glm::distance(planet->getPositionInWorldSpace().getGlmVec(), intersectionPoint);
+
+			if (distanceToIntersection < planet->getRadiusInWorldSpace().getGlmVec().x) {
+				this->focusedPlanet = planet;
 			}
 		}
 	}
@@ -250,7 +290,9 @@ void StateSpaceSimulation::addCallbacks()
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Disable_Mouse_Camera_Move", &CameraManagerToSFMLFrameworkAdapter::disableMouseCameraMove, cameraManager.get());
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Change_Camera", &CameraManagerToSFMLFrameworkAdapter::changeCamera, cameraManager.get());
 	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Pause_Simulation", &StateSpaceSimulation::switchSimulationState, this);
-	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Mouse_Left_Click", &StateSpaceSimulation::mouseClick, this);
+	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Mouse_Left_Click", &StateSpaceSimulation::mouseLeftClick, this);
+	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Mouse_Right_Click", &StateSpaceSimulation::mouseRightClick, this);
+	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Focus_Center", &StateSpaceSimulation::mouseRightClick, this);
 }
 
 void StateSpaceSimulation::removeCallbacks()
@@ -270,5 +312,7 @@ void StateSpaceSimulation::removeCallbacks()
 	eventManager->removeCallback(StateType::SpaceSimulation, "Change_Camera");
 	eventManager->removeCallback(StateType::SpaceSimulation, "Pause_Simulation");
 	eventManager->removeCallback(StateType::SpaceSimulation, "Mouse_Left_Click");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Mouse_Left_Right");
+	eventManager->removeCallback(StateType::SpaceSimulation, "Focus_Center");
 }
 

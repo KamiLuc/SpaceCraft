@@ -80,7 +80,7 @@ void SpaceSimulationImGui::createEarth()
 		{ {0.0f, 0.0f, 2.978f}, 4 },
 		{ 5.972f, 24 },
 		{ 6.371f, 6 },
-		1.0f,
+		2000.0f,
 		"Earth",
 		*this->textureManager.getTexture("earth"));
 
@@ -95,7 +95,7 @@ void SpaceSimulationImGui::createSun()
 		{ {0.0f, 0.0f, 0.0f}, 4 },
 		{ 1.989f, 30 },
 		{ 6.963f, 8 },
-		1.0f,
+		55.0f,
 		"Sun",
 		*this->textureManager.getTexture("sun"));
 
@@ -111,7 +111,7 @@ void SpaceSimulationImGui::createMercury()
 		{ {0.0f, 0.0f, 4.736f}, 4 },
 		{ 3.285f, 23 },
 		{ 2.439f, 6 },
-		1.0f,
+		3000.0f,
 		"Mercury",
 		*this->textureManager.getTexture("mercury"));
 
@@ -126,7 +126,7 @@ void SpaceSimulationImGui::createVenus()
 		{ {0.0f, 0.0f, 3.502f}, 4 },
 		{ 4.867f, 24 },
 		{ 6.051f, 6 },
-		1.0f,
+		2000.0f,
 		"Venus",
 		*this->textureManager.getTexture("venus"));
 
@@ -140,8 +140,8 @@ void SpaceSimulationImGui::createJupiter()
 		{ {7.785f, 0.0f, 0.0f}, 11 },
 		{ {0.0f, 0.0f, 1.307f}, 4 },
 		{ 1.898f, 27 },
-		{ 6.699f, 6 },
-		1.0f,
+		{ 6.699f, 7 },
+		500.0f,
 		"Jupiter",
 		*this->textureManager.getTexture("jupiter"));
 
@@ -156,7 +156,7 @@ void SpaceSimulationImGui::createSaturn()
 		{ {0.0f, 0.0f, 9.672f}, 3 },
 		{ 5.683f, 26 },
 		{ 5.823f, 7 },
-		1.0f,
+		500.0f,
 		"Saturn",
 		*this->textureManager.getTexture("saturn"));
 
@@ -171,7 +171,7 @@ void SpaceSimulationImGui::createUranus()
 		{ {0.0f, 0.0f, 6.81f}, 3 },
 		{ 8.681f, 25 },
 		{ 2.536f, 7 },
-		1.0f,
+		500.0f,
 		"Uranus",
 		*this->textureManager.getTexture("uranus"));
 
@@ -186,7 +186,7 @@ void SpaceSimulationImGui::createNeptune()
 		{ {0.0f, 0.0f, 5.43f}, 3 },
 		{ 1.024f, 26 },
 		{ 2.462f, 7 },
-		1.0f,
+		500.0f,
 		"Neptune",
 		*this->textureManager.getTexture("neptune"));
 
@@ -201,7 +201,7 @@ void SpaceSimulationImGui::createMars()
 		{ {0.0f, 0.0f, 2.407f}, 4 },
 		{ 6.39f, 23 },
 		{ 3.389f, 6 },
-		1.0f,
+		2000.0f,
 		"Mars",
 		*this->textureManager.getTexture("mars"));
 

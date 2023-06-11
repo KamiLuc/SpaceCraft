@@ -55,7 +55,7 @@ void CameraManager::changeCamera()
 	}
 }
 
-void CameraManager::observePoint(const glm::vec3& point, const GLfloat& distance)
+void CameraManager::observePoint(const glm::vec3& point)
 {
 	arcBallCamera.setLookAt(point);
 	arcBallCamera.updateCameraProperties();

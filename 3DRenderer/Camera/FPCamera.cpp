@@ -71,8 +71,8 @@ void FPCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned
 {
 	ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
 
-	ImGui::SliderFloat("Move speed", &moveSpeed, 0.0f, 10.0f);
-	ImGui::SliderFloat("Turn speed", &turnSpeed, 0.0f, 3.0f);;
+	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
+	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);;
 
 	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
 		objectHandler.removeObjectFromEdit(this);

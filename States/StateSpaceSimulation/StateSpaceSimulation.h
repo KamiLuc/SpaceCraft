@@ -23,8 +23,6 @@ public:
 	virtual void update(const sf::Time& time) override;
 	virtual void draw() override;
 	void renderObject(const Renderable& renderable);
-	void switchSimulationState(EventDetails* e);
-	void mouseClick(EventDetails* details);
 
 	std::shared_ptr<TexturedPlanet> createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
 		const Measure<1>& radius, float scale, const std::string& identifier, const Texture& texture);
@@ -46,10 +44,15 @@ public:
 
 	void focusPlanet(std::shared_ptr<Planet> planet);
 
+	void focusCenter(EventDetails* details);
+	void switchSimulationState(EventDetails* e);
+	void mouseLeftClick(EventDetails* details);
+	void mouseRightClick(EventDetails* details);
+
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;
 
-
 private:
+
 	bool pauseSimulation;
 	bool renderCoordinateAxes;
 
@@ -62,6 +65,7 @@ private:
 	std::unique_ptr<Material> dullMaterial;
 
 	std::shared_ptr<CoordinateSystemAxes> coordinateSystemAxes;
+	std::shared_ptr<RenderablePlanet> focusedPlanet;
 
 	std::list<std::shared_ptr<Renderable>> objectsToRender;
 	std::list<std::shared_ptr<RenderablePlanet>> planets;
