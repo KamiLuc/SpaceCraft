@@ -1,13 +1,16 @@
 #pragma once
 #include "../AppFramework/EventManager/EventDetails.h"
 #include "../AppFramework/StateManager/BaseState.h"
-#include <SFML/Graphics.hpp>
 #include "../AppFramework/GUI/Textbox.h"
+
+#include <SFML/Graphics.hpp>
 
 class StateIntro : public BaseState
 {
 public:
-	using BaseState::BaseState;
+	StateIntro(StateManager* stateManager, Render render = Render::twoDimensional);
+
+	~StateIntro() {};
 
 	virtual void onCreate() override;
 	virtual void onDestroy() override;
@@ -19,6 +22,7 @@ public:
 	void skip(EventDetails* details);
 
 private:
+
 	sf::Texture spaceTexture;
 	sf::Texture craftTexture;
 	sf::Texture rocketTexture;

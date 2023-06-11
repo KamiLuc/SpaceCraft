@@ -9,8 +9,12 @@ class BaseState
 {
 	friend class StateManager;
 public:
-	BaseState(StateManager* stateManager, Render render = Render::twoDimensional) : stateManager(stateManager), transparent(false),
-		transcendent(false), render(render) {}
+	BaseState(StateManager* stateManager, Render render = Render::twoDimensional)
+		: stateManager(stateManager)
+		, transparent(false)
+		, transcendent(false)
+		, render(render) {}
+
 	virtual ~BaseState() {}
 
 	virtual void onCreate() = 0;

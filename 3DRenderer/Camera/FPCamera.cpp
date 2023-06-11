@@ -10,21 +10,21 @@ FPCamera::FPCamera(const Settings::CameraSettings& settings)
 
 void FPCamera::updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec)
 {
-	auto velocity = timeInSec * settings.moveSpeed;
+	auto velocity = timeInSec * moveSpeed;
 
 	switch (direction)
 	{
 	case(CameraMoveDirection::Forward):
-		settings.position += front * velocity;
+		position += front * velocity;
 		break;
 	case(CameraMoveDirection::Backward):
-		settings.position -= front * velocity;
+		position -= front * velocity;
 		break;
 	case(CameraMoveDirection::Left):
-		settings.position -= right * velocity;
+		position -= right * velocity;
 		break;
 	case(CameraMoveDirection::Right):
-		settings.position += right * velocity;
+		position += right * velocity;
 		break;
 	default:
 		break;
@@ -35,17 +35,17 @@ void FPCamera::updateCameraPosition(const CameraMoveDirection& direction, const 
 void FPCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition)
 {
 	auto change = newMousePosition - oldMousePosition;
-	auto xChange = change.x * settings.turnSpeed;
-	auto yChange = change.y * settings.turnSpeed;
+	auto xChange = change.x * turnSpeed;
+	auto yChange = change.y * turnSpeed;
 
-	settings.yaw += xChange;
-	settings.pitch -= yChange;
+	yaw += xChange;
+	pitch -= yChange;
 
-	if (settings.pitch > 89.0f) {
-		settings.pitch = 89.0f;
+	if (pitch > 89.0f) {
+		pitch = 89.0f;
 	}
-	else if (settings.pitch < -89.0f) {
-		settings.pitch = -89.0f;
+	else if (pitch < -89.0f) {
+		pitch = -89.0f;
 	}
 
 	updateCameraProperties();
@@ -53,24 +53,38 @@ void FPCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& n
 
 void FPCamera::updateCameraProperties()
 {
-	front.x = cos(glm::radians(settings.yaw)) * cos(glm::radians(settings.pitch));
-	front.y = sin(glm::radians(settings.pitch));
-	front.z = sin(glm::radians(settings.yaw)) * cos(glm::radians(settings.pitch));
+	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front.y = sin(glm::radians(pitch));
+	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front = glm::normalize(front);
 
-	right = glm::normalize(glm::cross(front, settings.worldUp));
+	right = glm::normalize(glm::cross(front, worldUp));
 	up = glm::normalize(glm::cross(right, front));
 }
 
 glm::mat4 FPCamera::calculateViewMatrix() const
 {
-	return glm::lookAt(settings.position, settings.position + front, up);
+	return glm::lookAt(position, position + front, up);
+}
+
+void FPCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+{
+	ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
+
+	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
+	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);;
+
+	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
+		objectHandler.removeObjectFromEdit(this);
+	}
+
+	ImGui::End();
 }
 
 void FPCamera::useImmediateGluLookAt()
 {
-	auto center = settings.position + front;
-	gluLookAt(settings.position.x, settings.position.y, settings.position.z,
+	auto center = position + front;
+	gluLookAt(position.x, position.y, position.z,
 		center.x, center.y, center.z,
-		settings.worldUp.x, settings.worldUp.y, settings.worldUp.y);
+		worldUp.x, worldUp.y, worldUp.y);
 }

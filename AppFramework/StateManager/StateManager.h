@@ -7,11 +7,11 @@
 #include <vector>
 #include <unordered_map>
 #include <functional>
+#include <memory>
 
-
-using StateContainer = std::vector<std::pair<StateType, BaseState*>>;
+using StateContainer = std::vector<std::pair<StateType, std::unique_ptr<BaseState>>>;
 using TypeContainer = std::vector<StateType>;
-using StateFactory = std::unordered_map<StateType, std::function<BaseState* (void)>>;
+using StateFactory = std::unordered_map<StateType, std::function<std::unique_ptr<BaseState>(void)>>;
 
 class StateManager
 {
@@ -47,8 +47,8 @@ private:
 template<class T>
 inline void StateManager::registerState(const StateType& type, Render render)
 {
-	this->stateFactory[type] = [this, render]() -> BaseState*
+	this->stateFactory[type] = [this, render]() -> auto
 	{
-		return new T(this, render);
+		return std::make_unique<T>(this, render);
 	};
 }

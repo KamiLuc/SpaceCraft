@@ -17,11 +17,10 @@ void main()
 {
 	gl_Position = projection * view * model * vec4(pos, 1.0f);
 	
-	vertexColor = col;
+	vertexColor = col * col[3];
 
 	//in 4 is translation, not needed - transpose + inverse to invert scaling process (non uniform scaling)
 	normal = mat3(transpose(inverse(model))) * norm;
 
 	fragPos = (model * vec4(pos, 1.0f)).xyz;
-
 }

@@ -1,6 +1,7 @@
 #include "TexturedMesh.h"
 
-TexturedMesh::TexturedMesh(std::shared_ptr<Shader> shader) : BasicMesh(shader), textureCoordinatesBuffer(0)
+TexturedMesh::TexturedMesh()
+	: textureCoordinatesBuffer(-1)
 {
 }
 
@@ -24,15 +25,6 @@ void TexturedMesh::clearMesh()
 		glDeleteBuffers(1, &textureCoordinatesBuffer);
 		textureCoordinatesBuffer = 0;
 	}
-
-	BasicMesh::clearMesh();
-}
-
-void TexturedMesh::render(const UniformLocations& uniformLocations)
-{
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-	glBindVertexArray(0);
 }
 
 void TexturedMesh::bindBuffers(const std::vector<GLfloat>& textureCoordinates)

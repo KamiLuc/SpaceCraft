@@ -10,7 +10,7 @@
 using CallbacksContainer = std::unordered_map<std::string, std::function<void(EventDetails*)>>;
 enum class StateType;
 using Callbacks = std::unordered_map<StateType, CallbacksContainer>;
-using Bindings = std::unordered_map<std::string, Binding*>;
+using Bindings = std::unordered_map<std::string, std::shared_ptr<Binding>>;
 
 
 class EventManager
@@ -19,7 +19,7 @@ public:
 	EventManager();
 	~EventManager();
 
-	bool addBinding(Binding* binding);
+	bool addBinding(std::shared_ptr<Binding> binding);
 	bool removeBinding(std::string bindingName);
 	void setFocus(bool focus);
 	void setCurrentState(const StateType& state);

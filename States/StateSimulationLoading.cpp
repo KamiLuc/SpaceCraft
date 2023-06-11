@@ -1,5 +1,10 @@
 #include "StateSimulationLoading.h"
 
+StateSimulationLoading::StateSimulationLoading(StateManager* stateManager, Render render)
+	: BaseState(stateManager, render)
+{
+}
+
 void StateSimulationLoading::onCreate()
 {
 	this->firstBackgroundColor = this->stateManager->getContext()->window->getClearColor();
@@ -22,9 +27,10 @@ void StateSimulationLoading::update(const sf::Time& time)
 {
 	auto sharedContext = this->stateManager->getContext();
 
-	if (this->timePassed.asSeconds() >= this->animationTimeInSec &&
-		sharedContext->shaderManager->areShadersCompiled() && sharedContext->textureManager->areTexturesLoaded())
+	if (this->timePassed.asSeconds() >= this->animationTimeInSec)
 	{
+		sharedContext->textureManager->loadTextures();
+
 		this->stateManager->switchTo(StateType::SpaceSimulation);
 		this->stateManager->remove(StateType::SimulationLoading);
 	}

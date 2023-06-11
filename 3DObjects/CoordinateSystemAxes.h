@@ -1,15 +1,16 @@
 #pragma once
 
-#include "../3DRenderer/Interfaces/Renderable.h"
-#include "../3DRenderer/Interfaces/Moveable.h"
+#include "../../Interfaces/Moveable.h"
+#include "../../Interfaces/Renderable.h"
 
 #include <glm/glm.hpp>
 
 class CoordinateSystemAxes : public Renderable, public Moveable
 {
 public:
-	CoordinateSystemAxes(std::shared_ptr<Shader> shader, const glm::vec3& position);
-	void render(const UniformLocations& uniformLocations) override;
+	CoordinateSystemAxes(const Shader& shader, const Measure<3>& position);
+	void render(const UniformLocations& uniformLocations) const override;
+	glm::mat4 getModelMatrix() const override;
 
 private:
 	GLuint VAO;

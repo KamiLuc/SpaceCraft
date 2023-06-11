@@ -5,21 +5,15 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "../Interfaces/Renderable.h"
-
-class BasicMesh : public Renderable
-{
+class BasicMesh {
 public:
-	BasicMesh(std::shared_ptr<Shader> shader);
+	BasicMesh();
 	virtual ~BasicMesh();
 
-	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
+	virtual void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
 		const std::vector<GLfloat>& normals);
-	void clearMesh();
-
-	virtual void render(const UniformLocations& uniformLocations) override;
-
-	static void calculateAverageNormals(const std::vector<unsigned int>& indices, const std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals);
+	virtual void clearMesh();
+	virtual void useMesh() const;
 
 protected:
 	void beginMeshCreation();

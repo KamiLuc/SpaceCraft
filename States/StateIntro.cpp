@@ -3,11 +3,15 @@
 
 #include <future>
 
+StateIntro::StateIntro(StateManager* stateManager, Render render)
+	: BaseState(stateManager, render)
+	, introMovementTimInSec(1.0f)
+	, timePassedInSec(0.0f)
+{
+}
+
 void StateIntro::onCreate()
 {
-	timePassedInSec = 0;
-	introMovementTimInSec = 1.0f;
-
 	sf::Vector2u windowSize = stateManager->getContext()->window->getRenderWindow()->getSize();
 
 	spaceTexture.loadFromFile("Assets/space-logo.png");
@@ -106,7 +110,8 @@ void StateIntro::draw()
 void StateIntro::skip(EventDetails* details)
 {
 	if (stateManager->getContext()->shaderManager->areShadersCompiled()) {
-		stateManager->switchTo(StateType::MainMenu);
+		//stateManager->switchTo(StateType::MainMenu);
+		stateManager->switchTo(StateType::SimulationLoading);
 		stateManager->remove(StateType::Intro);
 	}
 }

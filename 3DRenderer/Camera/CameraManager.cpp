@@ -1,5 +1,4 @@
 #include "CameraManager.h"
-#include <glm/gtc/type_ptr.hpp>
 
 CameraManager::CameraManager(const Settings::CameraSettings& arcBallCameraSettings, const Settings::CameraSettings& firstPersonCameraSettings, const glm::vec2& windowSize)
 	: fpCamera(firstPersonCameraSettings), arcBallCamera(arcBallCameraSettings, windowSize),
@@ -38,37 +37,52 @@ void CameraManager::useCamera(GLuint uniformView, GLuint uniformEyePosition, GLu
 {
 	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(this->currentCamera->calculateViewMatrix()));
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(this->projectionMatrix));
-	auto cPos = this->currentCamera->getSettings()->position;
+	auto cPos = this->currentCamera->getPosition();
 	glUniform3f(uniformEyePosition, cPos.x, cPos.y, cPos.z);
 }
 
 void CameraManager::changeCamera()
 {
-	if (this->currentCamera == &this->arcBallCamera)
-	{
-		this->currentCamera = &this->fpCamera;
+	if (!ImGui::GetIO().WantCaptureKeyboard) {
+		if (this->currentCamera == &this->arcBallCamera)
+		{
+			this->currentCamera = &this->fpCamera;
+		}
+		else
+		{
+			this->currentCamera = &this->arcBallCamera;
+		}
 	}
-	else
-	{
-		this->currentCamera = &this->arcBallCamera;
-	}
 }
 
-void CameraManager::drawAxis()
+void CameraManager::observePoint(const glm::vec3& point)
 {
+	arcBallCamera.setLookAt(point);
+	arcBallCamera.updateCameraProperties();
+	fpCamera.setLookAt(point);
 }
 
-Settings::CameraSettings* CameraManager::getArcballCameraSettings()
+FPCamera& CameraManager::getFirstPersonCameraRef()
 {
-	return this->arcBallCamera.getSettings();
+	return fpCamera;
 }
 
-Settings::CameraSettings* CameraManager::getFirstPersonCameraSettings()
+ArcBallCamera& CameraManager::getArcBallCameraRef()
 {
-	return this->fpCamera.getSettings();
+	return arcBallCamera;
+}
+
+glm::mat4 CameraManager::getProjectionMatrix() const
+{
+	return projectionMatrix;
+}
+
+glm::mat4 CameraManager::getViewMatrix() const
+{
+	return currentCamera->calculateViewMatrix();
 }
 
 void CameraManager::calculateProjectionMatrix()
 {
-	this->projectionMatrix = glm::perspective(glm::radians(45.0f), this->windowSize.x / this->windowSize.y, 0.001f, 100000.0f);
+	projectionMatrix = glm::perspective(glm::radians(45.0f), windowSize.x / windowSize.y, 0.001f, 100000.0f);
 }

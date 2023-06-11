@@ -1,6 +1,14 @@
 #include "Texture.h"
 
-Texture::Texture(std::filesystem::path fileLocation) : textureID(0), width(0), height(0), bitDepth(0), fileLocation(fileLocation)
+Texture::Texture(const std::filesystem::path& fileLocation, const std::string& name, const TextureManager& textureManager)
+	:
+	textureID(0),
+	width(0),
+	height(0),
+	bitDepth(0),
+	fileLocation(fileLocation),
+	textureManager(textureManager),
+	name(name)
 {
 	if (!std::filesystem::exists(fileLocation)) {
 		std::string exceptionMessage{ std::move(std::string(__func__).append(" File doesn't exists: ").append(fileLocation.string().append("\n"))) };
@@ -54,7 +62,7 @@ void Texture::loadTexture()
 	stbi_image_free(textureData);
 }
 
-void Texture::useTexture()
+void Texture::useTexture() const
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->textureID);
@@ -69,3 +77,19 @@ void Texture::clearTexture()
 	this->bitDepth = 0;
 	this->fileLocation = "";
 }
+
+const TextureManager& Texture::getTextureManager() const
+{
+	return textureManager;
+}
+
+std::string Texture::getName() const
+{
+	return name;
+}
+
+GLuint Texture::getTextureId() const
+{
+	return textureID;
+}
+

@@ -13,6 +13,7 @@ struct UniformLocations {
 	GLuint uniformCameraPosition;
 	GLuint uniformSpecularIntensity;
 	GLuint uniformShininess;
+	GLuint uniformWorldScale;
 
 	UniformLocations();
 	void clear();

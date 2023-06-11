@@ -6,7 +6,7 @@
 class StateSimulationLoading : public BaseState
 {
 public:
-	using BaseState::BaseState;
+	StateSimulationLoading(StateManager* stateManager, Render render = Render::twoDimensional);
 
 	virtual void onCreate() override;
 	virtual void onDestroy() override;
