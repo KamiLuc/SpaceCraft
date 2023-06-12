@@ -42,6 +42,8 @@ public:
 	int* getExponentPtr();
 	Measure<elements>& normalize();
 
+	Measure<elements>& toSquare();
+
 private:
 	glm::vec<elements, float> values;
 	int exponent;
@@ -177,5 +179,12 @@ inline Measure<elements>& Measure<elements>::normalize()
 			return *this;
 		}
 	}
+}
+
+template<unsigned int elements>
+inline Measure<elements>& Measure<elements>::toSquare()
+{
+	exponent *= 2;
+	return *this;
 }
 
