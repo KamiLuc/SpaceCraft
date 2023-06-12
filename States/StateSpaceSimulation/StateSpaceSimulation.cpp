@@ -205,6 +205,7 @@ void StateSpaceSimulation::renderObject(const Renderable& renderable)
 
 void StateSpaceSimulation::focusCenter(EventDetails* details)
 {
+	this->focusedPlanet = nullptr;
 	cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
 }
 
@@ -292,7 +293,7 @@ void StateSpaceSimulation::addCallbacks()
 	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Pause_Simulation", &StateSpaceSimulation::switchSimulationState, this);
 	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Mouse_Left_Click", &StateSpaceSimulation::mouseLeftClick, this);
 	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Mouse_Right_Click", &StateSpaceSimulation::mouseRightClick, this);
-	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Focus_Center", &StateSpaceSimulation::mouseRightClick, this);
+	eventManager->addCallback<StateSpaceSimulation>(StateType::SpaceSimulation, "Focus_Center", &StateSpaceSimulation::focusCenter, this);
 }
 
 void StateSpaceSimulation::removeCallbacks()
