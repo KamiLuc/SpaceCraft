@@ -1,24 +1,24 @@
 #pragma once
 
-#include "../../3DRenderer/Shader/UniformLocations.h"
-#include "../../3DRenderer/Shader/Shader.h"
+#include "../../3DRenderer/Shader/ShaderManager.h"
+#include "../../3DRenderer/SceneContext.h"
 
 #include <glm/glm.hpp>
 
 class Renderable {
 public:
-	Renderable(const Shader& shader)
-		: shader(&shader) {};
+	Renderable(std::shared_ptr<ShaderManager> shaderManager)
+		: shaderManager(shaderManager) {};
 	virtual ~Renderable() {}
 
-	virtual void render(const UniformLocations& uniformLocations) const = 0;
+	virtual void render(std::shared_ptr<SceneContext> sceneContext) const = 0;
 	virtual glm::mat4 getModelMatrix() const = 0;
 
-	void setShader(const Shader& shader) { this->shader = &shader; }
-	const Shader& getShader() const { return *shader; }
+	void setShaderManager(std::shared_ptr<ShaderManager> shaderManager) { this->shaderManager = shaderManager; }
+	const std::shared_ptr<ShaderManager> getShaderManager() const { return shaderManager; }
 
 protected:
-	const Shader* shader;
+	std::shared_ptr<ShaderManager> shaderManager;
 };
 
 

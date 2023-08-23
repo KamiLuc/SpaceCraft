@@ -5,18 +5,21 @@ App::App()
 	: window("SpaceCraft", { 1620, 900 }, sf::Color::White), sharedContext(),
 	stateManager(&this->sharedContext)
 {
+	this->shaderManager = std::make_shared<ShaderManager>();
+	this->textureManager = std::make_shared<TextureManager>();
+
 	this->sharedContext.window = &this->window;
 	this->sharedContext.eventManager = this->window.getEventManager();
-	this->sharedContext.shaderManager = &this->shaderManager;
-	this->sharedContext.textureManager = &this->texturesManager;
+	this->sharedContext.shaderManager = this->shaderManager;
+	this->sharedContext.textureManager = this->textureManager;
 
 	auto& settings = Settings::GlobalSettings::getInstance();
 
-	this->shaderManager.setPath(settings.getShadersPath());
-	this->texturesManager.setPath(settings.getTexturesPath());
+	this->shaderManager->setPath(settings.getShadersPath());
+	this->textureManager->setPath(settings.getTexturesPath());
 
 	this->window.start3D();
-	this->shaderManager.loadAndCompileShaders();
+	this->shaderManager->loadAndCompileShaders();
 
 	this->stateManager.switchTo(StateType::Intro);
 }

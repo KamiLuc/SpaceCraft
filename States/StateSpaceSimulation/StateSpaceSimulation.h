@@ -5,9 +5,11 @@
 #include "../../3DRenderer/Camera/CameraManagerToSFMLFrameworkAdapter.h"
 #include "../../3DRenderer/Light/Light.h"
 #include "../../3DRenderer/Material.h"
+#include "../../3DRenderer/SceneContext.h"
 #include "../../3DObjects/CoordinateSystemAxes.h"
 #include "../../3DObjects/ColoredPlanet.h"
 #include "../../3DObjects/TexturedPlanet.h"
+
 
 class SpaceSimulationImGui;
 
@@ -59,10 +61,9 @@ private:
 	Measure<1> simulationSpeed;
 	Measure<1> gravitationalConstant;
 
-	std::unique_ptr<CameraManagerToSFMLFrameworkAdapter> cameraManager;
-	std::unique_ptr<Light> mainLight;
+	std::shared_ptr<SceneContext> sceneContext;
 	std::unique_ptr<Material> shinyMaterial;
-	std::unique_ptr<Material> dullMaterial;
+	std::shared_ptr<Material> dullMaterial;
 
 	std::shared_ptr<CoordinateSystemAxes> coordinateSystemAxes;
 	std::shared_ptr<RenderablePlanet> focusedPlanet;
@@ -72,8 +73,8 @@ private:
 
 	std::unique_ptr<SpaceSimulationImGui> simulationGui;
 
-	TextureManager* texturesManager;
-	ShaderManager* shaderManager;
+	std::shared_ptr<TextureManager> textureManager;
+	std::shared_ptr<ShaderManager> shaderManager;
 
 	void addCallbacks();
 	void removeCallbacks();

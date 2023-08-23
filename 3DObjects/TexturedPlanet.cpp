@@ -4,8 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 TexturedPlanet::TexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
-	const Measure<1>& radius, float scale, const std::string& identifier, const Shader& shader, const Texture& texture)
-	: RenderablePlanet(position, velocity, mass, radius, scale, identifier, shader)
+	const Measure<1>& radius, float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const Texture& texture)
+	: RenderablePlanet(position, velocity, mass, radius, scale, identifier, shaderManager)
 	, Textured(texture)
 {
 	std::vector<GLfloat> vertices{};
@@ -25,10 +25,23 @@ TexturedPlanet::TexturedPlanet(const Measure<3>& position, const Measure<3>& vel
 
 }
 
-void TexturedPlanet::render(const UniformLocations& uniformLocations) const
+void TexturedPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
 {
+	auto shader = shaderManager->getShader("texturedObjectShader");
+	auto& uniforms = shader->getUniformLocations();
+	
+	if (shader != shaderManager->getLastUsedShader())
+	{
+		shader->useShader();
+		shaderManager->setLastUsedShader(shader);
+	}
+
+	sceneContext->cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
+	sceneContext->mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
+	sceneContext->material->useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
+
 	texture->useTexture();
-	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
+	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	mesh.useMesh();
 }
 

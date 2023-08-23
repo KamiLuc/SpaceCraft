@@ -1,6 +1,8 @@
 #include "ShaderManager.h"
 
-ShaderManager::ShaderManager() : shadersCompiled(false)
+ShaderManager::ShaderManager()
+	: shadersCompiled(false)
+	, lastUsedShader(nullptr)
 {
 }
 

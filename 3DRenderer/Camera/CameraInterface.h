@@ -34,6 +34,7 @@ public:
 
 	glm::vec3 getPosition() const { return position; }
 	void setLookAt(const glm::vec3& lookAt) { this->lookAt = lookAt; }
+	void setCameraPosition(const glm::vec3& position) { this->position = position; }
 
 	virtual ~CameraInterface() {}
 

@@ -14,6 +14,6 @@ struct SharedContext
 
 	Window* window;
 	EventManager* eventManager;
-	ShaderManager* shaderManager;
-	TextureManager* textureManager;
+	std::shared_ptr<ShaderManager> shaderManager;
+	std::shared_ptr<TextureManager> textureManager;
 };

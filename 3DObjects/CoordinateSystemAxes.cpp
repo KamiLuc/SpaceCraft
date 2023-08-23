@@ -3,8 +3,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-CoordinateSystemAxes::CoordinateSystemAxes(const Shader& shader, const Measure<3>& position)
-	: VAO(-1), VBO(-1), Renderable(shader), Moveable(position), model(1.0f)
+CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shaderManager, const Measure<3>& position)
+	: VAO(-1), VBO(-1), Renderable(shaderManager), Moveable(position), model(1.0f)
 {
 	model = glm::translate(model, position.getGlmVec());
 
@@ -28,9 +28,20 @@ CoordinateSystemAxes::CoordinateSystemAxes(const Shader& shader, const Measure<3
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
 }
 
-void CoordinateSystemAxes::render(const UniformLocations& uniformLocations) const
+void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) const
 {
-	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
+	auto shader = shaderManager->getShader("coordinateSystemAxes");
+	auto& uniforms = shader->getUniformLocations();
+	
+	if (shader != shaderManager->getLastUsedShader())
+	{
+		shader->useShader();
+		shaderManager->setLastUsedShader(shader);
+	}
+
+	sceneContext->cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
+
+	glUniformMatrix4fv(shader->getUniformLocations().uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINES, 0, 6);
 	glBindVertexArray(0);
@@ -38,6 +49,6 @@ void CoordinateSystemAxes::render(const UniformLocations& uniformLocations) cons
 
 glm::mat4 CoordinateSystemAxes::getModelMatrix() const
 {
-	GLfloat m = 100000.0f;
+	GLfloat m = 1000.0f;
 	return glm::scale(model, glm::vec3(m, m, m));
 }

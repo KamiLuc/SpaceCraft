@@ -4,8 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 ColoredPlanet::ColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, const Measure<1>& radius,
-	float scale, const std::string& identifier, const Shader& shader, const glm::vec4& color)
-	: RenderablePlanet(position, velocity, mass, radius, scale, identifier, shader)
+	float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const glm::vec4& color)
+	: RenderablePlanet(position, velocity, mass, radius, scale, identifier, shaderManager)
 	, Colored(color)
 {
 	std::vector<GLfloat> vertices{};
@@ -24,9 +24,22 @@ ColoredPlanet::ColoredPlanet(const Measure<3>& position, const Measure<3>& veloc
 	this->mesh.createMesh(vertices, indices, normals, colors);
 }
 
-void ColoredPlanet::render(const UniformLocations& uniformLocations) const
+void ColoredPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
 {
-	glUniformMatrix4fv(uniformLocations.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
+	auto shader = shaderManager->getShader("coloredObjectShader");
+	auto& uniforms = shader->getUniformLocations();
+
+	if (shader != shaderManager->getLastUsedShader())
+	{
+		shader->useShader();
+		shaderManager->setLastUsedShader(shader);
+	}
+
+	sceneContext->cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
+	sceneContext->mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
+	sceneContext->material->useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
+
+	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	mesh.useMesh();
 }
 

@@ -22,8 +22,8 @@ public:
 private:
 	Window window;
 	StateManager stateManager;
-	ShaderManager shaderManager;
-	TextureManager texturesManager;
+	std::shared_ptr<ShaderManager>shaderManager;
+	std::shared_ptr<TextureManager>textureManager;
 
 	SharedContext sharedContext;
 

@@ -1,8 +1,8 @@
 #include "RenderablePlanet.h"
 
-RenderablePlanet::RenderablePlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, const Measure<1>& radius, float scale, const std::string& identifier, const Shader& shader, unsigned int sectors, unsigned int stacks)
+RenderablePlanet::RenderablePlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, const Measure<1>& radius, float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, unsigned int sectors, unsigned int stacks)
 	: Planet(position, velocity, mass, radius, scale, identifier, sectors, stacks)
-	, Renderable(shader)
+	, Renderable(shaderManager)
 {
 }
 
