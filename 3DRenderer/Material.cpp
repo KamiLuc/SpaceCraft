@@ -12,7 +12,7 @@ Material::~Material()
 {
 }
 
-void Material::useMaterial(GLuint specularIntensityLocation, GLuint shininessLocation)
+void Material::useMaterial(GLuint specularIntensityLocation, GLuint shininessLocation) const
 {
 	glUniform1f(specularIntensityLocation, this->specularIntensity);
 	glUniform1f(shininessLocation, this->shininess);

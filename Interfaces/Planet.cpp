@@ -34,6 +34,11 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 	ImGui::DragFloat("Scale", &scale, 0.1f, 1.0f, 10000.0f);
 	ImGui::Separator();
 
+	ImGui::Text("Material settings");
+	ImGui::DragFloat("Specular intensity", material.getSpecularIntensityPtr(), 0.01f, 0.0f, 1024.0f);
+	ImGui::DragFloat("Shininess", material.getShininessPtr(), 0.01f, 0.0f, 1024.0f);
+	ImGui::Separator();
+
 	if (ImGui::Button("Normalize values")) {
 		position.normalize();
 		velocity.normalize();

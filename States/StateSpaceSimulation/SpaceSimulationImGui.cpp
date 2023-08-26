@@ -321,6 +321,7 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 
 	if (ImGui::Button("Delete marked"))
 	{
+		std::sort(planetsToDelete.begin(), planetsToDelete.end());
 		while (planetsToDelete.size()) {
 			auto toDelete = planets.begin();
 

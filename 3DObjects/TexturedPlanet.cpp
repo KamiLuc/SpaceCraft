@@ -38,7 +38,7 @@ void TexturedPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
 
 	sceneContext->cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
 	sceneContext->mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
-	sceneContext->material->useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
+	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
 
 	texture->useTexture();
 	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));

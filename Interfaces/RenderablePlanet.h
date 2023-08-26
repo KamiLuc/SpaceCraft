@@ -11,6 +11,6 @@ public:
 	virtual glm::mat4 getModelMatrix() const override;
 	virtual ~RenderablePlanet() {}
 
-private:
-
+protected:
+	
 };

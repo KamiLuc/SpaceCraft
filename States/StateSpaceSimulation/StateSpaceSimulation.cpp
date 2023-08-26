@@ -31,7 +31,7 @@ void StateSpaceSimulation::onCreate()
 	simulationGui = std::make_unique<SpaceSimulationImGui>(*this, *textureManager);
 
 	shinyMaterial = std::make_unique<Material>(2.0f, 1024.0f);
-	dullMaterial = std::make_unique<Material>(0.3f, 4.0f);
+	dullMaterial = std::make_shared<Material>(0.3f, 4.0f);
 
 	sceneContext = std::make_shared<SceneContext>(cameraManager, mainLight, dullMaterial);
 
@@ -58,7 +58,7 @@ void StateSpaceSimulation::update(const sf::Time& time)
 
 	float simTime = timeInSec * static_cast<float>(this->simulationSpeed.getGlmVec()[0]);
 
-	if (!pauseSimulation) {
+	if (!pauseSimulation && !planets.empty()) {
 		auto it = planets.begin();
 		for (; it != planets.end()--; ++it) {
 
@@ -104,12 +104,12 @@ void StateSpaceSimulation::draw()
 {
 	simulationGui->draw();
 
-	for (const auto& el : objectsToRender) {
-		renderObject(*el);
-	}
-
 	if (renderCoordinateAxes) {
 		renderObject(*coordinateSystemAxes);
+	}
+
+	for (const auto& el : objectsToRender) {
+		renderObject(*el);
 	}
 
 	shaderManager->setLastUsedShader(nullptr);
@@ -180,9 +180,10 @@ void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandl
 	ImGui::Begin(("Simulation settings " + std::to_string(windowID)).c_str());
 
 	ImGui::Checkbox("Render coordinate system axis", &renderCoordinateAxes);
-	ImGui::Checkbox("Pause simulation", &pauseSimulation);
+	ImGui::DragFloat("Axis line width", coordinateSystemAxes->getLineWidthPtr(), 0.1f, 1.0f, 30.0f);
 
 	ImGui::Separator();
+	ImGui::Checkbox("Pause simulation", &pauseSimulation);
 	ImGui::InputFloat("Simulation speed", simulationSpeed.getValuesPtr());
 	ImGui::InputInt("Simulation speed exponent", simulationSpeed.getExponentPtr());
 
