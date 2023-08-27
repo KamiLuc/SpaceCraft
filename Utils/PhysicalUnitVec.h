@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PhysicalUnit.h"
+#include "glm/glm.hpp"
 
 #include <array>
 
@@ -44,12 +45,12 @@ public:
         return result;
     }
 
+    glm::vec<Elements, float> getGlmVec() const;
     void normalize() {
         for (auto& el : vec) {
             el.normalize();
         }
     }
-
 
 private:
 	std::array<PhysicalUnit, Elements> vec;
@@ -70,4 +71,14 @@ inline PhysicalUnitVec<Elements>::PhysicalUnitVec()
     for (size_t i = 0; i < Elements; ++i) {
         vec[i] = PhysicalUnit();
     }
+}
+
+template<int Elements>
+inline glm::vec<Elements, float> PhysicalUnitVec<Elements>::getGlmVec() const
+{
+    glm::vec<Elements, float> result{};
+    for (auto i = 0; i < Elements; i++) {
+        result[i] = static_cast<float>(vec[i].getValue());
+    }
+    return result;
 }

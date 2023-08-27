@@ -15,7 +15,9 @@ int main(int argc, char* argvp[])
 	auto aaaa = a - b;
 	auto aaaaa = a / b;
 	
-	PhysicalUnitVec<45> adsasdsa;
+	PhysicalUnitVec<3> ale{ {aa,aaa,aaaa} };
+
+	auto d = ale.getGlmVec();
 
 	App app;
 
