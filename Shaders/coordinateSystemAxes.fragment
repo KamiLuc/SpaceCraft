@@ -8,15 +8,30 @@ void main()
 {
     vec3 color;
 
-    if (worldPos.x < worldPos.y) {
-        color = vec3(1.0, 0.0, 0.0); //x
+    if (worldPos.y == 0 && worldPos.z == 0) {
+        if (worldPos.x < 0) {
+            color = vec3(0.3, 0.0, 0.0); //-x
+        }
+        else {
+            color = vec3(1.0, 0.0, 0.0); //+x
+        }
     }
-    else if (worldPos.x > worldPos.y) {
-        color = vec3(0.0, 1.0, 0.0); //y
+    else if (worldPos.y == 0 && worldPos.x == 0) {
+        if (worldPos.z < 0) {
+            color = vec3(0.0, 0.0, 0.3); //-z
+        }
+        else {
+            color = vec3(0.0, 0.0, 1.0); //+z
+        }
     }
     else {
-        color = vec3(0.0, 0.0, 1.0); //z
+        if (worldPos.y < 0) {
+            color = vec3(0.0, 0.3, 0.0); //-y
+        }
+        else {
+            color = vec3(0.0, 1.0, 0.0); //+y
+        }
     }
-
+ 
     fragColor = vec4(color, 1.0);
 }

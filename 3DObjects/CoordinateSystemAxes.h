@@ -8,7 +8,7 @@
 class CoordinateSystemAxes : public Renderable, public Moveable
 {
 public:
-	CoordinateSystemAxes(std::shared_ptr<ShaderManager> shaderManager, const glm::vec3& position, float lineWidth = 3.0f, bool immediateRender = true);
+	CoordinateSystemAxes(std::shared_ptr<ShaderManager> shaderManager, const glm::vec3& position, float lineWidth = 3.0f, bool immediateRender = false);
 	void render(std::shared_ptr<SceneContext> sceneContext) const override;
 	glm::mat4 getModelMatrix() const override;
 	void setLineWidth(float lineWidth) { this->lineWidth = lineWidth; }

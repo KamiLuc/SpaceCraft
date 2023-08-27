@@ -16,12 +16,20 @@ CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shader
 	model = glm::translate(model, position);
 
 	GLfloat axisVertices[] = {
-		0.0f, 0.0f, 0.0f,
+		-100000.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
+		1000.0f, 0.0f, 0.0f,
+
+		0.0f, -100000.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
 		0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f
+		0.0f, 1000.0f, 0.0f,
+
+		0.0f, 0.0f, -100000.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1000.0f
 	};
 
 	glGenBuffers(1, &VBO);
@@ -42,6 +50,9 @@ void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) co
 		return;
 	}
 
+	glPushMatrix();
+	glLineWidth(lineWidth);
+
 	auto shader = shaderManager->getShader("coordinateSystemAxes");
 	auto& uniforms = shader->getUniformLocations();
 	
@@ -55,14 +66,15 @@ void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) co
 
 	glUniformMatrix4fv(shader->getUniformLocations().uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_LINES, 0, 6);
+	glDrawArrays(GL_LINES, 0, 12);
 	glBindVertexArray(0);
+
+	glPopMatrix();
 }
 
 glm::mat4 CoordinateSystemAxes::getModelMatrix() const
 {
-	GLfloat m = 1000.0f;
-	return glm::scale(model, glm::vec3(m, m, m));
+	return model;
 }
 
 void CoordinateSystemAxes::setPosition(const glm::vec3& position)
@@ -70,6 +82,7 @@ void CoordinateSystemAxes::setPosition(const glm::vec3& position)
 	this->position = position;
 	this->model = glm::translate(glm::mat4(1.0f), position);
 }
+
 
 void CoordinateSystemAxes::renderWithImmediateMode(std::shared_ptr<SceneContext> sceneContext) const
 {
