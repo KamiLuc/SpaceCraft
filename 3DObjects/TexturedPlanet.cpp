@@ -3,8 +3,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-TexturedPlanet::TexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
-	const Measure<1>& radius, float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const Texture& texture)
+TexturedPlanet::TexturedPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+	const PhysicalUnit& radius, float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const Texture& texture)
 	: RenderablePlanet(position, velocity, mass, radius, scale, identifier, shaderManager)
 	, Textured(texture)
 {
@@ -67,7 +67,7 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 			}
 
 			ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(textureToDisplay->getTextureId())),
-				ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+				ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
 
 			if (isSelected)
 			{
@@ -79,12 +79,13 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 
 	ImGui::Separator();
 	ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(this->texture->getTextureId())),
-		ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+		ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
 
 	ImGui::Separator();
 	if (ImGui::Button("Close", { ImGui::GetWindowWidth() / 2, 20 })) {
 		objectHandler.removeObjectFromEdit(this);
 	}
+
 	ImGui::SameLine();
 	if (ImGui::Button("Delete planet", { ImGui::GetWindowWidth() / 2, 20 })) {
 		objectHandler.deleteObject(this);

@@ -6,22 +6,11 @@
 
 int main(int argc, char* argvp[])
 {
-	PhysicalUnit a(10.3f, 4);
-	PhysicalUnit b(12.3f, 5);
-
-
-	auto aa = a + b;
-	auto aaa = a * b;
-	auto aaaa = a - b;
-	auto aaaaa = a / b;
-	
-	PhysicalUnitVec<2> v1{ {a,b} };
-	PhysicalUnitVec<2> v2{ {a,b} };
-
-	auto c = v1 * v2;
-	auto d = v1 / v2;
-
 	App app;
+
+
+	PhysicalUnitVec x(std::array<PhysicalUnit,3>({ PhysicalUnit(2.0f, -3), PhysicalUnit(41.0f, 2), PhysicalUnit(8.0f, 3 )}));
+	auto z = x.getNormalized();
 
 	while (!app.getWindow()->isDone())
 	{

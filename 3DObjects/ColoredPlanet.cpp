@@ -3,7 +3,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-ColoredPlanet::ColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, const Measure<1>& radius,
+ColoredPlanet::ColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
 	float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const glm::vec4& color)
 	: RenderablePlanet(position, velocity, mass, radius, scale, identifier, shaderManager)
 	, Colored(color)
@@ -53,11 +53,12 @@ void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, uns
 	if (ImGui::ColorEdit4("Planet color", glm::value_ptr(this->color), ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar)) {
 		mesh.bindSingleColor(color);
 	}
-	ImGui::Separator();
 
+	ImGui::Separator();
 	if (ImGui::Button("Close", { ImGui::GetWindowWidth() / 2, 20 })) {
 		objectHandler.removeObjectFromEdit(this);
 	}
+
 	ImGui::SameLine();
 	if (ImGui::Button("Delete planet", { ImGui::GetWindowWidth() / 2, 20 })) {
 		objectHandler.deleteObject(this);

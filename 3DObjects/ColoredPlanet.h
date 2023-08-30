@@ -9,7 +9,7 @@
 class ColoredPlanet : public RenderablePlanet, public Colored
 {
 public:
-	ColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, const Measure<1>& radius,
+	ColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
 		float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const glm::vec4& color);
 	virtual ~ColoredPlanet() {}
 

@@ -1,4 +1,5 @@
 #include "CameraManager.h"
+#include <glm/gtc/type_ptr.hpp>
 
 CameraManager::CameraManager(const Settings::CameraSettings& arcBallCameraSettings, const Settings::CameraSettings& firstPersonCameraSettings, const glm::vec2& windowSize)
 	: fpCamera(firstPersonCameraSettings), arcBallCamera(arcBallCameraSettings, windowSize),

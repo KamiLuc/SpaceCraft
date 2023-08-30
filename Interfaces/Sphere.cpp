@@ -1,18 +1,18 @@
 #include "Sphere.h"
 
-Sphere::Sphere(const Measure<1> radius, unsigned int stacks, unsigned int sectors)
+Sphere::Sphere(const PhysicalUnit& radius, unsigned int stacks, unsigned int sectors)
 	: radius(radius)
 	, stacks(stacks)
 	, sectors(sectors)
 {
 }
 
-Measure<1> Sphere::getRadius() const
+PhysicalUnit Sphere::getRadius() const
 {
 	return radius;
 }
 
-void Sphere::setRadius(const Measure<1> radius)
+void Sphere::setRadius(const PhysicalUnit& radius)
 {
 	this->radius = radius;
 }

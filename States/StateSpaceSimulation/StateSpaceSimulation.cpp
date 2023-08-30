@@ -1,5 +1,12 @@
 #include "StateSpaceSimulation.h"
 
+#include <iostream>
+/// <summary>
+/// 
+/// </summary>
+/// <param name="stateManager"></param>
+/// <param name="render"></param>
+
 StateSpaceSimulation::StateSpaceSimulation(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
 	, simulationSpeed(8.64f, 4)
@@ -16,7 +23,7 @@ void StateSpaceSimulation::onCreate()
 	this->shaderManager = stateManager->getContext()->shaderManager;
 	this->textureManager = stateManager->getContext()->textureManager;
 
-	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(shaderManager, Measure<3>({ 0.0f, 0.0f, 0.0f }));
+	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(shaderManager, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	auto window = stateManager->getContext()->window;
 	auto windowSize = window->getWindowSize();
@@ -56,34 +63,25 @@ void StateSpaceSimulation::update(const sf::Time& time)
 	auto timeInSec = static_cast<float>(time.asSeconds());
 	sceneContext->cameraManager->updateCameraPosition(timeInSec);
 
-	float simTime = timeInSec * static_cast<float>(this->simulationSpeed.getGlmVec()[0]);
-
+	float simTime = timeInSec * static_cast<float>(this->simulationSpeed.getValue());
+	
 	if (!pauseSimulation && !planets.empty()) {
-		auto it = planets.begin();
-		for (; it != planets.end()--; ++it) {
 
-			std::list<std::shared_ptr<RenderablePlanet>>::iterator it2 = it;
-			it2++;
+		unsigned int toDrop = 1;
+		for (const auto& firstPlanet : planets) {
 
-			for (; it2 != planets.end(); ++it2) {
+			for (const auto& secondPlanet : planets | std::views::drop(toDrop++)) {
 
-				auto& planet = *it;
-				auto& otherPlanet = *it2;
+				auto distanceVec = secondPlanet->getPosition() - firstPlanet->getPosition();
+				auto distanceSquared = distanceVec.getLength().getSquared();
+				auto force = gravitationalConstant * (firstPlanet->getMass() * secondPlanet->getMass()) / distanceSquared;
+				auto forceVec = distanceVec.getNormalized() *  force;
 
-				glm::vec3 direction = otherPlanet->getPosition() - planet->getPosition();
-				float distance = glm::length(direction);
+				auto firstAcceleration = forceVec / firstPlanet->getMass();
+				auto secondAcceleration = (forceVec * (-1)) / secondPlanet->getMass();
 
-				auto t1 = planet->getMass() * gravitationalConstant * otherPlanet->getMass();
-				auto t2 = distance * distance;
-
-				glm::vec1 gravityForce = t1 / t2;
-				glm::vec3 force = gravityForce * glm::normalize(direction);
-
-				glm::vec3 acceleration = force / planet->getMass().getGlmVec();
-				glm::vec3 otherAcceleration = -force / otherPlanet->getMass().getGlmVec();
-
-				planet->setVelocity(planet->getVelocity() + acceleration * simTime);
-				otherPlanet->setVelocity(otherPlanet->getVelocity() + otherAcceleration * simTime);
+				firstPlanet->setVelocity(firstPlanet->getVelocity() + firstAcceleration * simTime);
+				secondPlanet->setVelocity(secondPlanet->getVelocity() + secondAcceleration * simTime);
 			}
 		}
 
@@ -91,7 +89,7 @@ void StateSpaceSimulation::update(const sf::Time& time)
 			el->update(simTime);
 		}
 	}
-
+	
 	if (focusedPlanet != nullptr) {
 		sceneContext->cameraManager->observePoint(focusedPlanet->getPositionInWorldSpace().getGlmVec());
 	}
@@ -104,26 +102,26 @@ void StateSpaceSimulation::draw()
 {
 	simulationGui->draw();
 
-	if (renderCoordinateAxes) {
-		renderObject(*coordinateSystemAxes);
-	}
-
 	for (const auto& el : objectsToRender) {
 		renderObject(*el);
+	}
+
+	if (renderCoordinateAxes) {
+		renderObject(*coordinateSystemAxes);
 	}
 
 	shaderManager->setLastUsedShader(nullptr);
 	stateManager->getContext()->window->renderImGui();
 }
 
-std::shared_ptr<TexturedPlanet> StateSpaceSimulation::createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
-	const Measure<1>& radius, float scale, const std::string& identifier, const Texture& texture)
+std::shared_ptr<TexturedPlanet> StateSpaceSimulation::createTexturedPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+	const PhysicalUnit& radius, float scale, const std::string& identifier, const Texture& texture)
 {
 	return std::make_shared<TexturedPlanet>(position, velocity, mass, radius, scale, identifier, shaderManager, texture);
 }
 
-std::shared_ptr<ColoredPlanet> StateSpaceSimulation::createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
-	const Measure<1>& radius, float scale, const std::string& identifier, const glm::vec4& color)
+std::shared_ptr<ColoredPlanet> StateSpaceSimulation::createColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+	const PhysicalUnit& radius, float scale, const std::string& identifier, const glm::vec4& color)
 {
 	return std::make_shared<ColoredPlanet>(position, velocity, mass, radius, scale, identifier, shaderManager, color);
 }
@@ -143,7 +141,7 @@ CameraManager& StateSpaceSimulation::getCameraManagerRef()
 	return *sceneContext->cameraManager;
 }
 
-Measure<1>& StateSpaceSimulation::getSimulationSpeedRef()
+PhysicalUnit& StateSpaceSimulation::getSimulationSpeedRef()
 {
 	return simulationSpeed;
 }
@@ -184,7 +182,7 @@ void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandl
 
 	ImGui::Separator();
 	ImGui::Checkbox("Pause simulation", &pauseSimulation);
-	ImGui::InputFloat("Simulation speed", simulationSpeed.getValuesPtr());
+	ImGui::InputFloat("Simulation speed", simulationSpeed.getBasePtr());
 	ImGui::InputInt("Simulation speed exponent", simulationSpeed.getExponentPtr());
 
 	ImGui::Separator();
@@ -228,13 +226,13 @@ void StateSpaceSimulation::mouseLeftClick(EventDetails* details)
 
 		for (const auto& planet : planets) {
 
-			glm::vec3 objectToClick = planet->getPositionInWorldSpace() - nearPlane;
+			glm::vec3 objectToClick = planet->getPositionInWorldSpace().getGlmVec() - nearPlane;
 
 			float intersectionDistance = glm::dot(objectToClick, rayDirection);
 			glm::vec3 intersectionPoint = nearPlane + (rayDirection * intersectionDistance);
 			float distanceToIntersection = glm::distance(planet->getPositionInWorldSpace().getGlmVec(), intersectionPoint);
 
-			if (distanceToIntersection < planet->getRadiusInWorldSpace().getGlmVec().x) {
+			if (distanceToIntersection < planet->getRadiusInWorldSpace()) {
 
 				simulationGui->addObjectToEdit(planet);
 			}
@@ -259,19 +257,20 @@ void StateSpaceSimulation::mouseRightClick(EventDetails* details)
 
 		for (const auto& planet : planets) {
 
-			glm::vec3 objectToClick = planet->getPositionInWorldSpace() - nearPlane;
+			glm::vec3 objectToClick = planet->getPositionInWorldSpace().getGlmVec() - nearPlane;
 
 			float intersectionDistance = glm::dot(objectToClick, rayDirection);
 			glm::vec3 intersectionPoint = nearPlane + (rayDirection * intersectionDistance);
 			float distanceToIntersection = glm::distance(planet->getPositionInWorldSpace().getGlmVec(), intersectionPoint);
 
-			if (distanceToIntersection < planet->getRadiusInWorldSpace().getGlmVec().x) {
+			if (distanceToIntersection < planet->getRadiusInWorldSpace()) {
 				this->focusedPlanet = planet;
 
 				auto planetInWorldPos = planet->getPositionInWorldSpace().getGlmVec();
-				auto newCameraPos = planetInWorldPos - glm::vec3(0, -11 * planet->getRadiusInWorldSpace().getGlmVec()[0], -11 * planet->getRadiusInWorldSpace().getGlmVec()[0]);
+				auto newCameraPos = planetInWorldPos - glm::vec3(0, planet->getRadiusInWorldSpace() * -11.0f, planet->getRadiusInWorldSpace() * -11.0f);
 
 				this->getCameraManagerRef().getArcBallCameraRef().setCameraPosition(newCameraPos);
+				break;
 			}
 		}
 	}

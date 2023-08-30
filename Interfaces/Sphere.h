@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Utils/Measure.h"
 #include "../Utils/Functions.h"
 #include "../3DRenderer/Mesh/BasicMesh.h"
+#include "../Utils/PhysicalUnit.h"
 
 #include <vector>
 #include <GL/glew.h>
@@ -11,15 +11,15 @@
 class Sphere
 {
 public:
-	Sphere(const Measure<1> radius, unsigned int stacks, unsigned int sectors);
+	Sphere(const PhysicalUnit& radius, unsigned int stacks, unsigned int sectors);
 	~Sphere() {}
 
-	Measure<1> getRadius() const;
-	void setRadius(const Measure<1> radius);
+	PhysicalUnit getRadius() const;
+	void setRadius(const PhysicalUnit& radius);
 	void createSphere(std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals, std::vector<unsigned int>& indices);
 
 protected:
-	Measure<1> radius;
+	PhysicalUnit radius;
 	unsigned int stacks;
 	unsigned int sectors;
 };

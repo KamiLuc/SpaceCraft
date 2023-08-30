@@ -7,7 +7,7 @@ CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shader
 	: VAO(-1)
 	, VBO(-1)
 	, Renderable(shaderManager)
-	, Moveable(position)
+	, Moveable(PhysicalUnitVec<3>(position))
 	, model(1.0f)
 	, lineWidth(lineWidth)
 	, immediateRender(immediateRender)
@@ -16,17 +16,17 @@ CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shader
 	model = glm::translate(model, position);
 
 	GLfloat axisVertices[] = {
-		-100000.0f, 0.0f, 0.0f,
+		-1000.0f, 0.0f, 0.0f,
 		-1.0f, 0.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		1000.0f, 0.0f, 0.0f,
 
-		0.0f, -100000.0f, 0.0f,
+		0.0f, -1000.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		0.0f, 1.0f, 0.0f,
 		0.0f, 1000.0f, 0.0f,
 
-		0.0f, 0.0f, -100000.0f,
+		0.0f, 0.0f, -1000.0f,
 		0.0f, 0.0f, -1.0f,
 		0.0f, 0.0f, 1.0f,
 		0.0f, 0.0f, 1000.0f

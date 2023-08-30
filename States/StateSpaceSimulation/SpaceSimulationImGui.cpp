@@ -1,6 +1,7 @@
 #include "SpaceSimulationImGui.h"
 #include <imgui.h>
 #include <vector>
+#include <array>
 
 SpaceSimulationImGui::SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, TextureManager& textureManager)
 	: spaceSimulation(spaceSimulation)
@@ -30,45 +31,45 @@ void SpaceSimulationImGui::draw()
 
 void SpaceSimulationImGui::createColoredPlanet()
 {
-	auto temp = this->spaceSimulation.createColoredPlanet(
-		{ {0.0f, 0.0f, 0.0f}, 0 },
-		{ {0.0f, 0.0f, 0.0f}, 0 },
-		0.0f,
-		1.0f,
+	/*auto temp = this->spaceSimulation.createColoredPlanet(
+		PhysicalUnitVec<3>::buildFromGlmVec(glm::vec<3, PhysicalUnit>({ 0.0f, 0 }, { 0.0f, 0 }, { 0.0f, 0 })),
+		PhysicalUnitVec<3>::buildFromGlmVec(glm::vec<3, PhysicalUnit>({ 0.0f, 0 }, { 0.0f, 0 }, { 0.0f, 0 })),
+		{ 0.0f, 0 },
+		{ 1.0f, 0 },
 		1.0f,
 		"Planet",
 		{ 0.3f, 0.2f, 0.8f, 1.0f });
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp.get());*/
 }
 
 void SpaceSimulationImGui::createTexturedPlanet()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {0.0f, 0.0f, 0.0f}, 0 },
-		{ {0.0f, 0.0f, 0.0f}, 0 },
-		0.0f,
-		1.0f,
+	/*auto temp = this->spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>::buildFromGlmVec(glm::vec<3, PhysicalUnit>({ 0.0f, 0 }, { 0.0f, 0 }, { 0.0f, 0 })),
+		PhysicalUnitVec<3>::buildFromGlmVec(glm::vec<3, PhysicalUnit>({ 0.0f, 0 }, { 0.0f, 0 }, { 0.0f, 0 })),
+		{ 0.0f, 0 },
+		{ 1.0f, 0 },
 		1.0f,
 		"Planet",
 		*this->textureManager.getTexture(this->textureManager.getTexturesNames()[0]));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	this->addObjectToEdit(temp.get());*/
 }
 
 void SpaceSimulationImGui::createSolarSystem()
 {
 	createSun();
-	createMercury();
-	createVenus();
+	/*createMercury();
+	createVenus();*/
 	createEarth();
-	createMars();
+	/*createMars();
 	createJupiter();
 	createSaturn();
 	createUranus();
-	createNeptune();
+	createNeptune();*/
 
 	objectsToEdit.clear();
 }
@@ -76,8 +77,8 @@ void SpaceSimulationImGui::createSolarSystem()
 void SpaceSimulationImGui::createEarth()
 {
 	auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {1.496f, 0.0f, 0.0f}, 11 },
-		{ {0.0f, 0.0f, 2.978f}, 4 },
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.496f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(2.978f, 4)}),
 		{ 5.972f, 24 },
 		{ 6.371f, 6 },
 		2000.0f,
@@ -91,22 +92,22 @@ void SpaceSimulationImGui::createEarth()
 void SpaceSimulationImGui::createSun()
 {
 	auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {0.0f, 0.0f, 0.0f}, 11 },
-		{ {0.0f, 0.0f, 0.0f}, 4 },
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 1.989f, 30 },
 		{ 6.963f, 8 },
 		55.0f,
 		"Sun",
-		*this->textureManager.getTexture("sun"));
+		* this->textureManager.getTexture("sun"));
 
+	this->addObjectToEdit(temp.get());
 	temp->setCanMove(false);
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
 }
 
 void SpaceSimulationImGui::createMercury()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	/*auto temp = this->spaceSimulation.createTexturedPlanet(
 		{ {5.791f, 0.0f, 0.0f}, 10 },
 		{ {0.0f, 0.0f, 4.736f}, 4 },
 		{ 3.285f, 23 },
@@ -116,12 +117,12 @@ void SpaceSimulationImGui::createMercury()
 		*this->textureManager.getTexture("mercury"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);
+	this->addObjectToEdit(temp);*/
 }
 
 void SpaceSimulationImGui::createVenus()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	/*auto temp = this->spaceSimulation.createTexturedPlanet(
 		{ {1.082f, 0.0f, 0.0f}, 11 },
 		{ {0.0f, 0.0f, 3.502f}, 4 },
 		{ 4.867f, 24 },
@@ -131,12 +132,12 @@ void SpaceSimulationImGui::createVenus()
 		*this->textureManager.getTexture("venus"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);
+	this->addObjectToEdit(temp);*/
 }
 
 void SpaceSimulationImGui::createJupiter()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	/*auto temp = this->spaceSimulation.createTexturedPlanet(
 		{ {7.785f, 0.0f, 0.0f}, 11 },
 		{ {0.0f, 0.0f, 1.307f}, 4 },
 		{ 1.898f, 27 },
@@ -146,12 +147,12 @@ void SpaceSimulationImGui::createJupiter()
 		*this->textureManager.getTexture("jupiter"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);
+	this->addObjectToEdit(temp);*/
 }
 
 void SpaceSimulationImGui::createSaturn()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	/*auto temp = this->spaceSimulation.createTexturedPlanet(
 		{ {1.427f, 0.0f, 0.0f}, 12 },
 		{ {0.0f, 0.0f, 9.672f}, 3 },
 		{ 5.683f, 26 },
@@ -161,12 +162,12 @@ void SpaceSimulationImGui::createSaturn()
 		*this->textureManager.getTexture("saturn"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);
+	this->addObjectToEdit(temp);*/
 }
 
 void SpaceSimulationImGui::createUranus()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	/*auto temp = this->spaceSimulation.createTexturedPlanet(
 		{ {2.871f, 0.0f, 0.0f}, 12 },
 		{ {0.0f, 0.0f, 6.81f}, 3 },
 		{ 8.681f, 25 },
@@ -176,12 +177,12 @@ void SpaceSimulationImGui::createUranus()
 		*this->textureManager.getTexture("uranus"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);
+	this->addObjectToEdit(temp);*/
 }
 
 void SpaceSimulationImGui::createNeptune()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	/*auto temp = this->spaceSimulation.createTexturedPlanet(
 		{ {4.498f, 0.0f, 0.0f}, 12 },
 		{ {0.0f, 0.0f, 5.43f}, 3 },
 		{ 1.024f, 26 },
@@ -191,12 +192,12 @@ void SpaceSimulationImGui::createNeptune()
 		*this->textureManager.getTexture("neptune"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);
+	this->addObjectToEdit(temp);*/
 }
 
 void SpaceSimulationImGui::createMars()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	/*auto temp = this->spaceSimulation.createTexturedPlanet(
 		{ {2.279f, 0.0f, 0.0f}, 11 },
 		{ {0.0f, 0.0f, 2.407f}, 4 },
 		{ 6.39f, 23 },
@@ -206,7 +207,7 @@ void SpaceSimulationImGui::createMars()
 		*this->textureManager.getTexture("mars"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);
+	this->addObjectToEdit(temp);*/
 }
 
 void SpaceSimulationImGui::showFileMenu()

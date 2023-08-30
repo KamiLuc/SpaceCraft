@@ -10,6 +10,7 @@
 #include "../../3DObjects/ColoredPlanet.h"
 #include "../../3DObjects/TexturedPlanet.h"
 
+#include <ranges>
 
 class SpaceSimulationImGui;
 
@@ -26,17 +27,17 @@ public:
 	virtual void draw() override;
 	void renderObject(const Renderable& renderable);
 
-	std::shared_ptr<TexturedPlanet> createTexturedPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
-		const Measure<1>& radius, float scale, const std::string& identifier, const Texture& texture);
+	std::shared_ptr<TexturedPlanet> createTexturedPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+		const PhysicalUnit& radius, float scale, const std::string& identifier, const Texture& texture);
 
-	std::shared_ptr<ColoredPlanet> createColoredPlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass,
-		const Measure<1>& radius, float scale, const std::string& identifier, const glm::vec4& color);
+	std::shared_ptr<ColoredPlanet> createColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+		const PhysicalUnit& radius, float scale, const std::string& identifier, const glm::vec4& color);
 
 	std::list<std::shared_ptr<RenderablePlanet>>& getPlanetsRef();
 
 	Light& getMainLightRef();
 	CameraManager& getCameraManagerRef();
-	Measure<1>& getSimulationSpeedRef();
+	PhysicalUnit& getSimulationSpeedRef();
 
 	void addPlanetToSimulation(std::shared_ptr<RenderablePlanet> planet);
 	void removePlanetFromSimulation(std::shared_ptr<RenderablePlanet> planet);
@@ -58,8 +59,8 @@ private:
 	bool pauseSimulation;
 	bool renderCoordinateAxes;
 
-	Measure<1> simulationSpeed;
-	Measure<1> gravitationalConstant;
+	PhysicalUnit simulationSpeed;
+	PhysicalUnit gravitationalConstant;
 
 	std::shared_ptr<SceneContext> sceneContext;
 	std::unique_ptr<Material> shinyMaterial;
