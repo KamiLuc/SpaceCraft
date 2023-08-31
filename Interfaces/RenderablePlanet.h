@@ -11,6 +11,9 @@ public:
 	virtual glm::mat4 getModelMatrix() const override;
 	virtual ~RenderablePlanet() {}
 
+	float getRadiusInWorldSpace() const;
+	glm::vec3 getPositionInWorldSpace() const;
+
 protected:
-	
+	const PhysicalUnit worldScale;
 };

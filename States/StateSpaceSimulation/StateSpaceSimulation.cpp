@@ -91,7 +91,7 @@ void StateSpaceSimulation::update(const sf::Time& time)
 	}
 	
 	if (focusedPlanet != nullptr) {
-		sceneContext->cameraManager->observePoint(focusedPlanet->getPositionInWorldSpace().getGlmVec());
+		sceneContext->cameraManager->observePoint(focusedPlanet->getPositionInWorldSpace());
 	}
 	else {
 		sceneContext->cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
@@ -168,9 +168,15 @@ void StateSpaceSimulation::removeObjectToRender(std::shared_ptr<Renderable> obje
 	objectsToRender.remove(object);
 }
 
-void StateSpaceSimulation::focusPlanet(std::shared_ptr<Planet> planet)
+void StateSpaceSimulation::focusPlanet(std::shared_ptr<RenderablePlanet> planet)
 {
-	sceneContext->cameraManager->observePoint(planet->getPositionInWorldSpace().getGlmVec());
+
+	auto planetInWorldPos = planet->getPositionInWorldSpace();
+	auto newCameraPosComponent = planet->getRadiusInWorldSpace() * -11.0f;
+	auto newCameraPos = planetInWorldPos - glm::vec3(newCameraPosComponent);
+
+	this->focusedPlanet = planet;
+	getCameraManagerRef().getArcBallCameraRef().setCameraPosition(newCameraPos);
 }
 
 void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
@@ -200,7 +206,7 @@ void StateSpaceSimulation::renderObject(const Renderable& renderable)
 
 void StateSpaceSimulation::focusCenter(EventDetails* details)
 {
-	this->focusedPlanet = nullptr;
+	focusedPlanet = nullptr;
 	sceneContext->cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
 }
 
@@ -211,36 +217,16 @@ void StateSpaceSimulation::switchSimulationState(EventDetails* e)
 
 void StateSpaceSimulation::mouseLeftClick(EventDetails* details)
 {
-	if (!ImGui::GetIO().WantCaptureMouse) {
-		float x = static_cast<float>(details->mouse.x);
-		float y = static_cast<float>(details->mouse.y);
-		float z = 0.5f;
-		auto winSize = stateManager->getContext()->window->getRenderWindow()->getSize();
-		glm::vec4 viewPort{ 0.0f, 0.0f, winSize.x, winSize.y };
-		glm::mat4 projectionMatrix = sceneContext->cameraManager->getProjectionMatrix();
-		glm::mat4 viewMatrix = sceneContext->cameraManager->getViewMatrix();
-
-		glm::vec3 nearPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.0f), viewMatrix, projectionMatrix, viewPort);
-		glm::vec3 farPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.99f), viewMatrix, projectionMatrix, viewPort);
-		glm::vec3 rayDirection = glm::normalize(farPlane - nearPlane);
-
-		for (const auto& planet : planets) {
-
-			glm::vec3 objectToClick = planet->getPositionInWorldSpace().getGlmVec() - nearPlane;
-
-			float intersectionDistance = glm::dot(objectToClick, rayDirection);
-			glm::vec3 intersectionPoint = nearPlane + (rayDirection * intersectionDistance);
-			float distanceToIntersection = glm::distance(planet->getPositionInWorldSpace().getGlmVec(), intersectionPoint);
-
-			if (distanceToIntersection < planet->getRadiusInWorldSpace()) {
-
-				simulationGui->addObjectToEdit(planet);
-			}
-		}
-	}
+	handleMouse(details, Mouse::LEFT);
 }
 
 void StateSpaceSimulation::mouseRightClick(EventDetails* details)
+{
+	handleMouse(details, Mouse::RIGHT);
+}
+
+
+void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)
 {
 	if (!ImGui::GetIO().WantCaptureMouse) {
 		float x = static_cast<float>(details->mouse.x);
@@ -257,24 +243,28 @@ void StateSpaceSimulation::mouseRightClick(EventDetails* details)
 
 		for (const auto& planet : planets) {
 
-			glm::vec3 objectToClick = planet->getPositionInWorldSpace().getGlmVec() - nearPlane;
+			glm::vec3 objectToClick = planet->getPositionInWorldSpace() - nearPlane;
 
 			float intersectionDistance = glm::dot(objectToClick, rayDirection);
 			glm::vec3 intersectionPoint = nearPlane + (rayDirection * intersectionDistance);
-			float distanceToIntersection = glm::distance(planet->getPositionInWorldSpace().getGlmVec(), intersectionPoint);
+			float distanceToIntersection = glm::distance(planet->getPositionInWorldSpace(), intersectionPoint);
+
+			auto r = planet->getRadiusInWorldSpace();
 
 			if (distanceToIntersection < planet->getRadiusInWorldSpace()) {
-				this->focusedPlanet = planet;
 
-				auto planetInWorldPos = planet->getPositionInWorldSpace().getGlmVec();
-				auto newCameraPos = planetInWorldPos - glm::vec3(0, planet->getRadiusInWorldSpace() * -11.0f, planet->getRadiusInWorldSpace() * -11.0f);
-
-				this->getCameraManagerRef().getArcBallCameraRef().setCameraPosition(newCameraPos);
+				if (mouseButton == Mouse::LEFT) {
+					simulationGui->addObjectToEdit(planet);
+				}
+				else if (mouseButton == Mouse::RIGHT) {
+					focusPlanet(planet);
+				}
 				break;
 			}
 		}
 	}
 }
+
 
 void StateSpaceSimulation::addCallbacks()
 {
@@ -318,4 +308,3 @@ void StateSpaceSimulation::removeCallbacks()
 	eventManager->removeCallback(StateType::SpaceSimulation, "Mouse_Left_Right");
 	eventManager->removeCallback(StateType::SpaceSimulation, "Focus_Center");
 }
-

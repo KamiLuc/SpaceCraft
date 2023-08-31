@@ -4,6 +4,7 @@ RenderablePlanet::RenderablePlanet(const PhysicalUnitVec<3>& position, const Phy
 	float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, unsigned int sectors, unsigned int stacks)
 	: Planet(position, velocity, mass, radius, scale, identifier, sectors, stacks)
 	, Renderable(shaderManager)
+	, worldScale({ 1.495978707f, 10 })
 {
 }
 
@@ -11,12 +12,22 @@ glm::mat4 RenderablePlanet::getModelMatrix() const
 {
 	glm::mat4 model(1.0f);
 
-	auto pos = position / worldScale3;
-	auto sc = (radius / worldScale1) * scale;
+	auto pos = position / worldScale;
+	auto sc = (radius / worldScale) * scale;
 
 	model = glm::translate(model, pos.getGlmVec());
 	model = glm::scale(model, glm::vec3(sc, sc, sc));
 	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	return model;
+}
+
+float RenderablePlanet::getRadiusInWorldSpace() const
+{
+	return (radius / worldScale).getValue() * scale;
+}
+
+glm::vec3 RenderablePlanet::getPositionInWorldSpace() const
+{
+	return (position / worldScale).getGlmVec();
 }

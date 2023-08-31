@@ -45,7 +45,7 @@ public:
 	void addObjectToRender(std::shared_ptr<Renderable> object);
 	void removeObjectToRender(std::shared_ptr<Renderable> object);
 
-	void focusPlanet(std::shared_ptr<Planet> planet);
+	void focusPlanet(std::shared_ptr<RenderablePlanet> planet);
 
 	void focusCenter(EventDetails* details);
 	void switchSimulationState(EventDetails* e);
@@ -55,6 +55,11 @@ public:
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;
 
 private:
+
+	enum class Mouse {
+		LEFT,
+		RIGHT
+	};
 
 	bool pauseSimulation;
 	bool renderCoordinateAxes;
@@ -79,5 +84,6 @@ private:
 
 	void addCallbacks();
 	void removeCallbacks();
+	void handleMouse(EventDetails* details, Mouse mouseButton);
 };
 

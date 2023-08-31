@@ -16,20 +16,14 @@ public:
 		, WithIdentifier(identifier)
 		, Sphere(radius, stacks, sectors)
 		, material(specularIntensity, shininess)
-		, worldScale1({ 1.495978707f, 10 })
-		, worldScale3(std::array<PhysicalUnit, 3>({ { 1.495978707f, 10 }, { 1.495978707f, 10 }, { 1.495978707f, 10 } }))
 	{}
 	virtual ~Planet() {}
 
 	void update(float timeInSec);
 
 	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;
-	PhysicalUnitVec<3> getPositionInWorldSpace() const;
-	PhysicalUnit getRadiusInWorldSpace() const;
 
 protected:
-	const PhysicalUnit worldScale1;
-	const PhysicalUnitVec<3> worldScale3;
 	Material material;
 };
 

@@ -54,13 +54,3 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 	ImGui::DragFloat("Specular intensity", material.getSpecularIntensityPtr(), 0.01f, 0.0f, 1024.0f);
 	ImGui::DragFloat("Shininess", material.getShininessPtr(), 0.01f, 0.0f, 1024.0f);
 }
-
-PhysicalUnitVec<3> Planet::getPositionInWorldSpace() const
-{
-	return getPosition() / worldScale3;
-}
-
-PhysicalUnit Planet::getRadiusInWorldSpace() const
-{
-	return (radius / worldScale1) * scale;
-}
