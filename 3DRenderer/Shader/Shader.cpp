@@ -114,6 +114,7 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 	uniformLocations.uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
 	uniformLocations.uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
 	uniformLocations.uniformCameraPosition = glGetUniformLocation(shaderID, "cameraPosition");
+	uniformLocations.uniformOrbitColor = glGetUniformLocation(shaderID, "orbitColor");
 }
 
 void Shader::addShader(GLuint programID, const char* shaderCode, GLenum shaderType)

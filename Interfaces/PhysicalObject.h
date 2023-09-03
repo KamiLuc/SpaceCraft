@@ -10,14 +10,12 @@ public:
 		, Scaleable(scale)
 		, velocity(velocity)
 		, mass(mass) {}
+	virtual ~PhysicalObject() {}
 
 	PhysicalUnitVec<3> getVelocity() const { return this->velocity; }
-	void setVelocity(const PhysicalUnitVec<3>& velocity) { this->velocity = velocity; }
-
-	void setMass(const PhysicalUnit& mass) { this->mass = mass; }
 	PhysicalUnit getMass() const { return this->mass; }
-
-	virtual ~PhysicalObject() {}
+	void setVelocity(const PhysicalUnitVec<3>& velocity) { this->velocity = velocity; }
+	void setMass(const PhysicalUnit& mass) { this->mass = mass; }
 
 protected:
 	PhysicalUnitVec<3> velocity;

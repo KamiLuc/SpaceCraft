@@ -14,6 +14,7 @@ struct UniformLocations {
 	GLuint uniformSpecularIntensity;
 	GLuint uniformShininess;
 	GLuint uniformWorldScale;
+	GLuint uniformOrbitColor;
 
 	UniformLocations();
 	void clear();

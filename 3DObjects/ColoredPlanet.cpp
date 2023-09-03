@@ -41,13 +41,22 @@ void ColoredPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
 
 	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	mesh.useMesh();
+
+	if (renderOrbit) {
+		orbitInWorldSpace.render(sceneContext);
+	}
 }
 
-void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	ImGui::Begin(("Edit colored planet " + std::to_string(windowID)).c_str());
+	if (beginImGui) {
+		ImGui::Begin(("Edit colored planet " + std::to_string(windowID)).c_str());
+	}
+	else {
+		ImGui::Separator();
+	}
 
-	Planet::editViaImGui(objectHandler, windowID);
+	RenderablePlanet::editViaImGui(objectHandler, windowID, false);
 
 	ImGui::Separator();
 	if (ImGui::ColorEdit4("Planet color", glm::value_ptr(this->color), ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar)) {
@@ -64,6 +73,8 @@ void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, uns
 		objectHandler.deleteObject(this);
 	}
 
-	ImGui::End();
+	if(beginImGui) {
+		ImGui::End();
+	}
 }
 

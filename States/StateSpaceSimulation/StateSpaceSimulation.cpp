@@ -1,12 +1,5 @@
 #include "StateSpaceSimulation.h"
 
-#include <iostream>
-/// <summary>
-/// 
-/// </summary>
-/// <param name="stateManager"></param>
-/// <param name="render"></param>
-
 StateSpaceSimulation::StateSpaceSimulation(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
 	, simulationSpeed(8.64f, 4)
@@ -60,10 +53,10 @@ void StateSpaceSimulation::deactivate()
 
 void StateSpaceSimulation::update(const sf::Time& time)
 {
-	auto timeInSec = static_cast<float>(time.asSeconds());
-	sceneContext->cameraManager->updateCameraPosition(timeInSec);
+	auto realTimeInSec = static_cast<float>(time.asSeconds());
+	sceneContext->cameraManager->updateCameraPosition(realTimeInSec);
 
-	float simTime = timeInSec * static_cast<float>(this->simulationSpeed.getValue());
+	float simTime = realTimeInSec * static_cast<float>(this->simulationSpeed.getValue());
 	
 	if (!pauseSimulation && !planets.empty()) {
 
@@ -86,7 +79,7 @@ void StateSpaceSimulation::update(const sf::Time& time)
 		}
 
 		for (auto& el : planets) {
-			el->update(simTime);
+			el->update(simTime, realTimeInSec);
 		}
 	}
 	
@@ -170,7 +163,6 @@ void StateSpaceSimulation::removeObjectToRender(std::shared_ptr<Renderable> obje
 
 void StateSpaceSimulation::focusPlanet(std::shared_ptr<RenderablePlanet> planet)
 {
-
 	auto planetInWorldPos = planet->getPositionInWorldSpace();
 	auto newCameraPosComponent = planet->getRadiusInWorldSpace() * -11.0f;
 	auto newCameraPos = planetInWorldPos - glm::vec3(newCameraPosComponent);
@@ -179,9 +171,14 @@ void StateSpaceSimulation::focusPlanet(std::shared_ptr<RenderablePlanet> planet)
 	getCameraManagerRef().getArcBallCameraRef().setCameraPosition(newCameraPos);
 }
 
-void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	ImGui::Begin(("Simulation settings " + std::to_string(windowID)).c_str());
+	if (beginImGui) {
+		ImGui::Begin(("Simulation settings " + std::to_string(windowID)).c_str());
+	}
+	else {
+		ImGui::Separator();
+	}
 
 	ImGui::Checkbox("Render coordinate system axis", &renderCoordinateAxes);
 	ImGui::DragFloat("Axis line width", coordinateSystemAxes->getLineWidthPtr(), 0.1f, 1.0f, 30.0f);
@@ -196,7 +193,9 @@ void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandl
 		objectHandler.removeObjectFromEdit(this);
 	}
 
-	ImGui::End();
+	if (beginImGui) {
+		ImGui::End();
+	}
 }
 
 void StateSpaceSimulation::renderObject(const Renderable& renderable)

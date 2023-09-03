@@ -5,53 +5,53 @@ CameraManager::CameraManager(const Settings::CameraSettings& arcBallCameraSettin
 	: fpCamera(firstPersonCameraSettings), arcBallCamera(arcBallCameraSettings, windowSize),
 	windowSize(windowSize), currentCamera(&arcBallCamera)
 {
-	this->calculateProjectionMatrix();
+	calculateProjectionMatrix();
 }
 
 void CameraManager::addCameraMoveDirection(const CameraMoveDirection& direction)
 {
-	if (std::find(this->cameraMoveDirections.begin(), this->cameraMoveDirections.end(), direction) == this->cameraMoveDirections.end())
+	if (std::find(cameraMoveDirections.begin(), cameraMoveDirections.end(), direction) == cameraMoveDirections.end())
 	{
-		this->cameraMoveDirections.push_back(direction);
+		cameraMoveDirections.push_back(direction);
 	}
 }
 
 void CameraManager::removeCameraMoveDirection(const CameraMoveDirection& direction)
 {
-	this->cameraMoveDirections.remove(direction);
+	cameraMoveDirections.remove(direction);
 }
 
 void CameraManager::mouseControl(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition)
 {
-	this->currentCamera->handleMouse(oldMousePosition, newMousePosition);
+	currentCamera->handleMouse(oldMousePosition, newMousePosition);
 }
 
 void CameraManager::updateCameraPosition(const GLfloat& timeInSec)
 {
-	for (const auto& it : this->cameraMoveDirections)
+	for (const auto& it : cameraMoveDirections)
 	{
-		this->currentCamera->updateCameraPosition(it, timeInSec);
+		currentCamera->updateCameraPosition(it, timeInSec);
 	}
 }
 
 void CameraManager::useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection)
 {
-	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(this->currentCamera->calculateViewMatrix()));
-	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(this->projectionMatrix));
-	auto cPos = this->currentCamera->getPosition();
+	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(currentCamera->calculateViewMatrix()));
+	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	auto cPos = currentCamera->getPosition();
 	glUniform3f(uniformEyePosition, cPos.x, cPos.y, cPos.z);
 }
 
 void CameraManager::changeCamera()
 {
 	if (!ImGui::GetIO().WantCaptureKeyboard) {
-		if (this->currentCamera == &this->arcBallCamera)
+		if (currentCamera == &arcBallCamera)
 		{
-			this->currentCamera = &this->fpCamera;
+			currentCamera = &fpCamera;
 		}
 		else
 		{
-			this->currentCamera = &this->arcBallCamera;
+			currentCamera = &arcBallCamera;
 		}
 	}
 }

@@ -11,7 +11,7 @@ public:
 	virtual void handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition) override;
 	virtual void updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec) override;
 	virtual glm::mat4 calculateViewMatrix() const override;
-	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;
+	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
 
 	void useImmediateGluLookAt() override;
 

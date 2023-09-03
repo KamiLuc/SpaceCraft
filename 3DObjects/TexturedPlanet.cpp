@@ -43,13 +43,19 @@ void TexturedPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
 	texture->useTexture();
 	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	mesh.useMesh();
+
+	if (renderOrbit) {
+		orbitInWorldSpace.render(sceneContext);
+	}
 }
 
-void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	ImGui::Begin(("Edit textured planet " + std::to_string(windowID)).c_str());
+	if (beginImGui) {
+		ImGui::Begin(("Edit textured planet " + std::to_string(windowID)).c_str());
+	}
 
-	Planet::editViaImGui(objectHandler, windowID);
+	RenderablePlanet::editViaImGui(objectHandler, windowID, false);
 
 	ImGui::Separator();
 	if (ImGui::BeginCombo("Texture", texture->getName().c_str()))
@@ -76,8 +82,6 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 		}
 		ImGui::EndCombo();
 	}
-
-	ImGui::Separator();
 	ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(this->texture->getTextureId())),
 		ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
 
@@ -85,11 +89,12 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 	if (ImGui::Button("Close", { ImGui::GetWindowWidth() / 2, 20 })) {
 		objectHandler.removeObjectFromEdit(this);
 	}
-
 	ImGui::SameLine();
 	if (ImGui::Button("Delete planet", { ImGui::GetWindowWidth() / 2, 20 })) {
 		objectHandler.deleteObject(this);
 	}
 
-	ImGui::End();
+	if (beginImGui) {
+		ImGui::End();
+	}
 }

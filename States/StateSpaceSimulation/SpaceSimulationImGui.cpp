@@ -65,8 +65,8 @@ void SpaceSimulationImGui::createSolarSystem()
 	/*createMercury();
 	createVenus();*/
 	createEarth();
-	/*createMars();
-	createJupiter();
+	createMars();
+	/*createJupiter();
 	createSaturn();
 	createUranus();
 	createNeptune();*/
@@ -197,17 +197,17 @@ void SpaceSimulationImGui::createNeptune()
 
 void SpaceSimulationImGui::createMars()
 {
-	/*auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {2.279f, 0.0f, 0.0f}, 11 },
-		{ {0.0f, 0.0f, 2.407f}, 4 },
+	auto temp = this->spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(2.279f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(2.407f, 4)}),
 		{ 6.39f, 23 },
 		{ 3.389f, 6 },
 		2000.0f,
 		"Mars",
-		*this->textureManager.getTexture("mars"));
+		* this->textureManager.getTexture("mars"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);*/
+	this->addObjectToEdit(temp.get());
 }
 
 void SpaceSimulationImGui::showFileMenu()
@@ -273,6 +273,7 @@ void SpaceSimulationImGui::showObjectsMenu()
 
 	auto& planets = spaceSimulation.getPlanetsRef();
 	if (planets.size() > 0) {
+
 		ImGui::Separator();
 		if (ImGui::BeginMenu("Delete planets")) {
 			showDeletePlanetsMenu();
@@ -324,8 +325,8 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 	{
 		std::sort(planetsToDelete.begin(), planetsToDelete.end());
 		while (planetsToDelete.size()) {
-			auto toDelete = planets.begin();
 
+			auto toDelete = planets.begin();
 			for (unsigned int i = 0; i < *planetsToDelete.rbegin(); ++i) {
 				toDelete++;
 			}
@@ -342,6 +343,7 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 			auto planet = planets.rbegin();
 			spaceSimulation.removePlanetFromSimulation(*planet);
 		}
+
 		this->objectsToEdit.clear();
 	}
 }

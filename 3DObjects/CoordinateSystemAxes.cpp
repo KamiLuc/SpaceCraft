@@ -4,9 +4,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shaderManager, const glm::vec3& position, float lineWidth , bool immediateRender)
-	: VAO(-1)
-	, VBO(-1)
-	, Renderable(shaderManager)
+	: Renderable(shaderManager)
+	, VAO(0)
+	, VBO(0)
 	, Moveable(PhysicalUnitVec<3>(position))
 	, model(1.0f)
 	, lineWidth(lineWidth)
@@ -43,6 +43,19 @@ CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shader
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
 }
 
+CoordinateSystemAxes::~CoordinateSystemAxes()
+{
+	if (VBO != 0) {
+		glDeleteBuffers(1, &VBO);
+		VBO = 0;
+	}
+
+	if (VAO != 0) {
+		glDeleteVertexArrays(1, &VAO);
+		VAO = 0;
+	}
+}
+
 void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) const
 {
 	if (immediateRender) {
@@ -69,6 +82,7 @@ void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) co
 	glDrawArrays(GL_LINES, 0, 12);
 	glBindVertexArray(0);
 
+	glLineWidth(1.0f);
 	glPopMatrix();
 }
 
@@ -82,7 +96,6 @@ void CoordinateSystemAxes::setPosition(const glm::vec3& position)
 	this->position = position;
 	this->model = glm::translate(glm::mat4(1.0f), position);
 }
-
 
 void CoordinateSystemAxes::renderWithImmediateMode(std::shared_ptr<SceneContext> sceneContext) const
 {

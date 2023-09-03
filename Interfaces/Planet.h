@@ -20,8 +20,7 @@ public:
 	virtual ~Planet() {}
 
 	void update(float timeInSec);
-
-	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;
+	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
 
 protected:
 	Material material;

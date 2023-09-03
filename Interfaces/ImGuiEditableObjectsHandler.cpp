@@ -30,6 +30,6 @@ void ImGuiEditableObjectsHandler::removeObjectFromEdit(EditableViaImGui* object)
 void ImGuiEditableObjectsHandler::update()
 {
 	for (unsigned int i = 0; i < objectsToEdit.size(); i++) {
-		objectsToEdit[i]->editViaImGui(*this, i);
+		objectsToEdit[i]->editViaImGui(*this, i, true);
 	}
 }

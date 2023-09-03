@@ -7,11 +7,14 @@ void Planet::update(float timeInSec)
 	}
 }
 
-void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	ImGui::PushItemWidth(100.0f);
 	std::array<const char*, 3> xyz{ "X", "Y", "Z" };
 	std::array<const char*, 3> vxyz{ "vX", "vY", "vZ" };
+
+	if (beginImGui) {
+		ImGui::Begin(("Edit planet " + std::to_string(windowID)).c_str());
+	}
 
 	ImGui::Checkbox("Can move", &canMove);
 
@@ -41,16 +44,16 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 	ImGui::Separator();
 	ImGui::DragFloat("Mass", mass.getBasePtr(), 0.01f, 0.0f, 1000.0f);
 	ImGui::InputInt("Mass Exponent", mass.getExponentPtr());
-
-	ImGui::Separator();
 	ImGui::DragFloat("Radius", radius.getBasePtr(), 0.01f, 0.0f, 1000.0f);
 	ImGui::InputInt("Radius Exponent", radius.getExponentPtr());
-
-	ImGui::Separator();
 	ImGui::DragFloat("Scale", &scale, 0.1f, 1.0f, 10000.0f);
 
 	ImGui::Separator();
 	ImGui::Text("Material settings");
 	ImGui::DragFloat("Specular intensity", material.getSpecularIntensityPtr(), 0.01f, 0.0f, 1024.0f);
 	ImGui::DragFloat("Shininess", material.getShininessPtr(), 0.01f, 0.0f, 1024.0f);
+
+	if (beginImGui) {
+		ImGui::End();
+	}
 }

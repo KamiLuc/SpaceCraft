@@ -64,10 +64,12 @@ glm::mat4 ArcBallCamera::calculateViewMatrix() const
 	return viewMatrix;
 }
 
-void ArcBallCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+void ArcBallCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
-
+	if (beginImGui) {
+		ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
+	}
+	
 	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
 	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);;
 
@@ -75,7 +77,9 @@ void ArcBallCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, uns
 		objectHandler.removeObjectFromEdit(this);
 	}
 
-	ImGui::End();
+	if (beginImGui) {
+		ImGui::End();
+	}
 }
 
 void ArcBallCamera::useImmediateGluLookAt()

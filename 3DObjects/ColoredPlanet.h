@@ -14,7 +14,7 @@ public:
 	virtual ~ColoredPlanet() {}
 
 	virtual void render(std::shared_ptr<SceneContext> sceneContext) const override;
-	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;
+	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
 
 private:
 	ColoredMesh mesh;

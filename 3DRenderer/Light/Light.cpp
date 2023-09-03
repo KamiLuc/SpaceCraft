@@ -38,9 +38,11 @@ void Light::useLight(GLint ambientIntensityLocation, GLint colorLocation, GLint 
 	glUniform1f(diffuseIntensityLocation, diffuseIntensity);
 }
 
-void Light::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+void Light::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	ImGui::Begin(("Edit light " + std::to_string(windowID)).c_str());
+	if (beginImGui) {
+		ImGui::Begin(("Edit light " + std::to_string(windowID)).c_str());
+	}
 
 	ImGui::SliderFloat("Intensity", &ambientIntensity, 0.0f, 1.0f);
 	ImGui::ColorEdit3("Color", glm::value_ptr(color), ImGuiColorEditFlags_Float);
@@ -58,5 +60,7 @@ void Light::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned in
 		objectHandler.removeObjectFromEdit(this);
 	}
 
-	ImGui::End();
+	if (beginImGui) {
+		ImGui::End();
+	}
 }

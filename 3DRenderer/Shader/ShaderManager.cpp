@@ -63,7 +63,8 @@ std::shared_ptr<Shader> ShaderManager::getShader(const std::string& shader)
 		return shaders[shader];
 	}
 	else {
-		return nullptr;
+		auto errorMessage = "Shader not exists: " + shader;
+		throw std::invalid_argument(errorMessage);
 	}
 }
 
