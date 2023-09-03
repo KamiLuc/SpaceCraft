@@ -21,7 +21,7 @@ public:
 protected:
 	std::vector<T> data;
 	std::size_t maxSize;
-	std::vector<T>::iterator actualDataBegin; 
+	std::vector<T>::iterator actualDataBegin;
 	std::vector<T>::iterator actualDataEnd;
 };
 
@@ -49,23 +49,28 @@ inline void CircularVector<T>::setMaxSize(size_t maxSize)
 	{
 		throw std::runtime_error("Negative size is not allowed.");
 	}
-
-	auto acutalSize = getActualSize();
-
-	if (maxSize > acutalSize)
+	else if (maxSize == this->maxSize)
 	{
-		this->maxSize = maxSize;
-		data.resize(maxSize);
+		return;
 	}
-	else if (maxSize < acutalSize)
+
+	auto actualSize = getActualSize();
+	std::vector<T> newData(maxSize * 2);
+	auto distance = maxSize > actualSize ? actualSize : maxSize;
+
+	if (maxSize > actualSize)
 	{
-		this->maxSize = maxSize;
-		std::vector<T> newData(maxSize * 2);
+		std::copy(actualDataBegin, actualDataEnd, newData.begin());
+	}
+	else if (maxSize < actualSize)
+	{
 		std::copy(actualDataEnd - maxSize, actualDataEnd, newData.begin());
-		data = std::move(newData);
-		actualDataBegin = data.begin();
-		actualDataEnd = actualDataBegin + maxSize;
 	}
+
+	this->maxSize = maxSize;
+	data = std::move(newData);
+	actualDataBegin = data.begin();
+	actualDataEnd = actualDataBegin + distance;
 }
 
 template<typename T>
