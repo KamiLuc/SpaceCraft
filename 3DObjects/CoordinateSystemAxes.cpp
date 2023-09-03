@@ -3,7 +3,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shaderManager, const glm::vec3& position, float lineWidth , bool immediateRender)
+CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shaderManager, const glm::vec3& position, float lineWidth, bool immediateRender)
 	: Renderable(shaderManager)
 	, VAO(0)
 	, VBO(0)
@@ -45,12 +45,14 @@ CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shader
 
 CoordinateSystemAxes::~CoordinateSystemAxes()
 {
-	if (VBO != 0) {
+	if (VBO != 0)
+	{
 		glDeleteBuffers(1, &VBO);
 		VBO = 0;
 	}
 
-	if (VAO != 0) {
+	if (VAO != 0)
+	{
 		glDeleteVertexArrays(1, &VAO);
 		VAO = 0;
 	}
@@ -58,7 +60,8 @@ CoordinateSystemAxes::~CoordinateSystemAxes()
 
 void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) const
 {
-	if (immediateRender) {
+	if (immediateRender)
+	{
 		renderWithImmediateMode(sceneContext);
 		return;
 	}
@@ -68,7 +71,7 @@ void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) co
 
 	auto shader = shaderManager->getShader("coordinateSystemAxes");
 	auto& uniforms = shader->getUniformLocations();
-	
+
 	if (shader != shaderManager->getLastUsedShader())
 	{
 		shader->useShader();
@@ -114,7 +117,7 @@ void CoordinateSystemAxes::renderWithImmediateMode(std::shared_ptr<SceneContext>
 	glBegin(GL_LINES);
 
 	glColor3f(0.2f, 0.0f, 0.0f);
-	glVertex3f(-1000.0f + position.x, 0.0f, 0.0f); 
+	glVertex3f(-1000.0f + position.x, 0.0f, 0.0f);
 	glVertex3f(-1.0f + position.x, 0.0f, 0.0f);
 
 	glColor3f(1.0f, 0.0f, 0.0f);

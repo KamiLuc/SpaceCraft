@@ -17,13 +17,10 @@ public:
 
 	void createFromString(const char* vertexCode, const char* fragmentCode);
 	void createFromFiles(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentSHaderPath);
-
-	std::optional<std::string> readFile(const std::filesystem::path& filePath);
-
-	const UniformLocations& getUniformLocations() const;
-
 	void useShader() const;
 	void clearShader();
+	std::optional<std::string> readFile(const std::filesystem::path& filePath);
+	const UniformLocations& getUniformLocations() const;
 
 private:
 	GLuint shaderID;

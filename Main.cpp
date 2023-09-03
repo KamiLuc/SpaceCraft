@@ -1,7 +1,5 @@
 #include "AppFramework/App.h"
 
-#include "Utils/CircularVector.h"
-
 int main(int argc, char* argvp[])
 {
 	App app;

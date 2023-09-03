@@ -34,7 +34,8 @@ void BasicMesh::bindBuffers(const std::vector<GLfloat>& vertices, const std::vec
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
-	if (!normals.empty()) {
+	if (!normals.empty())
+	{
 		glGenBuffers(1, &normalsBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, normalsBuffer);
 		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);

@@ -22,8 +22,8 @@ public:
 
 private:
 	glm::vec3 color;
+	glm::vec3 direction;
 	GLfloat ambientIntensity;
 	GLfloat diffuseIntensity;
-	glm::vec3 direction;
 };
 

@@ -2,6 +2,7 @@
 
 #include "Window.h"
 #include "StateManager/StateManager.h"
+#include "../Settings/Settings.h"
 
 class App
 {
@@ -13,10 +14,8 @@ public:
 	void update();
 	void lateUpdate();
 	void render();
-
-	sf::Time getElapsedTime() const;
 	void restartClock();
-
+	sf::Time getElapsedTime() const;
 	Window* getWindow();
 
 private:
@@ -24,9 +23,7 @@ private:
 	StateManager stateManager;
 	std::shared_ptr<ShaderManager>shaderManager;
 	std::shared_ptr<TextureManager>textureManager;
-
 	SharedContext sharedContext;
-
 	sf::Clock clock;
 	sf::Time elapsedTime;
 };

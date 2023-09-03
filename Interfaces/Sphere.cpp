@@ -27,11 +27,13 @@ void Sphere::createSphere(std::vector<GLfloat>& vertices, std::vector<GLfloat>& 
 	GLfloat sectorAngle, stackAngle;
 	GLfloat lengthInv = 1.0f / radius;
 
-	for (unsigned int i = 0; i <= stacks; ++i) {
+	for (unsigned int i = 0; i <= stacks; ++i)
+	{
 		stackAngle = PI / 2 - i * stackStep;
 		auto xy = radius * cosf(stackAngle);
 
-		for (unsigned int j = 0; j <= sectors; ++j) {
+		for (unsigned int j = 0; j <= sectors; ++j)
+		{
 			sectorAngle = j * sectorStep;
 
 			auto x = xy * cosf(sectorAngle);
@@ -48,19 +50,23 @@ void Sphere::createSphere(std::vector<GLfloat>& vertices, std::vector<GLfloat>& 
 		}
 	}
 
-	for (unsigned int i = 0; i < stacks; ++i) {
+	for (unsigned int i = 0; i < stacks; ++i)
+	{
 		unsigned int k1 = i * (sectors + 1);
 		unsigned int k2 = k1 + sectors + 1;
 
-		for (unsigned int j = 0; j < sectors; ++j, ++k1, ++k2) {
+		for (unsigned int j = 0; j < sectors; ++j, ++k1, ++k2)
+		{
 
-			if (i != 0) {
+			if (i != 0)
+			{
 				indices.push_back(k1 + 1);
 				indices.push_back(k2);
 				indices.push_back(k1);
 			}
 
-			if (i != stacks - 1) {
+			if (i != stacks - 1)
+			{
 				indices.push_back(k2 + 1);
 				indices.push_back(k2);
 				indices.push_back(k1 + 1);

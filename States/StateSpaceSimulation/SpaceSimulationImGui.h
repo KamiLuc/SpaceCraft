@@ -8,6 +8,8 @@
 #include "StateSpaceSimulation.h"
 
 #include <vector>
+#include <imgui.h>
+#include <array>
 
 using namespace Settings;
 
@@ -17,13 +19,11 @@ class SpaceSimulationImGui : public ImGuiEditableObjectsHandler
 {
 public:
 	SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, TextureManager& textureManager);
-	void draw();
 
+	void draw();
 	void createColoredPlanet();
 	void createTexturedPlanet();
-
 	void createSolarSystem();
-
 	void createEarth();
 	void createSun();
 	void createMercury();

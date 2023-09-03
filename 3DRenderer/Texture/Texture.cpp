@@ -1,17 +1,17 @@
 #include "Texture.h"
 
 Texture::Texture(const std::filesystem::path& fileLocation, const std::string& name, const TextureManager& textureManager)
-	:
-	textureID(0),
-	width(0),
-	height(0),
-	bitDepth(0),
-	fileLocation(fileLocation),
-	textureManager(textureManager),
-	name(name)
+	: textureID(0)
+	, width(0)
+	, height(0)
+	, bitDepth(0)
+	, fileLocation(fileLocation)
+	, textureManager(textureManager)
+	, name(name)
 {
-	if (!std::filesystem::exists(fileLocation)) {
-		std::string exceptionMessage{ std::move(std::string(__func__).append(" File doesn't exists: ").append(fileLocation.string().append("\n"))) };
+	if (!std::filesystem::exists(fileLocation))
+	{
+		std::string exceptionMessage { std::move(std::string(__func__).append(" File doesn't exists: ").append(fileLocation.string().append("\n"))) };
 		printf(exceptionMessage.c_str());
 		throw std::invalid_argument(exceptionMessage);
 	}
@@ -33,8 +33,9 @@ void Texture::loadTexture()
 		return;
 	}
 
-	if (!textureData) {
-		std::string exceptionMessage{ std::move(std::string(__func__).append(" File is not an image: ").append(fileLocation.string().append("\n"))) };
+	if (!textureData)
+	{
+		std::string exceptionMessage { std::move(std::string(__func__).append(" File is not an image: ").append(fileLocation.string().append("\n"))) };
 		printf(exceptionMessage.c_str());
 		throw std::runtime_error(exceptionMessage);
 	}

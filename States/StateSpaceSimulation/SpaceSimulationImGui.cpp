@@ -1,27 +1,30 @@
 #include "SpaceSimulationImGui.h"
-#include <imgui.h>
-#include <vector>
-#include <array>
 
 SpaceSimulationImGui::SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, TextureManager& textureManager)
 	: spaceSimulation(spaceSimulation)
 	, textureManager(textureManager)
-	, renderCoordinateSystemAxis(false) {}
+	, renderCoordinateSystemAxis(false)
+{
+}
 
 void SpaceSimulationImGui::draw()
 {
 	this->update();
 
-	if (ImGui::BeginMainMenuBar()) {
-		if (ImGui::BeginMenu("File")) {
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
 			showFileMenu();
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Settings")) {
+		if (ImGui::BeginMenu("Settings"))
+		{
 			showSettingsMenu();
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Objects")) {
+		if (ImGui::BeginMenu("Objects"))
+		{
 			showObjectsMenu();
 			ImGui::EndMenu();
 		}
@@ -83,7 +86,7 @@ void SpaceSimulationImGui::createEarth()
 		{ 6.371f, 6 },
 		2000.0f,
 		"Earth",
-		*this->textureManager.getTexture("earth"));
+		* this->textureManager.getTexture("earth"));
 
 	this->spaceSimulation.addPlanetToSimulation(temp);
 	this->addObjectToEdit(temp.get());
@@ -217,54 +220,67 @@ void SpaceSimulationImGui::showFileMenu()
 
 void SpaceSimulationImGui::showObjectsMenu()
 {
-	if (ImGui::Selectable("Create colored planet")) {
+	if (ImGui::Selectable("Create colored planet"))
+	{
 		createColoredPlanet();
 	}
 
-	if (ImGui::Selectable("Create textured planet")) {
+	if (ImGui::Selectable("Create textured planet"))
+	{
 		createTexturedPlanet();
 	}
 	ImGui::Separator();
 
-	if (ImGui::Selectable("Create Solar system")) {
+	if (ImGui::Selectable("Create Solar system"))
+	{
 		createSolarSystem();
 	}
 	ImGui::Separator();
 
-	if (ImGui::BeginMenu("Create real planet")) {
-		if (ImGui::Selectable("Create Sun")) {
+	if (ImGui::BeginMenu("Create real planet"))
+	{
+		if (ImGui::Selectable("Create Sun"))
+		{
 			createSun();
 		}
 
-		if (ImGui::Selectable("Create Mercury")) {
+		if (ImGui::Selectable("Create Mercury"))
+		{
 			createMercury();
 		}
 
-		if (ImGui::Selectable("Create Venus")) {
+		if (ImGui::Selectable("Create Venus"))
+		{
 			createVenus();
 		}
 
-		if (ImGui::Selectable("Create Earth")) {
+		if (ImGui::Selectable("Create Earth"))
+		{
 			createEarth();
 		}
 
-		if (ImGui::Selectable("Create Mars")) {
+		if (ImGui::Selectable("Create Mars"))
+		{
 			createMars();
 		}
 
-		if (ImGui::Selectable("Create Jupiter")) {
+		if (ImGui::Selectable("Create Jupiter"))
+		{
 			createJupiter();
 		}
 
-		if (ImGui::Selectable("Create Saturn")) {
+		if (ImGui::Selectable("Create Saturn"))
+		{
 			createSaturn();
 		}
 
-		if (ImGui::Selectable("Create Uranus")) {
+		if (ImGui::Selectable("Create Uranus"))
+		{
 			createUranus();
 		}
 
-		if (ImGui::Selectable("Create Neptun")) {
+		if (ImGui::Selectable("Create Neptun"))
+		{
 			createNeptune();
 		}
 
@@ -272,21 +288,25 @@ void SpaceSimulationImGui::showObjectsMenu()
 	}
 
 	auto& planets = spaceSimulation.getPlanetsRef();
-	if (planets.size() > 0) {
+	if (planets.size() > 0)
+	{
 
 		ImGui::Separator();
-		if (ImGui::BeginMenu("Delete planets")) {
+		if (ImGui::BeginMenu("Delete planets"))
+		{
 			showDeletePlanetsMenu();
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Edit planets")) {
+		if (ImGui::BeginMenu("Edit planets"))
+		{
 			showEditPlanetsMenu();
 			ImGui::EndMenu();
 		}
 
 		ImGui::Separator();
-		if (ImGui::BeginMenu("Focus planet")) {
+		if (ImGui::BeginMenu("Focus planet"))
+		{
 			showObjectFocusMenu();
 			ImGui::EndMenu();
 		}
@@ -324,10 +344,12 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 	if (ImGui::Button("Delete marked"))
 	{
 		std::sort(planetsToDelete.begin(), planetsToDelete.end());
-		while (planetsToDelete.size()) {
+		while (planetsToDelete.size())
+		{
 
 			auto toDelete = planets.begin();
-			for (unsigned int i = 0; i < *planetsToDelete.rbegin(); ++i) {
+			for (unsigned int i = 0; i < *planetsToDelete.rbegin(); ++i)
+			{
 				toDelete++;
 			}
 
@@ -339,7 +361,8 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 
 	if (ImGui::Button("Delete all"))
 	{
-		while (planets.size() != 0) {
+		while (planets.size() != 0)
+		{
 			auto planet = planets.rbegin();
 			spaceSimulation.removePlanetFromSimulation(*planet);
 		}
@@ -355,7 +378,8 @@ void SpaceSimulationImGui::showEditPlanetsMenu()
 
 	for (const auto& planet : planets)
 	{
-		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str())) {
+		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str()))
+		{
 			addObjectToEdit(planet.get());
 		}
 		++index;
@@ -369,7 +393,8 @@ void SpaceSimulationImGui::showObjectFocusMenu()
 
 	for (const auto& planet : planets)
 	{
-		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str())) {
+		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str()))
+		{
 			this->spaceSimulation.focusPlanet(planet);
 		}
 		++index;
@@ -384,10 +409,13 @@ void SpaceSimulationImGui::deleteObject(std::shared_ptr<EditableViaImGui> object
 void SpaceSimulationImGui::deleteObject(EditableViaImGui* object)
 {
 	auto& planets = spaceSimulation.getPlanetsRef();
-	auto planet = std::find_if(planets.begin(), planets.end(), [&object](std::shared_ptr<RenderablePlanet> obj) {
-		return object == obj.get(); });
+	auto planet = std::find_if(planets.begin(), planets.end(), [&object](std::shared_ptr<RenderablePlanet> obj)
+							   {
+								   return object == obj.get();
+							   });
 
-	if (planet != planets.end()) {
+	if (planet != planets.end())
+	{
 		removeObjectFromEdit(object);
 		spaceSimulation.removePlanetFromSimulation(*planet);
 	}
@@ -396,23 +424,27 @@ void SpaceSimulationImGui::deleteObject(EditableViaImGui* object)
 void SpaceSimulationImGui::showSettingsMenu()
 {
 	ImGui::Separator();
-	if (ImGui::Selectable("Simulation settings")) {
+	if (ImGui::Selectable("Simulation settings"))
+	{
 		addObjectToEdit(&spaceSimulation);
 	}
 
 	ImGui::Separator();
-	if (ImGui::Selectable("First person camera")) {
+	if (ImGui::Selectable("First person camera"))
+	{
 		auto& camera = spaceSimulation.getCameraManagerRef().getFirstPersonCameraRef();
 		addObjectToEdit(&camera);
 	}
 
-	if (ImGui::Selectable("Arc ball camera")) {
+	if (ImGui::Selectable("Arc ball camera"))
+	{
 		auto& camera = spaceSimulation.getCameraManagerRef().getArcBallCameraRef();
 		addObjectToEdit(&camera);
 	}
 
 	ImGui::Separator();
-	if (ImGui::Selectable("Main light")) {
+	if (ImGui::Selectable("Main light"))
+	{
 		auto& light = spaceSimulation.getMainLightRef();
 		addObjectToEdit(&light);
 	}

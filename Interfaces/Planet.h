@@ -10,13 +10,14 @@ class Planet : public PhysicalObject, public EditableViaImGui, public WithIdenti
 {
 public:
 	Planet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
-		float scale, const std::string& identifier, unsigned int sectors = 32, unsigned int stacks = 32,
-		float specularIntensity = 0.3f, float shininess = 4.0f)
+		   float scale, const std::string& identifier, unsigned int sectors = 32, unsigned int stacks = 32,
+		   float specularIntensity = 0.3f, float shininess = 4.0f)
 		: PhysicalObject(position, velocity, mass, scale)
 		, WithIdentifier(identifier)
 		, Sphere(radius, stacks, sectors)
 		, material(specularIntensity, shininess)
-	{}
+	{
+	}
 	virtual ~Planet() {}
 
 	void update(float timeInSec);

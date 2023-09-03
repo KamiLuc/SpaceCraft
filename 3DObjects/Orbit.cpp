@@ -22,12 +22,14 @@ Orbit::Orbit(size_t maxSize, const glm::vec3 orbitColor, std::shared_ptr<ShaderM
 
 Orbit::~Orbit()
 {
-	if (VBO != 0) {
+	if (VBO != 0)
+	{
 		glDeleteBuffers(1, &VBO);
 		VBO = 0;
 	}
 
-	if (VAO != 0) {
+	if (VAO != 0)
+	{
 		glDeleteVertexArrays(1, &VAO);
 		VAO = 0;
 	}

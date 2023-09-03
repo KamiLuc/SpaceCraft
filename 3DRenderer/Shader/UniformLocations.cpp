@@ -12,7 +12,9 @@ UniformLocations::UniformLocations()
 	, uniformSpecularIntensity(-1)
 	, uniformShininess(-1)
 	, uniformWorldScale(-1)
-	, uniformOrbitColor(-1){}
+	, uniformOrbitColor(-1)
+{
+}
 
 void UniformLocations::clear()
 {

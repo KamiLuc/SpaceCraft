@@ -1,10 +1,10 @@
 #pragma once
 
+#include "Shader.h"
+
 #include <filesystem>
 #include <map>
 #include <optional>
-
-#include "Shader.h"
 
 class ShaderManager
 {
@@ -13,10 +13,9 @@ public:
 
 	void loadAndCompileShaders();
 	void setPath(const std::filesystem::path& shadersPath);
-
-	std::shared_ptr<Shader> getShader(const std::string& shader);
-	bool areShadersCompiled() const;
 	void setLastUsedShader(std::shared_ptr<Shader> lastUsedShader) { this->lastUsedShader = lastUsedShader; }
+	bool areShadersCompiled() const;
+	std::shared_ptr<Shader> getShader(const std::string& shader);
 	std::shared_ptr<Shader> getLastUsedShader() const { return lastUsedShader; }
 
 private:

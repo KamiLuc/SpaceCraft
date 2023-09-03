@@ -17,7 +17,8 @@ void ArcBallCamera::updateCameraPosition(const CameraMoveDirection& direction, c
 	if (direction == CameraMoveDirection::Forward)
 	{
 		auto newPosition = position + getViewDirection() * timeInSec * moveSpeed;
-		if (glm::distance(newPosition, lookAt) > 0.1f) {
+		if (glm::distance(newPosition, lookAt) > 0.1f)
+		{
 			position = newPosition;
 		}
 	}
@@ -41,10 +42,12 @@ void ArcBallCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::ve
 	float yAngle = (oldMousePosition.y - newMousePosition.y) * deltaAngleY;
 
 	float cosAngle = glm::dot(getViewDirection(), worldUp);
-	if (cosAngle < -0.99f) {
+	if (cosAngle < -0.99f)
+	{
 		yAngle = 0.01f;
 	}
-	if (cosAngle > 0.99f) {
+	if (cosAngle > 0.99f)
+	{
 		yAngle = -0.01f;
 	}
 
@@ -66,18 +69,21 @@ glm::mat4 ArcBallCamera::calculateViewMatrix() const
 
 void ArcBallCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	if (beginImGui) {
+	if (beginImGui)
+	{
 		ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
 	}
-	
+
 	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
 	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);;
 
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
+	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 }))
+	{
 		objectHandler.removeObjectFromEdit(this);
 	}
 
-	if (beginImGui) {
+	if (beginImGui)
+	{
 		ImGui::End();
 	}
 }
@@ -85,8 +91,8 @@ void ArcBallCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, uns
 void ArcBallCamera::useImmediateGluLookAt()
 {
 	gluLookAt(position.x, position.y, position.z,
-		0, 0, 0,
-		worldUp.x, worldUp.y, worldUp.z);
+			  0, 0, 0,
+			  worldUp.x, worldUp.y, worldUp.z);
 }
 
 glm::vec3 ArcBallCamera::getViewDirection() const

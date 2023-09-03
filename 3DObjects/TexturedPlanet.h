@@ -9,7 +9,7 @@ class TexturedPlanet : public RenderablePlanet, public Textured
 {
 public:
 	TexturedPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
-		float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const Texture& texture);
+				   float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const Texture& texture);
 	virtual ~TexturedPlanet() {}
 
 	virtual void render(std::shared_ptr<SceneContext> sceneContext) const override;

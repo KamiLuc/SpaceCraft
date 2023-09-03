@@ -11,7 +11,7 @@ ColoredMesh::~ColoredMesh()
 }
 
 void ColoredMesh::createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
-	const std::vector<GLfloat>& normals, const std::vector<GLfloat>& verticesColorBuffer)
+							 const std::vector<GLfloat>& normals, const std::vector<GLfloat>& verticesColorBuffer)
 {
 	beginMeshCreation();
 	BasicMesh::bindBuffers(vertices, indices, normals);
@@ -37,7 +37,8 @@ void ColoredMesh::bindSingleColor(const glm::vec<4, GLfloat>& color)
 	GLsizei dataSize = bufferSize / sizeof(GLfloat);
 	std::vector<GLfloat> data(dataSize);
 
-	for (GLsizei i = 0; i < dataSize / 4; i++) {
+	for (GLsizei i = 0; i < dataSize / 4; i++)
+	{
 		data[4 * i] = color[0];
 		data[4 * i + 1] = color[1];
 		data[4 * i + 2] = color[2];
@@ -50,7 +51,8 @@ void ColoredMesh::bindSingleColor(const glm::vec<4, GLfloat>& color)
 
 void ColoredMesh::bindBuffers(const std::vector<GLfloat>& verticesColors)
 {
-	if (!verticesColors.empty()) {
+	if (!verticesColors.empty())
+	{
 		glGenBuffers(1, &verticesColorBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, verticesColorBuffer);
 		glBufferData(GL_ARRAY_BUFFER, verticesColors.size() * sizeof(GLfloat), verticesColors.data(), GL_STATIC_DRAW);

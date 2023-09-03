@@ -2,17 +2,19 @@
 
 void Planet::update(float timeInSec)
 {
-	if (canMove) {
+	if (canMove)
+	{
 		position += velocity * timeInSec;
 	}
 }
 
 void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	std::array<const char*, 3> xyz{ "X", "Y", "Z" };
-	std::array<const char*, 3> vxyz{ "vX", "vY", "vZ" };
+	std::array<const char*, 3> xyz { "X", "Y", "Z" };
+	std::array<const char*, 3> vxyz { "vX", "vY", "vZ" };
 
-	if (beginImGui) {
+	if (beginImGui)
+	{
 		ImGui::Begin(("Edit planet " + std::to_string(windowID)).c_str());
 	}
 
@@ -23,20 +25,22 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 
 	ImGui::Separator();
 	ImGui::Text("Position settings");
-	for (size_t i = 0; i < xyz.size(); ++i) {
+	for (size_t i = 0; i < xyz.size(); ++i)
+	{
 		ImGui::DragFloat(xyz[i], position.getData()[i].getBasePtr(), 0.01f);
 		ImGui::SameLine();
-		std::string exponentLabel{ xyz[i] };
+		std::string exponentLabel { xyz[i] };
 		exponentLabel += " Exponent";
 		ImGui::InputInt(exponentLabel.c_str(), position.getData()[i].getExponentPtr());
 	}
 
 	ImGui::Separator();
 	ImGui::Text("Velocity settings");
-	for (size_t i = 0; i < vxyz.size(); ++i) {
+	for (size_t i = 0; i < vxyz.size(); ++i)
+	{
 		ImGui::DragFloat(vxyz[i], velocity.getData()[i].getBasePtr(), 0.01f);
 		ImGui::SameLine();
-		std::string exponentLabel{ vxyz[i] };
+		std::string exponentLabel { vxyz[i] };
 		exponentLabel += " Exponent";
 		ImGui::InputInt(exponentLabel.c_str(), velocity.getData()[i].getExponentPtr());
 	}
@@ -53,7 +57,8 @@ void Planet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned i
 	ImGui::DragFloat("Specular intensity", material.getSpecularIntensityPtr(), 0.01f, 0.0f, 1024.0f);
 	ImGui::DragFloat("Shininess", material.getShininessPtr(), 0.01f, 0.0f, 1024.0f);
 
-	if (beginImGui) {
+	if (beginImGui)
+	{
 		ImGui::End();
 	}
 }

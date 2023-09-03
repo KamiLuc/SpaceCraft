@@ -3,7 +3,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Light::Light(const LightSettings& settings)
-	: Light(settings.color, settings.ambientIntensity, settings.diffuseIntensity, settings.direction)
+	: Light(settings.color
+			, settings.ambientIntensity
+			, settings.diffuseIntensity
+			, settings.direction)
 {
 }
 
@@ -40,7 +43,8 @@ void Light::useLight(GLint ambientIntensityLocation, GLint colorLocation, GLint 
 
 void Light::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	if (beginImGui) {
+	if (beginImGui)
+	{
 		ImGui::Begin(("Edit light " + std::to_string(windowID)).c_str());
 	}
 
@@ -56,11 +60,13 @@ void Light::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned in
 	ImGui::SliderFloat("Z direction", &direction.z, -1.0f, 1.0f);
 
 	ImGui::Separator();
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
+	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 }))
+	{
 		objectHandler.removeObjectFromEdit(this);
 	}
 
-	if (beginImGui) {
+	if (beginImGui)
+	{
 		ImGui::End();
 	}
 }

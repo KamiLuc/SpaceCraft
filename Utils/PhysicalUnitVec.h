@@ -21,20 +21,16 @@ public:
     PhysicalUnitVec& operator+=(const PhysicalUnitVec& other);
     PhysicalUnitVec operator+(const PhysicalUnit& other) const;
     PhysicalUnitVec& operator+=(const PhysicalUnit& other);
-
     PhysicalUnitVec operator-(const PhysicalUnitVec& other) const;
     PhysicalUnitVec& operator-=(const PhysicalUnitVec& other);
-
     PhysicalUnitVec operator*(const PhysicalUnitVec& other) const;
     PhysicalUnitVec& operator*=(const PhysicalUnitVec& other);
     PhysicalUnitVec operator*(const PhysicalUnit& other) const;
     PhysicalUnitVec& operator*=(const PhysicalUnit& other);
-       
     PhysicalUnitVec operator/(const PhysicalUnitVec& other) const;
     PhysicalUnitVec& operator/=(const PhysicalUnitVec& other);
     PhysicalUnitVec operator/(const PhysicalUnit& other) const;
     PhysicalUnitVec& operator/=(const PhysicalUnit& other);
-
     PhysicalUnit& operator[](size_t index);
     const PhysicalUnit& operator[](size_t index) const;
 

@@ -1,8 +1,8 @@
 #include "Window.h"
-#include "imgui.h"
-#include "imgui-SFML.h"
 
-Window::Window() : Window("No name", { 640, 480 }, sf::Color::White)
+Window::Window()
+	: Window("No name", { 640, 480 }
+			 , sf::Color::White)
 {
 }
 
@@ -13,9 +13,9 @@ Window::Window(const std::string& title, const sf::Vector2u& size, const sf::Col
 	this->create();
 
 	this->eventManager.addCallback(StateType(0), "Fullscreen_toggle",
-		&Window::toggleFullscreen, this);
+								   &Window::toggleFullscreen, this);
 	this->eventManager.addCallback(StateType(0), "Window_close",
-		&Window::close, this);
+								   &Window::close, this);
 }
 
 Window::~Window()

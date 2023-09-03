@@ -5,8 +5,8 @@ void calculateAverageNormals(const std::vector<unsigned int>& indices, const std
 	normals.clear();
 	normals.resize(vertices.size(), 0.0f);
 
-	for (size_t i = 0; i < indices.size(); i += 3) {
-
+	for (size_t i = 0; i < indices.size(); i += 3)
+	{
 		glm::vec3 v1(vertices[3 * indices[i]], vertices[3 * indices[i] + 1], vertices[3 * indices[i] + 2]);
 		glm::vec3 v2(vertices[3 * indices[i + 1]], vertices[3 * indices[i + 1] + 1], vertices[3 * indices[i + 1] + 2]);
 		glm::vec3 v3(vertices[3 * indices[i + 2]], vertices[3 * indices[i + 2] + 1], vertices[3 * indices[i + 2] + 2]);
@@ -23,8 +23,8 @@ void calculateAverageNormals(const std::vector<unsigned int>& indices, const std
 		normals[3 * indices[i + 2] + 2] += faceNormal.z;
 	}
 
-	for (size_t i = 0; i < normals.size(); i += 3) {
-
+	for (size_t i = 0; i < normals.size(); i += 3)
+	{
 		glm::vec3 normal(normals[i], normals[i + 1], normals[i + 2]);
 		normal = glm::normalize(normal);
 		normals[i] = normal.x;

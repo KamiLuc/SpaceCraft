@@ -1,6 +1,8 @@
 #include "TextureManager.h"
 
-TextureManager::TextureManager() : texturesLoaded(false), texturesPath("")
+TextureManager::TextureManager()
+	: texturesLoaded(false)
+	, texturesPath("")
 {
 }
 
@@ -9,22 +11,25 @@ void TextureManager::loadTextures()
 	checkPath(texturesPath);
 
 	texturesLoaded.store(false);
-	std::vector<std::string> texturesAlreadyLoaded{};
+	std::vector<std::string> texturesAlreadyLoaded {};
 
-	for (auto& file : std::filesystem::directory_iterator(texturesPath)) {
+	for (auto& file : std::filesystem::directory_iterator(texturesPath))
+	{
 		std::filesystem::path path = file.path();
 		std::string fileExtension = path.extension().string();
 		std::string fileName = path.stem().string();
 
-		if (std::find(texturesAlreadyLoaded.begin(), texturesAlreadyLoaded.end(), fileName) == texturesAlreadyLoaded.end()) {
+		if (std::find(texturesAlreadyLoaded.begin(), texturesAlreadyLoaded.end(), fileName) == texturesAlreadyLoaded.end())
+		{
 
-			try {
+			try
+			{
 				auto texture = std::make_shared<Texture>(path, fileName, *this);
 				texture->loadTexture();
 				textures[fileName] = std::move(texture);
 				texturesAlreadyLoaded.emplace_back(std::move(fileName));
-			}
-			catch (...) {
+			} catch (...)
+			{
 				continue;
 			}
 		}
@@ -35,9 +40,10 @@ void TextureManager::loadTextures()
 
 void TextureManager::loadTexturesAsync()
 {
-	std::thread loadingThread([&]() {
-		loadTextures();
-		});
+	std::thread loadingThread([&]()
+							  {
+								  loadTextures();
+							  });
 
 	loadingThread.detach();
 }
@@ -49,10 +55,12 @@ void TextureManager::setPath(const std::filesystem::path& texturesPath)
 
 std::shared_ptr<Texture> TextureManager::getTexture(const std::string& texture) const
 {
-	if (textures.contains(texture)) {
+	if (textures.contains(texture))
+	{
 		return textures.at(texture);
 	}
-	else {
+	else
+	{
 		return nullptr;
 	}
 }
@@ -64,9 +72,10 @@ bool TextureManager::areTexturesLoaded() const
 
 std::vector<std::string> TextureManager::getTexturesNames() const
 {
-	std::vector<std::string> result{};
+	std::vector<std::string> result {};
 
-	for (const auto& el : textures) {
+	for (const auto& el : textures)
+	{
 		result.emplace_back(el.first);
 	}
 
@@ -75,8 +84,9 @@ std::vector<std::string> TextureManager::getTexturesNames() const
 
 void TextureManager::checkPath(const std::filesystem::path& texturesPath)
 {
-	if (!std::filesystem::exists(texturesPath)) {
-		std::string exceptionMessage{ std::move(std::string(__func__).append(" Failed to open ").
+	if (!std::filesystem::exists(texturesPath))
+	{
+		std::string exceptionMessage { std::move(std::string(__func__).append(" Failed to open ").
 			append(texturesPath.string().c_str()).append(" Folder doesn't exist\n")) };
 		printf(exceptionMessage.c_str());
 		throw std::exception(exceptionMessage.c_str());

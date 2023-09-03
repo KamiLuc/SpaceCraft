@@ -29,7 +29,8 @@ void TexturedMesh::clearMesh()
 
 void TexturedMesh::bindBuffers(const std::vector<GLfloat>& textureCoordinates)
 {
-	if (!textureCoordinates.empty()) {
+	if (!textureCoordinates.empty())
+	{
 		glGenBuffers(1, &textureCoordinatesBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, textureCoordinatesBuffer);
 		glBufferData(GL_ARRAY_BUFFER, textureCoordinates.size() * sizeof(GLfloat), textureCoordinates.data(), GL_STATIC_DRAW);

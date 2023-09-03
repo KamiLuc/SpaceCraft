@@ -28,9 +28,9 @@ public:
 
 	void renderObject(const Renderable& renderable);
 	std::shared_ptr<TexturedPlanet> createTexturedPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
-		const PhysicalUnit& radius, float scale, const std::string& identifier, const Texture& texture);
+														 const PhysicalUnit& radius, float scale, const std::string& identifier, const Texture& texture);
 	std::shared_ptr<ColoredPlanet> createColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
-		const PhysicalUnit& radius, float scale, const std::string& identifier, const glm::vec4& color);
+													   const PhysicalUnit& radius, float scale, const std::string& identifier, const glm::vec4& color);
 	std::list<std::shared_ptr<RenderablePlanet>>& getPlanetsRef();
 	Light& getMainLightRef();
 	CameraManager& getCameraManagerRef();
@@ -47,7 +47,6 @@ public:
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool begiImGui) override;
 
 private:
-
 	enum class Mouse {
 		LEFT,
 		RIGHT
@@ -55,7 +54,6 @@ private:
 
 	bool pauseSimulation;
 	bool renderCoordinateAxes;
-
 	PhysicalUnit simulationSpeed;
 	PhysicalUnit gravitationalConstant;
 	std::shared_ptr<SceneContext> sceneContext;

@@ -25,7 +25,7 @@ void StateSpaceSimulation::onCreate()
 	auto& settings = Settings::GlobalSettings::getInstance();
 
 	auto cameraManager = std::make_shared<CameraManagerToSFMLFrameworkAdapter>(settings.getArcBallCameraSettings(),
-		settings.getFirstPersonCameraSettings(), window->getRenderWindow());
+																			   settings.getFirstPersonCameraSettings(), window->getRenderWindow());
 	auto mainLight = std::make_shared<Light>(settings.getMainLightSettings());
 
 	simulationGui = std::make_unique<SpaceSimulationImGui>(*this, *textureManager);
@@ -57,18 +57,20 @@ void StateSpaceSimulation::update(const sf::Time& time)
 	sceneContext->cameraManager->updateCameraPosition(realTimeInSec);
 
 	float simTime = realTimeInSec * static_cast<float>(this->simulationSpeed.getValue());
-	
-	if (!pauseSimulation && !planets.empty()) {
+
+	if (!pauseSimulation && !planets.empty())
+	{
 
 		unsigned int toDrop = 1;
-		for (const auto& firstPlanet : planets) {
-
-			for (const auto& secondPlanet : planets | std::views::drop(toDrop++)) {
+		for (const auto& firstPlanet : planets)
+		{
+			for (const auto& secondPlanet : planets | std::views::drop(toDrop++))
+			{
 
 				auto distanceVec = secondPlanet->getPosition() - firstPlanet->getPosition();
 				auto distanceSquared = distanceVec.getLength().getSquared();
 				auto force = gravitationalConstant * (firstPlanet->getMass() * secondPlanet->getMass()) / distanceSquared;
-				auto forceVec = distanceVec.getNormalized() *  force;
+				auto forceVec = distanceVec.getNormalized() * force;
 
 				auto firstAcceleration = forceVec / firstPlanet->getMass();
 				auto secondAcceleration = (forceVec * (-1)) / secondPlanet->getMass();
@@ -78,15 +80,18 @@ void StateSpaceSimulation::update(const sf::Time& time)
 			}
 		}
 
-		for (auto& el : planets) {
+		for (auto& el : planets)
+		{
 			el->update(simTime, realTimeInSec);
 		}
 	}
-	
-	if (focusedPlanet != nullptr) {
+
+	if (focusedPlanet != nullptr)
+	{
 		sceneContext->cameraManager->observePoint(focusedPlanet->getPositionInWorldSpace());
 	}
-	else {
+	else
+	{
 		sceneContext->cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
 	}
 }
@@ -95,11 +100,13 @@ void StateSpaceSimulation::draw()
 {
 	simulationGui->draw();
 
-	for (const auto& el : objectsToRender) {
+	for (const auto& el : objectsToRender)
+	{
 		renderObject(*el);
 	}
 
-	if (renderCoordinateAxes) {
+	if (renderCoordinateAxes)
+	{
 		renderObject(*coordinateSystemAxes);
 	}
 
@@ -108,13 +115,13 @@ void StateSpaceSimulation::draw()
 }
 
 std::shared_ptr<TexturedPlanet> StateSpaceSimulation::createTexturedPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
-	const PhysicalUnit& radius, float scale, const std::string& identifier, const Texture& texture)
+																		   const PhysicalUnit& radius, float scale, const std::string& identifier, const Texture& texture)
 {
 	return std::make_shared<TexturedPlanet>(position, velocity, mass, radius, scale, identifier, shaderManager, texture);
 }
 
 std::shared_ptr<ColoredPlanet> StateSpaceSimulation::createColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
-	const PhysicalUnit& radius, float scale, const std::string& identifier, const glm::vec4& color)
+																		 const PhysicalUnit& radius, float scale, const std::string& identifier, const glm::vec4& color)
 {
 	return std::make_shared<ColoredPlanet>(position, velocity, mass, radius, scale, identifier, shaderManager, color);
 }
@@ -173,10 +180,12 @@ void StateSpaceSimulation::focusPlanet(std::shared_ptr<RenderablePlanet> planet)
 
 void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	if (beginImGui) {
+	if (beginImGui)
+	{
 		ImGui::Begin(("Simulation settings " + std::to_string(windowID)).c_str());
 	}
-	else {
+	else
+	{
 		ImGui::Separator();
 	}
 
@@ -189,11 +198,13 @@ void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandl
 	ImGui::InputInt("Simulation speed exponent", simulationSpeed.getExponentPtr());
 
 	ImGui::Separator();
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
+	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 }))
+	{
 		objectHandler.removeObjectFromEdit(this);
 	}
 
-	if (beginImGui) {
+	if (beginImGui)
+	{
 		ImGui::End();
 	}
 }
@@ -227,12 +238,13 @@ void StateSpaceSimulation::mouseRightClick(EventDetails* details)
 
 void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)
 {
-	if (!ImGui::GetIO().WantCaptureMouse) {
+	if (!ImGui::GetIO().WantCaptureMouse)
+	{
 		float x = static_cast<float>(details->mouse.x);
 		float y = static_cast<float>(details->mouse.y);
 		float z = 0.5f;
 		auto winSize = stateManager->getContext()->window->getRenderWindow()->getSize();
-		glm::vec4 viewPort{ 0.0f, 0.0f, winSize.x, winSize.y };
+		glm::vec4 viewPort { 0.0f, 0.0f, winSize.x, winSize.y };
 		glm::mat4 projectionMatrix = sceneContext->cameraManager->getProjectionMatrix();
 		glm::mat4 viewMatrix = sceneContext->cameraManager->getViewMatrix();
 
@@ -240,7 +252,8 @@ void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)
 		glm::vec3 farPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.99f), viewMatrix, projectionMatrix, viewPort);
 		glm::vec3 rayDirection = glm::normalize(farPlane - nearPlane);
 
-		for (const auto& planet : planets) {
+		for (const auto& planet : planets)
+		{
 
 			glm::vec3 objectToClick = planet->getPositionInWorldSpace() - nearPlane;
 
@@ -250,12 +263,15 @@ void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)
 
 			auto r = planet->getRadiusInWorldSpace();
 
-			if (distanceToIntersection < planet->getRadiusInWorldSpace()) {
+			if (distanceToIntersection < planet->getRadiusInWorldSpace())
+			{
 
-				if (mouseButton == Mouse::LEFT) {
+				if (mouseButton == Mouse::LEFT)
+				{
 					simulationGui->addObjectToEdit(planet);
 				}
-				else if (mouseButton == Mouse::RIGHT) {
+				else if (mouseButton == Mouse::RIGHT)
+				{
 					focusPlanet(planet);
 				}
 				break;

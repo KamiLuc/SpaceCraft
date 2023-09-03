@@ -9,7 +9,9 @@ public:
 		: Moveable(position)
 		, Scaleable(scale)
 		, velocity(velocity)
-		, mass(mass) {}
+		, mass(mass)
+	{
+	}
 	virtual ~PhysicalObject() {}
 
 	PhysicalUnitVec<3> getVelocity() const { return this->velocity; }

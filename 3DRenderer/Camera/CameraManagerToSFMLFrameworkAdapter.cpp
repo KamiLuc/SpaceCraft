@@ -1,10 +1,12 @@
 #include "CameraManagerToSFMLFrameworkAdapter.h"
 
 CameraManagerToSFMLFrameworkAdapter::CameraManagerToSFMLFrameworkAdapter(const Settings::CameraSettings& arcBallCameraSettings,
-	const Settings::CameraSettings& firstPersonCameraSettings, sf::Window* window)
+																		 const Settings::CameraSettings& firstPersonCameraSettings, sf::Window* window)
 	: CameraManager(arcBallCameraSettings, firstPersonCameraSettings,
-		{ static_cast<GLfloat>(window->getSize().x), static_cast<GLfloat>(window->getSize().y) }),
-	window(window), mouseCameraMove(false), lastMousePos(0, 0)
+					{ static_cast<GLfloat>(window->getSize().x), static_cast<GLfloat>(window->getSize().y) })
+	, window(window)
+	, mouseCameraMove(false)
+	, lastMousePos(0, 0)
 {
 }
 

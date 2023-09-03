@@ -9,7 +9,7 @@ class CameraManagerToSFMLFrameworkAdapter : public CameraManager
 {
 public:
 	CameraManagerToSFMLFrameworkAdapter(const Settings::CameraSettings& arcBallCameraSettings,
-		const Settings::CameraSettings& firstPersonCameraSettings, sf::Window* window);
+										const Settings::CameraSettings& firstPersonCameraSettings, sf::Window* window);
 
 	void handleKeyboardInput(EventDetails* e);
 	void updateCameraPosition(const GLfloat& timeInSec);

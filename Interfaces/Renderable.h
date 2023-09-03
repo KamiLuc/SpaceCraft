@@ -8,7 +8,9 @@
 class Renderable {
 public:
 	Renderable(std::shared_ptr<ShaderManager> shaderManager)
-		: shaderManager(shaderManager) {};
+		: shaderManager(shaderManager)
+	{
+	};
 	virtual ~Renderable() {}
 
 	virtual void render(std::shared_ptr<SceneContext> sceneContext) const = 0;

@@ -1,10 +1,12 @@
 #pragma once
 
+#include "EventManager/EventManager.h"
+#include "imgui.h"
+#include "imgui-SFML.h"
+
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <GL\glew.h>
-
-#include "EventManager/EventManager.h"
 
 enum class Render
 {
@@ -22,14 +24,13 @@ public:
 	void beginDraw();
 	void endDraw();
 	void update();
+	void setClearColor(const sf::Color& color);
 	void close(EventDetails* details = nullptr);
 	void toggleFullscreen(EventDetails* details);
 	void draw(const sf::Drawable& drawable);
 	void renderImGui();
-
 	void start2D();
 	void start3D();
-
 	bool isDone() const;
 	bool isFocused() const;
 	bool isFullscreen() const;
@@ -39,13 +40,7 @@ public:
 	EventManager* getEventManager();
 	sf::Color getClearColor() const;
 
-	void setClearColor(const sf::Color& color);
-
 private:
-	void destroy();
-	void create();
-	void initGLEW();
-
 	Render currentRender;
 	sf::RenderWindow window;
 	EventManager eventManager;
@@ -56,5 +51,9 @@ private:
 	bool done;
 	bool fullscreen;
 	bool focused;
+
+	void destroy();
+	void create();
+	void initGLEW();
 };
 

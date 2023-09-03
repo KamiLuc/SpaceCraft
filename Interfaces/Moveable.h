@@ -8,7 +8,9 @@ class Moveable {
 public:
 	Moveable(const PhysicalUnitVec<3>& position)
 		: position(position)
-		, canMove(true) {};
+		, canMove(true)
+	{
+	}
 	virtual ~Moveable() {}
 
 	void moveBy(const PhysicalUnitVec<3>& position) { this->position += position; }
@@ -16,7 +18,7 @@ public:
 	void setCanMove(bool canMove) { this->canMove = canMove; }
 	bool getCanMove() const { return canMove; }
 	PhysicalUnitVec<3> getPosition() const { return position; }
-	
+
 protected:
 	PhysicalUnitVec<3> position;
 	bool canMove;

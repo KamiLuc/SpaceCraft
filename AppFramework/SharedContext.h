@@ -10,7 +10,9 @@ struct SharedContext
 		: window(nullptr)
 		, eventManager(nullptr)
 		, shaderManager(nullptr)
-		, textureManager(nullptr) {}
+		, textureManager(nullptr)
+	{
+	}
 
 	Window* window;
 	EventManager* eventManager;
