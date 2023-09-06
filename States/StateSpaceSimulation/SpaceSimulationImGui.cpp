@@ -9,7 +9,7 @@ SpaceSimulationImGui::SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation
 
 void SpaceSimulationImGui::draw()
 {
-	this->update();
+	update();
 
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -34,183 +34,183 @@ void SpaceSimulationImGui::draw()
 
 void SpaceSimulationImGui::createColoredPlanet()
 {
-	/*auto temp = this->spaceSimulation.createColoredPlanet(
-		PhysicalUnitVec<3>::buildFromGlmVec(glm::vec<3, PhysicalUnit>({ 0.0f, 0 }, { 0.0f, 0 }, { 0.0f, 0 })),
-		PhysicalUnitVec<3>::buildFromGlmVec(glm::vec<3, PhysicalUnit>({ 0.0f, 0 }, { 0.0f, 0 }, { 0.0f, 0 })),
+	auto temp = spaceSimulation.createColoredPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 0.0f, 0 },
-		{ 1.0f, 0 },
+		{ 5.0f, 10 },
 		1.0f,
 		"Planet",
 		{ 0.3f, 0.2f, 0.8f, 1.0f });
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());*/
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp.get());
 }
 
 void SpaceSimulationImGui::createTexturedPlanet()
 {
-	/*auto temp = this->spaceSimulation.createTexturedPlanet(
-		PhysicalUnitVec<3>::buildFromGlmVec(glm::vec<3, PhysicalUnit>({ 0.0f, 0 }, { 0.0f, 0 }, { 0.0f, 0 })),
-		PhysicalUnitVec<3>::buildFromGlmVec(glm::vec<3, PhysicalUnit>({ 0.0f, 0 }, { 0.0f, 0 }, { 0.0f, 0 })),
+	auto temp = spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 0.0f, 0 },
-		{ 1.0f, 0 },
+		{ 5.0f, 10 },
 		1.0f,
 		"Planet",
-		*this->textureManager.getTexture(this->textureManager.getTexturesNames()[0]));
+		* textureManager.getTexture(textureManager.getTexturesNames()[0]));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());*/
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp.get());
 }
 
 void SpaceSimulationImGui::createSolarSystem()
 {
 	createSun();
-	/*createMercury();
-	createVenus();*/
+	createMercury();
+	createVenus();
 	createEarth();
 	createMars();
-	/*createJupiter();
+	createJupiter();
 	createSaturn();
 	createUranus();
-	createNeptune();*/
+	createNeptune();
 
 	objectsToEdit.clear();
 }
 
 void SpaceSimulationImGui::createEarth()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	auto temp = spaceSimulation.createTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.496f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(2.978f, 4)}),
 		{ 5.972f, 24 },
 		{ 6.371f, 6 },
 		2000.0f,
 		"Earth",
-		* this->textureManager.getTexture("earth"));
+		* textureManager.getTexture("earth"));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createSun()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	auto temp = spaceSimulation.createTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 1.989f, 30 },
 		{ 6.963f, 8 },
 		55.0f,
 		"Sun",
-		* this->textureManager.getTexture("sun"));
+		* textureManager.getTexture("sun"));
 
-	this->addObjectToEdit(temp.get());
+	addObjectToEdit(temp.get());
 	temp->setCanMove(false);
-	this->spaceSimulation.addPlanetToSimulation(temp);
+	spaceSimulation.addPlanetToSimulation(temp);
 }
 
 void SpaceSimulationImGui::createMercury()
 {
-	/*auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {5.791f, 0.0f, 0.0f}, 10 },
-		{ {0.0f, 0.0f, 4.736f}, 4 },
+	auto temp = spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(5.791f, 10), PhysicalUnit(0.0f, 10), PhysicalUnit(0.0f, 10)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(4.736f, 4)}),
 		{ 3.285f, 23 },
 		{ 2.439f, 6 },
 		3000.0f,
 		"Mercury",
-		*this->textureManager.getTexture("mercury"));
+		* textureManager.getTexture("mercury"));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);*/
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createVenus()
 {
-	/*auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {1.082f, 0.0f, 0.0f}, 11 },
-		{ {0.0f, 0.0f, 3.502f}, 4 },
+	auto temp = spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.082f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(3.502f, 4)}),
 		{ 4.867f, 24 },
 		{ 6.051f, 6 },
 		2000.0f,
 		"Venus",
-		*this->textureManager.getTexture("venus"));
+		* textureManager.getTexture("venus"));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);*/
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createJupiter()
 {
-	/*auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {7.785f, 0.0f, 0.0f}, 11 },
-		{ {0.0f, 0.0f, 1.307f}, 4 },
+	auto temp = spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(7.785f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(1.307f, 4)}),
 		{ 1.898f, 27 },
 		{ 6.699f, 7 },
 		500.0f,
 		"Jupiter",
-		*this->textureManager.getTexture("jupiter"));
+		* textureManager.getTexture("jupiter"));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);*/
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createSaturn()
 {
-	/*auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {1.427f, 0.0f, 0.0f}, 12 },
-		{ {0.0f, 0.0f, 9.672f}, 3 },
+	auto temp = spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.427f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(9.672f, 3)}),
 		{ 5.683f, 26 },
 		{ 5.823f, 7 },
 		500.0f,
 		"Saturn",
-		*this->textureManager.getTexture("saturn"));
+		* textureManager.getTexture("saturn"));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);*/
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createUranus()
 {
-	/*auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {2.871f, 0.0f, 0.0f}, 12 },
-		{ {0.0f, 0.0f, 6.81f}, 3 },
+	auto temp = spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(2.871f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(6.81f, 3)}),
 		{ 8.681f, 25 },
 		{ 2.536f, 7 },
-		500.0f,
+		3000.0f,
 		"Uranus",
-		*this->textureManager.getTexture("uranus"));
+		* textureManager.getTexture("uranus"));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);*/
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createNeptune()
 {
-	/*auto temp = this->spaceSimulation.createTexturedPlanet(
-		{ {4.498f, 0.0f, 0.0f}, 12 },
-		{ {0.0f, 0.0f, 5.43f}, 3 },
+	auto temp = spaceSimulation.createTexturedPlanet(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(4.498f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(5.43f, 3)}),
 		{ 1.024f, 26 },
 		{ 2.462f, 7 },
-		500.0f,
+		5000.0f,
 		"Neptune",
-		*this->textureManager.getTexture("neptune"));
+		* textureManager.getTexture("neptune"));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp);*/
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp);
 }
 
 void SpaceSimulationImGui::createMars()
 {
-	auto temp = this->spaceSimulation.createTexturedPlanet(
+	auto temp = spaceSimulation.createTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(2.279f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(2.407f, 4)}),
-		{ 6.39f, 23 },
+		{ 6.39f, 24 },
 		{ 3.389f, 6 },
 		2000.0f,
 		"Mars",
-		* this->textureManager.getTexture("mars"));
+		* textureManager.getTexture("mars"));
 
-	this->spaceSimulation.addPlanetToSimulation(temp);
-	this->addObjectToEdit(temp.get());
+	spaceSimulation.addPlanetToSimulation(temp);
+	addObjectToEdit(temp.get());
 }
 
 void SpaceSimulationImGui::showFileMenu()
@@ -350,7 +350,7 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 			auto toDelete = planets.begin();
 			for (unsigned int i = 0; i < *planetsToDelete.rbegin(); ++i)
 			{
-				toDelete++;
+				++toDelete;
 			}
 
 			removeObjectFromEdit(toDelete->get());
@@ -367,7 +367,7 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 			spaceSimulation.removePlanetFromSimulation(*planet);
 		}
 
-		this->objectsToEdit.clear();
+		objectsToEdit.clear();
 	}
 }
 
@@ -395,7 +395,7 @@ void SpaceSimulationImGui::showObjectFocusMenu()
 	{
 		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str()))
 		{
-			this->spaceSimulation.focusPlanet(planet);
+			spaceSimulation.focusPlanet(planet);
 		}
 		++index;
 	}

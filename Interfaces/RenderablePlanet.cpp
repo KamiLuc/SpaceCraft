@@ -32,30 +32,34 @@ void RenderablePlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, 
 	{
 		ImGui::Begin(("Edit planet " + std::to_string(windowID)).c_str());
 	}
-	else
-	{
-		ImGui::Separator();
-	}
 
 	Planet::editViaImGui(objectHandler, windowID, false);
 
-	ImGui::Separator();
-	ImGui::Text("Orbit settings");
-	ImGui::Checkbox("Render orbit", &renderOrbit);
-	glm::vec3 color = orbitInWorldSpace.getColor();
-	if (ImGui::ColorEdit3("Color", glm::value_ptr(color)))
+	if (ImGui::CollapsingHeader("Orbit"))
 	{
-		orbitInWorldSpace.setColor(color);
-	}
-	int orbitMaxSize = static_cast<int>(orbitInWorldSpace.getMaxSize());
-	if (ImGui::InputInt("Max size", &orbitMaxSize))
-	{
-		if (orbitMaxSize > 0)
+		ImGui::Checkbox("Render orbit", &renderOrbit);
+
+		ImGui::PushItemWidth(291.0f);
+		glm::vec3 color = orbitInWorldSpace.getColor();
+		if (ImGui::ColorEdit3("Color", glm::value_ptr(color)))
 		{
-			orbitInWorldSpace.setMaxSize(orbitMaxSize);
+			orbitInWorldSpace.setColor(color);
 		}
+		ImGui::PopItemWidth();
+
+		ImGui::PushItemWidth(100.0f);
+		int orbitMaxSize = static_cast<int>(orbitInWorldSpace.getMaxSize());
+		if (ImGui::InputInt("Max size", &orbitMaxSize))
+		{
+			if (orbitMaxSize > 0)
+			{
+				orbitInWorldSpace.setMaxSize(orbitMaxSize);
+			}
+		}
+
+		ImGui::DragFloat("Update interval", &orbitDataUpdateIntervalInSec, 0.01f, 0.01f, 100.0f);
+		ImGui::PopItemWidth();
 	}
-	ImGui::DragFloat("Update interval", &orbitDataUpdateIntervalInSec, 0.01f, 0.01f, 100.0f);
 
 	if (beginImGui)
 	{

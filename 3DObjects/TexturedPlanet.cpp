@@ -56,7 +56,8 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 {
 	if (beginImGui)
 	{
-		ImGui::Begin(("Edit textured planet " + std::to_string(windowID)).c_str());
+		ImGui::SetNextWindowSizeConstraints(ImVec2(410, 300), ImVec2(410, 1000));
+		ImGui::Begin(("Edit textured planet " + std::to_string(windowID)).c_str(), nullptr);
 	}
 
 	RenderablePlanet::editViaImGui(objectHandler, windowID, false);
