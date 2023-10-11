@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Interfaces/EditableViaImGui.h"
-#include "../../Settings/LightSettings.h"
+#include "AppFramework/GUI/EditableViaImGui.h"
+#include "Settings/LightSettings.h"
 
 #include <glm\glm.hpp>
 #include <GL\glew.h>
@@ -17,15 +17,13 @@ public:
 
 	void setAmbientIntensity(GLfloat ambientIntensity);
 	void setDirection(const glm::vec3& direction);
-
 	void useLight(GLint ambientIntensityLocation, GLint colorLocation, GLint diffuseIntensityLocation, GLint directionLocation);
-
-	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) override;
+	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
 
 private:
 	glm::vec3 color;
+	glm::vec3 direction;
 	GLfloat ambientIntensity;
 	GLfloat diffuseIntensity;
-	glm::vec3 direction;
 };
 

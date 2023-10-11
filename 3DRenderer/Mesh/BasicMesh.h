@@ -11,7 +11,7 @@ public:
 	virtual ~BasicMesh();
 
 	virtual void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
-		const std::vector<GLfloat>& normals);
+							const std::vector<GLfloat>& normals);
 	virtual void clearMesh();
 	virtual void useMesh() const;
 

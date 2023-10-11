@@ -1,16 +1,30 @@
 #pragma once
 
+#include "3DObjects/Orbit.h"
+#include "AppFramework/Serializer/Serializable.h"
 #include "Renderable.h"
 #include "Planet.h"
 
-class RenderablePlanet : public Planet, public Renderable {
+#include <glm/gtc/type_ptr.hpp>
+
+class RenderablePlanet : public Planet, public Renderable, public Serializable {
 public:
-	RenderablePlanet(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, const Measure<1>& radius,
-		float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, unsigned int sectors = 32, unsigned int stacks = 32);
+	RenderablePlanet();
+	RenderablePlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
+					 float scale, const std::string& identifier, unsigned int sectors = 32, unsigned int stacks = 32);
 
-	virtual glm::mat4 getModelMatrix() const override;
 	virtual ~RenderablePlanet() {}
+	virtual glm::mat4 getModelMatrix() const;
+	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
 
-private:
+	void update(float simTimeInSec, float realTimeInSec);
+	float getRadiusInWorldSpace() const;
+	glm::vec3 getPositionInWorldSpace() const;
 
+protected:
+	const PhysicalUnit worldScale;
+	Orbit orbitInWorldSpace;
+	float lastRealOrbitUpdate;
+	float orbitDataUpdateIntervalInSec;
+	bool renderOrbit;
 };

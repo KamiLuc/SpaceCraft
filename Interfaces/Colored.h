@@ -4,14 +4,17 @@
 
 class Colored {
 public:
+	Colored() {}
 	Colored(const glm::vec4& color) : color(color) {}
 	virtual ~Colored() {};
 
-	void setColor(const glm::vec4& color) {
+	void setColor(const glm::vec4& color)
+	{
 		this->color = color;
 	}
 
-	glm::vec4 getColor() const {
+	glm::vec4 getColor() const
+	{
 		return this->color;
 	}
 

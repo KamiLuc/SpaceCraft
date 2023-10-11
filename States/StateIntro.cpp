@@ -1,7 +1,4 @@
 #include "StateIntro.h"
-#include "../AppFramework/StateManager/StateManager.h"
-
-#include <future>
 
 StateIntro::StateIntro(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
@@ -73,7 +70,7 @@ void StateIntro::update(const sf::Time& time)
 		spaceSprite.setPosition(spaceSprite.getPosition().x, yPos * (timePassedInSec / introMovementTimInSec));
 		craftSprite.setPosition(craftSprite.getPosition().x, yPos * (timePassedInSec / introMovementTimInSec));
 		rocketSprite.setPosition(rocketSprite.getPosition().x, windowSize.y - windowSize.y *
-			(timePassedInSec / introMovementTimInSec) + yPos - 10);
+								 (timePassedInSec / introMovementTimInSec) + yPos - 10);
 	}
 
 	else if (timePassedInSec > introMovementTimInSec * 2.0f)
@@ -109,7 +106,8 @@ void StateIntro::draw()
 
 void StateIntro::skip(EventDetails* details)
 {
-	if (stateManager->getContext()->shaderManager->areShadersCompiled()) {
+	if (stateManager->getContext()->shaderManager->areShadersCompiled())
+	{
 		//stateManager->switchTo(StateType::MainMenu);
 		stateManager->switchTo(StateType::SimulationLoading);
 		stateManager->remove(StateType::Intro);

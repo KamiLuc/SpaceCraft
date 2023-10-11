@@ -9,8 +9,9 @@ class ImGuiEditableObjectsHandler;
 
 class EditableViaImGui {
 public:
-	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID) = 0;
+	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) = 0;
 	virtual ~EditableViaImGui() {}
+
 private:
 };
 

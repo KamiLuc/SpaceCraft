@@ -9,11 +9,12 @@ public:
 	virtual ~TexturedMesh();
 
 	void createMesh(const std::vector<GLfloat>& vertices, const std::vector<GLuint>& indices,
-		const std::vector<GLfloat>& normals, const std::vector<GLfloat>& textureCoordinates);
+					const std::vector<GLfloat>& normals, const std::vector<GLfloat>& textureCoordinates);
 	void clearMesh();
 
 protected:
-	void bindBuffers(const std::vector<GLfloat>& textureCoordinates);
 	GLuint textureCoordinatesBuffer;
+
+	void bindBuffers(const std::vector<GLfloat>& textureCoordinates);
 };
 

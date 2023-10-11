@@ -1,9 +1,5 @@
 #include "EventManager.h"
 
-#include <fstream>
-#include <cstdio>
-#include <sstream>
-
 EventManager::EventManager() : focus(true)
 {
 	this->loadBindings();
@@ -148,29 +144,29 @@ void EventManager::update()
 		{
 			switch (eventIt.first)
 			{
-			case (EventType::Keyboard):
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(eventIt.second.code)))
-				{
-					if (bind->details.keyCode != -1)
+				case (EventType::Keyboard):
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(eventIt.second.code)))
 					{
-						bind->details.keyCode = eventIt.second.code;
+						if (bind->details.keyCode != -1)
+						{
+							bind->details.keyCode = eventIt.second.code;
+						}
+						++(bind->eventsHappening);
 					}
-					++(bind->eventsHappening);
-				}
-				break;
-			case (EventType::Mouse):
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Button(eventIt.second.code)))
-				{
-					if (bind->details.keyCode != -1)
+					break;
+				case (EventType::Mouse):
+					if (sf::Mouse::isButtonPressed(sf::Mouse::Button(eventIt.second.code)))
 					{
-						bind->details.keyCode = eventIt.second.code;
+						if (bind->details.keyCode != -1)
+						{
+							bind->details.keyCode = eventIt.second.code;
+						}
+						++(bind->eventsHappening);
 					}
-					++(bind->eventsHappening);
-				}
-				break;
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 
@@ -221,21 +217,22 @@ void EventManager::loadBindings()
 		throw std::runtime_error(errorMessage.c_str());
 	}
 
-	std::string line{};
+	std::string line {};
 	while (std::getline(bindings, line))
 	{
 		std::stringstream keyStream(line);
 		std::string callbackName;
 		keyStream >> callbackName;
 
-		if (callbackName.empty()) {
+		if (callbackName.empty())
+		{
 			continue;
 		}
 
 		auto bind = std::make_shared<Binding>(callbackName);
 		while (!keyStream.eof())
 		{
-			std::string keyValue{};
+			std::string keyValue {};
 			keyStream >> keyValue;
 			int start = 0;
 			size_t end = keyValue.find(delimeter);

@@ -1,17 +1,18 @@
 #pragma once
 
-#include "../../3DRenderer/Texture/Texture.h"
+#include "3DRenderer/Texture/Texture.h"
 
 #include <memory>
 
 class Textured {
 public:
-	Textured(const Texture& texture) : texture(&texture) {};
+	Textured() : texture(nullptr) {}
+	Textured(std::shared_ptr<Texture> texture) : texture(texture) {}
 	virtual ~Textured() {}
 
-	void setTexture(const Texture& texture) { this->texture = &texture; }
-	const Texture& getTexture() const { return *texture; }
+	void setTexture(std::shared_ptr<Texture> texture) { this->texture = texture; }
+	const std::shared_ptr<const Texture> getTexture() const { return texture; }
 
 protected:
-	const Texture* texture;
+	std::shared_ptr<const Texture> texture;
 };

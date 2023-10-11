@@ -9,7 +9,9 @@ public:
 	Material(GLfloat intensity, GLfloat shine);
 	~Material();
 
-	void useMaterial(GLuint specularIntensityLocation, GLuint shininessLocation);
+	void useMaterial(GLuint specularIntensityLocation, GLuint shininessLocation) const;
+	GLfloat* getSpecularIntensityPtr() { return &specularIntensity; }
+	GLfloat* getShininessPtr() { return &shininess; }
 
 private:
 	GLfloat specularIntensity;

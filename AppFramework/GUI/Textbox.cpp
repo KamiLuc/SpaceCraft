@@ -18,7 +18,7 @@ Textbox::~Textbox()
 void Textbox::setup(int linesVisible, int characterSize, int width, const sf::Vector2f& screenPosition)
 {
 	this->linesVisible = linesVisible;
-	sf::Vector2f offset{ 2.0f, 2.0f };
+	sf::Vector2f offset { 2.0f, 2.0f };
 
 	this->font.loadFromFile("arial.ttf");
 	this->content.setFont(this->font);
@@ -28,7 +28,7 @@ void Textbox::setup(int linesVisible, int characterSize, int width, const sf::Ve
 	this->content.setOutlineColor(sf::Color::White);
 	this->content.setPosition(screenPosition + offset);
 
-	this->background.setSize({static_cast<float>(width), linesVisible * (characterSize * 1.2f)});
+	this->background.setSize({ static_cast<float>(width), linesVisible * (characterSize * 1.2f) });
 	this->background.setFillColor(sf::Color(90, 90, 90, 90));
 	this->background.setPosition(screenPosition);
 }

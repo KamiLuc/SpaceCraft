@@ -19,13 +19,15 @@ void Shader::createFromFiles(const std::filesystem::path& vertexShaderPath, cons
 	std::optional<std::string> vertexCode = readFile(vertexShaderPath);
 	std::optional<std::string> fragmentCode = readFile(fragmentShaderPath);
 
-	if (vertexCode == std::nullopt) {
-		std::string exceptionMessage{ std::move(std::string(__func__).append("readFile returned null from vertexShaderPath")) };
+	if (vertexCode == std::nullopt)
+	{
+		std::string exceptionMessage { std::move(std::string(__func__).append("readFile returned null from vertexShaderPath")) };
 		printf(exceptionMessage.c_str());
 		throw std::exception(exceptionMessage.c_str());
 	}
-	else if (fragmentCode == std::nullopt) {
-		std::string exceptionMessage{ std::move(std::string(__func__).append("readFile returned null from fragmentShaderPath")) };
+	else if (fragmentCode == std::nullopt)
+	{
+		std::string exceptionMessage { std::move(std::string(__func__).append("readFile returned null from fragmentShaderPath")) };
 		printf(exceptionMessage.c_str());
 		throw std::exception(exceptionMessage.c_str());
 	}
@@ -35,16 +37,18 @@ void Shader::createFromFiles(const std::filesystem::path& vertexShaderPath, cons
 
 std::optional<std::string> Shader::readFile(const std::filesystem::path& filePath)
 {
-	std::string fileContent{};
+	std::string fileContent {};
 	std::ifstream fileStream(filePath, std::ios::in);
 
-	if (!fileStream.is_open()) {
+	if (!fileStream.is_open())
+	{
 		printf("Failed to read %s File doesn't exist\n", filePath.string().c_str());
 		return std::nullopt;
 	}
 
-	std::string line{};
-	while (!fileStream.eof()) {
+	std::string line {};
+	while (!fileStream.eof())
+	{
 		std::getline(fileStream, line);
 		fileContent.append(line + "\n");
 	}
@@ -65,7 +69,8 @@ void Shader::useShader() const
 
 void Shader::clearShader()
 {
-	if (this->shaderID != 0) {
+	if (this->shaderID != 0)
+	{
 		glDeleteProgram(this->shaderID);
 		this->shaderID = 0;
 	}
@@ -77,7 +82,8 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 {
 	shaderID = glCreateProgram();
 
-	if (shaderID == 0) {
+	if (shaderID == 0)
+	{
 		printf("Error creating shader program!\n");
 		return;
 	}
@@ -90,7 +96,8 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 
 	glLinkProgram(shaderID);
 	glGetProgramiv(shaderID, GL_LINK_STATUS, &result);
-	if (!result) {
+	if (!result)
+	{
 		glGetProgramInfoLog(shaderID, sizeof(eLog), nullptr, eLog);
 		printf("Error linking program: %s\n", eLog);
 		return;
@@ -98,7 +105,8 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 
 	glValidateProgram(shaderID);
 	glGetProgramiv(shaderID, GL_LINK_STATUS, &result);
-	if (!result) {
+	if (!result)
+	{
 		glGetProgramInfoLog(shaderID, sizeof(eLog), nullptr, eLog);
 		printf("Error validating program: %s\n", eLog);
 		return;
@@ -114,15 +122,16 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 	uniformLocations.uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
 	uniformLocations.uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
 	uniformLocations.uniformCameraPosition = glGetUniformLocation(shaderID, "cameraPosition");
+	uniformLocations.uniformOrbitColor = glGetUniformLocation(shaderID, "orbitColor");
 }
 
 void Shader::addShader(GLuint programID, const char* shaderCode, GLenum shaderType)
 {
 	GLuint theShader = glCreateShader(shaderType);
-	const GLchar* theCode[1]{ 0 };
+	const GLchar* theCode[1] { 0 };
 	theCode[0] = shaderCode;
 
-	GLint codeLenght[1]{ 0 };
+	GLint codeLenght[1] { 0 };
 	codeLenght[0] = static_cast<GLint>(strlen(shaderCode));
 
 	glShaderSource(theShader, 1, theCode, codeLenght);
@@ -132,7 +141,8 @@ void Shader::addShader(GLuint programID, const char* shaderCode, GLenum shaderTy
 	GLchar eLog[1024] = { 0 };
 
 	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
-	if (!result) {
+	if (!result)
+	{
 		glGetShaderInfoLog(theShader, sizeof(eLog), nullptr, eLog);
 		printf("Error compiling the %d shader: %s\n", shaderType, eLog);
 		return;

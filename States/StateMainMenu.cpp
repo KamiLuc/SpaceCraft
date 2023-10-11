@@ -1,5 +1,4 @@
 #include "StateMainMenu.h"
-#include "../AppFramework/StateManager/StateManager.h"
 
 StateMainMenu::StateMainMenu(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
@@ -109,23 +108,23 @@ void StateMainMenu::mouseClick(EventDetails* details)
 		{
 			switch (i)
 			{
-			case 0:
-				this->getStateManager()->switchTo(StateType::SimulationLoading);
-				break;
-			case 3:
+				case 0:
+					this->getStateManager()->switchTo(StateType::SimulationLoading);
+					break;
+				case 3:
 #ifdef _WIN32
-				system((std::string("start ") + this->repoUrl).c_str());
+					system((std::string("start ") + this->repoUrl).c_str());
 #elif __APPLE__
-				system((std::string("open ") + this->repoUrl).c_str());
+					system((std::string("open ") + this->repoUrl).c_str());
 #else
-				system((std::string("xdg-open ") + this->repoUrl).c_str());
+					system((std::string("xdg-open ") + this->repoUrl).c_str());
 #endif
-				break;
-			case 4:
-				context->window->close();
-				break;
-			default:
-				break;
+					break;
+				case 4:
+					context->window->close();
+					break;
+				default:
+					break;
 			}
 		}
 	}

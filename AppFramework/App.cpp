@@ -1,27 +1,26 @@
 #include "App.h"
-#include "../Settings/Settings.h"
 
 App::App()
-	: window("SpaceCraft", { 1620, 900 }, sf::Color::White), sharedContext(),
-	stateManager(&this->sharedContext)
+	: window("SpaceCraft", { 1620, 900 }, sf::Color::White), sharedContext()
+	, stateManager(&sharedContext)
 {
-	this->shaderManager = std::make_shared<ShaderManager>();
-	this->textureManager = std::make_shared<TextureManager>();
+	shaderManager = std::make_shared<ShaderManager>();
+	textureManager = std::make_shared<TextureManager>();
 
-	this->sharedContext.window = &this->window;
-	this->sharedContext.eventManager = this->window.getEventManager();
-	this->sharedContext.shaderManager = this->shaderManager;
-	this->sharedContext.textureManager = this->textureManager;
+	sharedContext.window = &window;
+	sharedContext.eventManager = window.getEventManager();
+	sharedContext.shaderManager = shaderManager;
+	sharedContext.textureManager = textureManager;
 
 	auto& settings = Settings::GlobalSettings::getInstance();
 
-	this->shaderManager->setPath(settings.getShadersPath());
-	this->textureManager->setPath(settings.getTexturesPath());
+	shaderManager->setPath(settings.getShadersPath());
+	textureManager->setPath(settings.getTexturesPath());
 
-	this->window.start3D();
-	this->shaderManager->loadAndCompileShaders();
+	window.start3D();
+	shaderManager->loadAndCompileShaders();
 
-	this->stateManager.switchTo(StateType::Intro);
+	stateManager.switchTo(StateType::Intro);
 }
 
 App::~App()
@@ -34,34 +33,34 @@ void App::handleInput()
 
 void App::update()
 {
-	this->window.update();
-	this->stateManager.update(this->elapsedTime);
+	window.update();
+	stateManager.update(elapsedTime);
 }
 
 void App::lateUpdate()
 {
-	this->stateManager.processRequest();
-	this->restartClock();
+	stateManager.processRequest();
+	restartClock();
 }
 
 void App::render()
 {
-	this->window.beginDraw();
-	this->stateManager.draw();
-	this->window.endDraw();
+	window.beginDraw();
+	stateManager.draw();
+	window.endDraw();
 }
 
 sf::Time App::getElapsedTime() const
 {
-	return this->elapsedTime;
+	return elapsedTime;
 }
 
 void App::restartClock()
 {
-	this->elapsedTime = this->clock.restart();
+	elapsedTime = clock.restart();
 }
 
 Window* App::getWindow()
 {
-	return &this->window;
+	return &window;
 }

@@ -1,13 +1,15 @@
 #pragma once
 
-#include "../../Settings/CameraSettings.h" 
-#include "../../Settings/LightSettings.h"
-#include "../../3DRenderer/Texture/TextureManager.h"
-#include "../../Interfaces/Planet.h"
-#include "../../Interfaces/ImGuiEditableObjectsHandler.h"
-#include "StateSpaceSimulation.h"
+#include "Settings/CameraSettings.h" 
+#include "Settings/LightSettings.h"
+#include "3DRenderer/Texture/TextureManager.h"
+#include "Interfaces/Planet.h"
+#include "AppFramework/GUI/EditableViaImGui.h"
+#include "../StateSpaceSimulation.h"
 
 #include <vector>
+#include <imgui.h>
+#include <array>
 
 using namespace Settings;
 
@@ -17,13 +19,11 @@ class SpaceSimulationImGui : public ImGuiEditableObjectsHandler
 {
 public:
 	SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, TextureManager& textureManager);
-	void draw();
 
+	void draw();
 	void createColoredPlanet();
 	void createTexturedPlanet();
-
 	void createSolarSystem();
-
 	void createEarth();
 	void createSun();
 	void createMercury();
@@ -37,9 +37,7 @@ public:
 private:
 	StateSpaceSimulation& spaceSimulation;
 	TextureManager& textureManager;
-
 	std::vector<unsigned int> planetsToDelete;
-
 	bool renderCoordinateSystemAxis;
 
 	void showFileMenu();

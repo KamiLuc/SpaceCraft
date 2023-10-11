@@ -1,8 +1,9 @@
 #include "TextWithBackdrop.h"
 
 TextWithBackdrop::TextWithBackdrop(const std::string& content, const sf::Font& font, const unsigned int& characterSize,
-	const sf::Color& contentColor, const sf::Color& backdropColor)
-	: sf::Text(content, font, characterSize), backdrop()
+								   const sf::Color& contentColor, const sf::Color& backdropColor)
+	: sf::Text(content, font, characterSize)
+	, backdrop()
 {
 	this->setFillColor(contentColor);
 	this->setOutlineColor(contentColor);;

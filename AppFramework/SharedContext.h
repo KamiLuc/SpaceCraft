@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Window.h"
-#include "../3DRenderer/Shader/ShaderManager.h"
-#include "../3DRenderer/Texture/TextureManager.h"
+#include "3DRenderer/Shader/ShaderManager.h"
+#include "3DRenderer/Texture/TextureManager.h"
 
 struct SharedContext
 {
@@ -10,7 +10,9 @@ struct SharedContext
 		: window(nullptr)
 		, eventManager(nullptr)
 		, shaderManager(nullptr)
-		, textureManager(nullptr) {}
+		, textureManager(nullptr)
+	{
+	}
 
 	Window* window;
 	EventManager* eventManager;

@@ -1,4 +1,5 @@
 #include "FPCamera.h"
+
 #include <glm/ext/matrix_transform.hpp>
 
 FPCamera::FPCamera(const Settings::CameraSettings& settings)
@@ -14,20 +15,20 @@ void FPCamera::updateCameraPosition(const CameraMoveDirection& direction, const 
 
 	switch (direction)
 	{
-	case(CameraMoveDirection::Forward):
-		position += front * velocity;
-		break;
-	case(CameraMoveDirection::Backward):
-		position -= front * velocity;
-		break;
-	case(CameraMoveDirection::Left):
-		position -= right * velocity;
-		break;
-	case(CameraMoveDirection::Right):
-		position += right * velocity;
-		break;
-	default:
-		break;
+		case(CameraMoveDirection::Forward):
+			position += front * velocity;
+			break;
+		case(CameraMoveDirection::Backward):
+			position -= front * velocity;
+			break;
+		case(CameraMoveDirection::Left):
+			position -= right * velocity;
+			break;
+		case(CameraMoveDirection::Right):
+			position += right * velocity;
+			break;
+		default:
+			break;
 	}
 	updateCameraProperties();
 }
@@ -41,10 +42,12 @@ void FPCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& n
 	yaw += xChange;
 	pitch -= yChange;
 
-	if (pitch > 89.0f) {
+	if (pitch > 89.0f)
+	{
 		pitch = 89.0f;
 	}
-	else if (pitch < -89.0f) {
+	else if (pitch < -89.0f)
+	{
 		pitch = -89.0f;
 	}
 
@@ -67,24 +70,31 @@ glm::mat4 FPCamera::calculateViewMatrix() const
 	return glm::lookAt(position, position + front, up);
 }
 
-void FPCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID)
+void FPCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
 {
-	ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
+	if (beginImGui)
+	{
+		ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
+	}
 
 	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
 	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);;
 
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 })) {
+	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 }))
+	{
 		objectHandler.removeObjectFromEdit(this);
 	}
 
-	ImGui::End();
+	if (beginImGui)
+	{
+		ImGui::End();
+	}
 }
 
 void FPCamera::useImmediateGluLookAt()
 {
 	auto center = position + front;
 	gluLookAt(position.x, position.y, position.z,
-		center.x, center.y, center.z,
-		worldUp.x, worldUp.y, worldUp.y);
+			  center.x, center.y, center.z,
+			  worldUp.x, worldUp.y, worldUp.y);
 }

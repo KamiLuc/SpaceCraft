@@ -21,14 +21,11 @@ public:
 
 	void update(const sf::Time& time);
 	void draw();
-
 	void processRequest();
-
-	SharedContext* getContext();
-	bool hasState(const StateType& type) const;
-
 	void switchTo(const StateType& type);
 	void remove(const StateType& type);
+	SharedContext* getContext();
+	bool hasState(const StateType& type) const;
 
 private:
 
@@ -48,7 +45,7 @@ template<class T>
 inline void StateManager::registerState(const StateType& type, Render render)
 {
 	this->stateFactory[type] = [this, render]() -> auto
-	{
-		return std::make_unique<T>(this, render);
-	};
+		{
+			return std::make_unique<T>(this, render);
+		};
 }

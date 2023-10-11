@@ -5,21 +5,22 @@
 
 class PhysicalObject : public Moveable, public Scaleable {
 public:
-	PhysicalObject(const Measure<3>& position, const Measure<3>& velocity, const Measure<1>& mass, float scale)
+	PhysicalObject() {}
+	PhysicalObject(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, float scale)
 		: Moveable(position)
 		, Scaleable(scale)
 		, velocity(velocity)
-		, mass(mass) {}
-
-	Measure<3> getVelocity() const { return this->velocity; }
-	void setVelocity(const Measure<3>& velocity) { this->velocity = velocity; }
-
-	void setMass(const Measure<1>& mass) { this->mass = mass; }
-	Measure<1> getMass() const { return this->mass; }
-
+		, mass(mass)
+	{
+	}
 	virtual ~PhysicalObject() {}
 
+	PhysicalUnitVec<3> getVelocity() const { return this->velocity; }
+	PhysicalUnit getMass() const { return this->mass; }
+	void setVelocity(const PhysicalUnitVec<3>& velocity) { this->velocity = velocity; }
+	void setMass(const PhysicalUnit& mass) { this->mass = mass; }
+
 protected:
-	Measure<3> velocity;
-	Measure<1> mass;
+	PhysicalUnitVec<3> velocity;
+	PhysicalUnit mass;
 };
