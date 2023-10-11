@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../AppFramework/StateManager/BaseState.h"
-#include "../AppFramework/EventManager/EventDetails.h"
-#include "../AppFramework/GUI/TextWithBackdrop.h"
-#include "../AppFramework/StateManager/StateManager.h"
+#include "AppFramework/StateManager/BaseState.h"
+#include "AppFramework/EventManager/EventDetails.h"
+#include "AppFramework/GUI/TextWithBackdrop.h"
+#include "AppFramework/StateManager/StateManager.h"
 
 #include <vector>
 #include <SFML/Graphics.hpp>

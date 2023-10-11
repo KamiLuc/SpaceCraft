@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Window.h"
-#include "../3DRenderer/Shader/ShaderManager.h"
-#include "../3DRenderer/Texture/TextureManager.h"
+#include "3DRenderer/Shader/ShaderManager.h"
+#include "3DRenderer/Texture/TextureManager.h"
 
 struct SharedContext
 {

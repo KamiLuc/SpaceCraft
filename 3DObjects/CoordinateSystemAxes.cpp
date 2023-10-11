@@ -3,9 +3,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-CoordinateSystemAxes::CoordinateSystemAxes(std::shared_ptr<ShaderManager> shaderManager, const glm::vec3& position, float lineWidth, bool immediateRender)
-	: Renderable(shaderManager)
-	, VAO(0)
+CoordinateSystemAxes::CoordinateSystemAxes(const glm::vec3& position, float lineWidth, bool immediateRender)
+	: VAO(0)
 	, VBO(0)
 	, Moveable(PhysicalUnitVec<3>(position))
 	, model(1.0f)
@@ -58,7 +57,7 @@ CoordinateSystemAxes::~CoordinateSystemAxes()
 	}
 }
 
-void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) const
+void CoordinateSystemAxes::render(SceneContext& sceneContext) const
 {
 	if (immediateRender)
 	{
@@ -69,16 +68,17 @@ void CoordinateSystemAxes::render(std::shared_ptr<SceneContext> sceneContext) co
 	glPushMatrix();
 	glLineWidth(lineWidth);
 
+	auto& shaderManager = sceneContext.shaderManager;
 	auto shader = shaderManager->getShader("coordinateSystemAxes");
 	auto& uniforms = shader->getUniformLocations();
 
-	if (shader != shaderManager->getLastUsedShader())
+	if (shader != sceneContext.shaderManager->getLastUsedShader())
 	{
 		shader->useShader();
 		shaderManager->setLastUsedShader(shader);
 	}
 
-	sceneContext->cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
+	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
 
 	glUniformMatrix4fv(shader->getUniformLocations().uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	glBindVertexArray(VAO);
@@ -100,7 +100,7 @@ void CoordinateSystemAxes::setPosition(const glm::vec3& position)
 	this->model = glm::translate(glm::mat4(1.0f), position);
 }
 
-void CoordinateSystemAxes::renderWithImmediateMode(std::shared_ptr<SceneContext> sceneContext) const
+void CoordinateSystemAxes::renderWithImmediateMode(SceneContext& sceneContext) const
 {
 	glPushMatrix();
 
@@ -108,11 +108,11 @@ void CoordinateSystemAxes::renderWithImmediateMode(std::shared_ptr<SceneContext>
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(glm::value_ptr(sceneContext->cameraManager->getProjectionMatrix()));
+	glLoadMatrixf(glm::value_ptr(sceneContext.cameraManager->getProjectionMatrix()));
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glLoadMatrixf(glm::value_ptr(sceneContext->cameraManager->getViewMatrix()));
+	glLoadMatrixf(glm::value_ptr(sceneContext.cameraManager->getViewMatrix()));
 
 	glBegin(GL_LINES);
 

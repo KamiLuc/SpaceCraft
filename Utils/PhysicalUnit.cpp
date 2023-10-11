@@ -32,9 +32,11 @@ PhysicalUnit PhysicalUnit::operator-(const PhysicalUnit& other) const
 
 PhysicalUnit& PhysicalUnit::operator-=(const PhysicalUnit& other)
 {
-	exponent = std::max(exponent, other.exponent);
-	base = (base * static_cast<float>(std::pow(10, exponent - exponent))) -
-		(other.base * static_cast<float>(std::pow(10, other.exponent - exponent)));
+	int commonExponent = std::max(exponent, other.exponent);
+	float newBase = (base * static_cast<float>(std::pow(10, exponent - commonExponent))) -
+		(other.base * static_cast<float>(std::pow(10, other.exponent - commonExponent)));
+	this->exponent = commonExponent;
+	this->base = newBase;
 	return *this;
 }
 
@@ -48,9 +50,11 @@ PhysicalUnit PhysicalUnit::operator+(const PhysicalUnit& other) const
 
 PhysicalUnit& PhysicalUnit::operator+=(const PhysicalUnit& other)
 {
-	exponent = std::max(exponent, other.exponent);;
-	base = (base * static_cast<float>(std::pow(10, exponent - exponent))) +
-		(other.base * static_cast<float>(std::pow(10, other.exponent - exponent)));
+	int commonExponent = std::max(exponent, other.exponent);;
+	float newBase = (base * static_cast<float>(std::pow(10, exponent - commonExponent))) +
+		(other.base * static_cast<float>(std::pow(10, other.exponent - commonExponent)));
+	this->exponent = commonExponent;
+	this->base = newBase;
 	return *this;
 }
 

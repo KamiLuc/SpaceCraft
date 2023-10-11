@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GL/glew.h"
-#include "../../Submodules/stb/stb_image.h"
+#include "Submodules/stb/stb_image.h"
 #include "TextureManager.h"
 
 #include <cstdint>

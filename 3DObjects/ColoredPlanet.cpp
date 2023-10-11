@@ -4,8 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 ColoredPlanet::ColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
-							 float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const glm::vec4& color)
-	: RenderablePlanet(position, velocity, mass, radius, scale, identifier, shaderManager)
+							 float scale, const std::string& identifier, const glm::vec4& color)
+	: RenderablePlanet(position, velocity, mass, radius, scale, identifier)
 	, Colored(color)
 {
 	std::vector<GLfloat> vertices {};
@@ -25,8 +25,9 @@ ColoredPlanet::ColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalU
 	this->mesh.createMesh(vertices, indices, normals, colors);
 }
 
-void ColoredPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
+void ColoredPlanet::render(SceneContext& sceneContext) const
 {
+	auto& shaderManager = sceneContext.shaderManager;
 	auto shader = shaderManager->getShader("coloredObjectShader");
 	auto& uniforms = shader->getUniformLocations();
 
@@ -36,8 +37,8 @@ void ColoredPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
 		shaderManager->setLastUsedShader(shader);
 	}
 
-	sceneContext->cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	sceneContext->mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
+	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
+	sceneContext.mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
 	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
 
 	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
@@ -84,5 +85,20 @@ void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, uns
 	{
 		ImGui::End();
 	}
+}
+
+SerializableObjectId ColoredPlanet::getSerializabledId() const
+{
+	return SerializableObjectId::COLORED_PLANET;
+}
+
+std::string ColoredPlanet::serializeToString() const
+{
+	return std::string();
+}
+
+bool ColoredPlanet::deserializeFromString(const std::string& data)
+{
+	return false;
 }
 

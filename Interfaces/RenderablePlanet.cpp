@@ -1,14 +1,17 @@
 #include "RenderablePlanet.h"
 
+RenderablePlanet::RenderablePlanet()
+{
+}
+
 RenderablePlanet::RenderablePlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
-								   float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, unsigned int sectors, unsigned int stacks)
+								   float scale, const std::string& identifier, unsigned int sectors, unsigned int stacks)
 	: Planet(position, velocity, mass, radius, scale, identifier, sectors, stacks)
-	, Renderable(shaderManager)
 	, lastRealOrbitUpdate(0.0f)
 	, renderOrbit(false)
 	, orbitDataUpdateIntervalInSec(0.1f)
 	, worldScale({ 1.495978707f, 10 })
-	, orbitInWorldSpace(150, { 1.0f, 1.0f, 1.0f }, shaderManager)
+	, orbitInWorldSpace(150, { 1.0f, 1.0f, 1.0f })
 {
 }
 

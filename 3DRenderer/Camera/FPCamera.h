@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CameraInterface.h"
-#include "../../Interfaces/EditableViaImGui.h"
+#include "AppFramework/GUI/EditableViaImGui.h"
 
 class FPCamera : public CameraInterface, public EditableViaImGui
 {

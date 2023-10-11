@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../Settings/CameraSettings.h" 
-#include "../../Settings/LightSettings.h"
-#include "../../3DRenderer/Texture/TextureManager.h"
-#include "../../Interfaces/Planet.h"
-#include "../../Interfaces/ImGuiEditableObjectsHandler.h"
-#include "StateSpaceSimulation.h"
+#include "Settings/CameraSettings.h" 
+#include "Settings/LightSettings.h"
+#include "3DRenderer/Texture/TextureManager.h"
+#include "Interfaces/Planet.h"
+#include "AppFramework/GUI/EditableViaImGui.h"
+#include "../StateSpaceSimulation.h"
 
 #include <vector>
 #include <imgui.h>

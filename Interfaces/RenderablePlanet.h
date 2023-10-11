@@ -1,15 +1,17 @@
 #pragma once
 
-#include "../3DObjects/Orbit.h"
+#include "3DObjects/Orbit.h"
+#include "AppFramework/Serializer/Serializable.h"
 #include "Renderable.h"
 #include "Planet.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
-class RenderablePlanet : public Planet, public Renderable {
+class RenderablePlanet : public Planet, public Renderable, public Serializable {
 public:
+	RenderablePlanet();
 	RenderablePlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
-					 float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, unsigned int sectors = 32, unsigned int stacks = 32);
+					 float scale, const std::string& identifier, unsigned int sectors = 32, unsigned int stacks = 32);
 
 	virtual ~RenderablePlanet() {}
 	virtual glm::mat4 getModelMatrix() const;

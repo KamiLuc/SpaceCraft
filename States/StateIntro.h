@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../AppFramework/EventManager/EventDetails.h"
-#include "../AppFramework/StateManager/BaseState.h"
-#include "../AppFramework/GUI/Textbox.h"
-#include "../AppFramework/StateManager/StateManager.h"
+#include "AppFramework/EventManager/EventDetails.h"
+#include "AppFramework/StateManager/BaseState.h"
+#include "AppFramework/GUI/Textbox.h"
+#include "AppFramework/StateManager/StateManager.h"
 
 #include <future>
 #include <SFML/Graphics.hpp>

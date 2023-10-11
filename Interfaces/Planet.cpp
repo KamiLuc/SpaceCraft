@@ -1,5 +1,9 @@
 #include "Planet.h"
 
+Planet::Planet()
+{
+}
+
 void Planet::update(float timeInSec)
 {
 	if (canMove)

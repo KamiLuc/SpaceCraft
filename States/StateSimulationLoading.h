@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../AppFramework/StateManager/StateManager.h"
-#include "../AppFramework/StateManager/BaseState.h"
+#include "AppFramework/StateManager/StateManager.h"
+#include "AppFramework/StateManager/BaseState.h"
 
 class StateSimulationLoading : public BaseState
 {

@@ -2,10 +2,11 @@
 
 #include <GL/glew.h>
 
-#include "../../Utils/PhysicalUnitVec.h"
+#include "Utils/PhysicalUnitVec.h"
 
 class Moveable {
 public:
+	Moveable() {}
 	Moveable(const PhysicalUnitVec<3>& position)
 		: position(position)
 		, canMove(true)

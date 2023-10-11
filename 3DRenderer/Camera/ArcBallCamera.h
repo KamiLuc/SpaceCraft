@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CameraInterface.h"
-#include "../../Interfaces/EditableViaImGui.h"
+#include "AppFramework/GUI/EditableViaImGui.h"
 
 #include <algorithm>
 #include <glm/vector_relational.hpp>

@@ -1,8 +1,7 @@
 #include "Orbit.h"
 
-Orbit::Orbit(size_t maxSize, const glm::vec3 orbitColor, std::shared_ptr<ShaderManager> shaderManager)
+Orbit::Orbit(size_t maxSize, const glm::vec3 orbitColor)
 	: CircularVector(maxSize)
-	, Renderable(shaderManager)
 	, color(orbitColor)
 	, VAO(0)
 	, VBO(0)
@@ -44,9 +43,10 @@ void Orbit::addPoint(const glm::vec3& point)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Orbit::render(std::shared_ptr<SceneContext> sceneContext) const
+void Orbit::render(SceneContext& sceneContext) const
 {
-	auto shader = shaderManager->getShader("orbitShader");
+	auto& shaderManager = sceneContext.shaderManager;
+	auto shader = sceneContext.shaderManager->getShader("orbitShader");
 	auto& uniforms = shader->getUniformLocations();
 
 	if (shader != shaderManager->getLastUsedShader())
@@ -55,7 +55,7 @@ void Orbit::render(std::shared_ptr<SceneContext> sceneContext) const
 		shaderManager->setLastUsedShader(shader);
 	}
 
-	sceneContext->cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
+	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
 	glUniform3f(uniforms.uniformOrbitColor, color.r, color.g, color.b);
 
 	glBindVertexArray(VAO);

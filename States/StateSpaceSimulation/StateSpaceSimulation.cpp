@@ -2,21 +2,21 @@
 
 StateSpaceSimulation::StateSpaceSimulation(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
+	, planetCreator(stateManager->getContext()->shaderManager, objectsToRender, planets)
+	, shaderManager(stateManager->getContext()->shaderManager)
+	, textureManager(stateManager->getContext()->textureManager)
+	, serializer(',')
+	, sceneContext()
 	, simulationSpeed(8.64f, 4)
 	, gravitationalConstant(6.67430f, -11)
 	, pauseSimulation(true)
 	, renderCoordinateAxes(true)
-	, shaderManager(nullptr)
-	, textureManager(nullptr)
 {
 }
 
 void StateSpaceSimulation::onCreate()
 {
-	this->shaderManager = stateManager->getContext()->shaderManager;
-	this->textureManager = stateManager->getContext()->textureManager;
-
-	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(shaderManager, glm::vec3(0.0f, 0.0f, 0.0f));
+	coordinateSystemAxes = std::make_unique<CoordinateSystemAxes>(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	auto window = stateManager->getContext()->window;
 	auto windowSize = window->getWindowSize();
@@ -30,10 +30,11 @@ void StateSpaceSimulation::onCreate()
 
 	simulationGui = std::make_unique<SpaceSimulationImGui>(*this, *textureManager);
 
-	shinyMaterial = std::make_unique<Material>(2.0f, 1024.0f);
-	dullMaterial = std::make_shared<Material>(0.3f, 4.0f);
+	sceneContext = SceneContext(cameraManager, stateManager->getContext()->shaderManager, mainLight, std::make_shared<Material>(0.3f, 4.0f));
 
-	sceneContext = std::make_shared<SceneContext>(cameraManager, mainLight, dullMaterial);
+	serializer.setFilePath("tutajTesty2.txt");
+	serializer.registerObjectCreator(SerializableObjectId::COLORED_PLANET,
+									 [&](const std::string& data) { return planetCreator.createColoredPlanetFromString(data); });
 
 	addCallbacks();
 }
@@ -54,7 +55,7 @@ void StateSpaceSimulation::deactivate()
 void StateSpaceSimulation::update(const sf::Time& time)
 {
 	auto realTimeInSec = static_cast<float>(time.asSeconds());
-	sceneContext->cameraManager->updateCameraPosition(realTimeInSec);
+	sceneContext.cameraManager->updateCameraPosition(realTimeInSec);
 
 	float simTime = realTimeInSec * static_cast<float>(this->simulationSpeed.getValue());
 
@@ -66,7 +67,6 @@ void StateSpaceSimulation::update(const sf::Time& time)
 		{
 			for (const auto& secondPlanet : planets | std::views::drop(toDrop++))
 			{
-
 				auto distanceVec = secondPlanet->getPosition() - firstPlanet->getPosition();
 				auto distanceSquared = distanceVec.getLength().getSquared();
 				auto force = gravitationalConstant * (firstPlanet->getMass() * secondPlanet->getMass()) / distanceSquared;
@@ -88,11 +88,11 @@ void StateSpaceSimulation::update(const sf::Time& time)
 
 	if (focusedPlanet != nullptr)
 	{
-		sceneContext->cameraManager->observePoint(focusedPlanet->getPositionInWorldSpace());
+		sceneContext.cameraManager->observePoint(focusedPlanet->getPositionInWorldSpace());
 	}
 	else
 	{
-		sceneContext->cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
+		sceneContext.cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
 	}
 }
 
@@ -112,38 +112,6 @@ void StateSpaceSimulation::draw()
 
 	shaderManager->setLastUsedShader(nullptr);
 	stateManager->getContext()->window->renderImGui();
-}
-
-std::shared_ptr<TexturedPlanet> StateSpaceSimulation::createTexturedPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
-																		   const PhysicalUnit& radius, float scale, const std::string& identifier, const Texture& texture)
-{
-	return std::make_shared<TexturedPlanet>(position, velocity, mass, radius, scale, identifier, shaderManager, texture);
-}
-
-std::shared_ptr<ColoredPlanet> StateSpaceSimulation::createColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
-																		 const PhysicalUnit& radius, float scale, const std::string& identifier, const glm::vec4& color)
-{
-	return std::make_shared<ColoredPlanet>(position, velocity, mass, radius, scale, identifier, shaderManager, color);
-}
-
-std::list<std::shared_ptr<RenderablePlanet>>& StateSpaceSimulation::getPlanetsRef()
-{
-	return planets;
-}
-
-Light& StateSpaceSimulation::getMainLightRef()
-{
-	return *sceneContext->mainLight;
-}
-
-CameraManager& StateSpaceSimulation::getCameraManagerRef()
-{
-	return *sceneContext->cameraManager;
-}
-
-PhysicalUnit& StateSpaceSimulation::getSimulationSpeedRef()
-{
-	return simulationSpeed;
 }
 
 void StateSpaceSimulation::addPlanetToSimulation(std::shared_ptr<RenderablePlanet> planet)
@@ -175,7 +143,7 @@ void StateSpaceSimulation::focusPlanet(std::shared_ptr<RenderablePlanet> planet)
 	auto newCameraPos = planetInWorldPos - glm::vec3(newCameraPosComponent);
 
 	this->focusedPlanet = planet;
-	getCameraManagerRef().getArcBallCameraRef().setCameraPosition(newCameraPos);
+	sceneContext.cameraManager->getArcBallCameraRef().setCameraPosition(newCameraPos);
 }
 
 void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
@@ -209,6 +177,11 @@ void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandl
 	}
 }
 
+void StateSpaceSimulation::testSerialize()
+{
+	serializer.serializeObjects(planets.begin(), planets.end());
+}
+
 void StateSpaceSimulation::renderObject(const Renderable& renderable)
 {
 	renderable.render(sceneContext);
@@ -217,7 +190,7 @@ void StateSpaceSimulation::renderObject(const Renderable& renderable)
 void StateSpaceSimulation::focusCenter(EventDetails* details)
 {
 	focusedPlanet = nullptr;
-	sceneContext->cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
+	sceneContext.cameraManager->observePoint({ 0.0f, 0.0f, 0.0f });
 }
 
 void StateSpaceSimulation::switchSimulationState(EventDetails* e)
@@ -245,8 +218,8 @@ void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)
 		float z = 0.5f;
 		auto winSize = stateManager->getContext()->window->getRenderWindow()->getSize();
 		glm::vec4 viewPort { 0.0f, 0.0f, winSize.x, winSize.y };
-		glm::mat4 projectionMatrix = sceneContext->cameraManager->getProjectionMatrix();
-		glm::mat4 viewMatrix = sceneContext->cameraManager->getViewMatrix();
+		glm::mat4 projectionMatrix = sceneContext.cameraManager->getProjectionMatrix();
+		glm::mat4 viewMatrix = sceneContext.cameraManager->getViewMatrix();
 
 		glm::vec3 nearPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.0f), viewMatrix, projectionMatrix, viewPort);
 		glm::vec3 farPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.99f), viewMatrix, projectionMatrix, viewPort);
@@ -284,7 +257,7 @@ void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)
 void StateSpaceSimulation::addCallbacks()
 {
 	auto eventManager = stateManager->getContext()->eventManager;
-	auto cameraManager = sceneContext->cameraManager;
+	auto cameraManager = sceneContext.cameraManager;
 
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Start_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());
 	eventManager->addCallback<CameraManagerToSFMLFrameworkAdapter>(StateType::SpaceSimulation, "Stop_Camera_Forward", &CameraManagerToSFMLFrameworkAdapter::handleKeyboardInput, cameraManager.get());

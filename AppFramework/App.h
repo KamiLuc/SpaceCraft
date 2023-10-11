@@ -2,7 +2,7 @@
 
 #include "Window.h"
 #include "StateManager/StateManager.h"
-#include "../Settings/Settings.h"
+#include "Settings/Settings.h"
 
 class App
 {

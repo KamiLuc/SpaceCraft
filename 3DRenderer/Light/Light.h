@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Interfaces/EditableViaImGui.h"
-#include "../../Settings/LightSettings.h"
+#include "AppFramework/GUI/EditableViaImGui.h"
+#include "Settings/LightSettings.h"
 
 #include <glm\glm.hpp>
 #include <GL\glew.h>

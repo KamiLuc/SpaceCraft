@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Utils/Functions.h"
-#include "../3DRenderer/Mesh/BasicMesh.h"
-#include "../Utils/PhysicalUnit.h"
+#include "Utils/Functions.h"
+#include "3DRenderer/Mesh/BasicMesh.h"
+#include "Utils/PhysicalUnit.h"
 
 #include <vector>
 #include <GL/glew.h>
@@ -11,6 +11,7 @@
 class Sphere
 {
 public:
+	Sphere() : Sphere(0, 0, 0) {}
 	Sphere(const PhysicalUnit& radius, unsigned int stacks, unsigned int sectors);
 	~Sphere() {}
 

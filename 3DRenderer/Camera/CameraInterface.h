@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <stdexcept>
 
-#include "../../Settings/Settings.h"
+#include "Settings/Settings.h"
 #include "CameraMoveDirection.h"
 
 class CameraInterface

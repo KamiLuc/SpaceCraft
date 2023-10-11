@@ -1,4 +1,5 @@
 #include "FPCamera.h"
+
 #include <glm/ext/matrix_transform.hpp>
 
 FPCamera::FPCamera(const Settings::CameraSettings& settings)

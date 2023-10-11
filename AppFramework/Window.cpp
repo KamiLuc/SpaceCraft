@@ -1,14 +1,19 @@
 #include "Window.h"
 
-Window::Window()
-	: Window("No name", { 640, 480 }
-			 , sf::Color::White)
+Window::Window() : Window("No name", { 640, 480 }
+						  , sf::Color::White)
 {
 }
 
 Window::Window(const std::string& title, const sf::Vector2u& size, const sf::Color& clearColor)
-	: windowTitle(title), windowSize(size), done(false), fullscreen(false), focused(true),
-	clearColor(clearColor), currentRender(Render::twoDimensional), imGuiUpdateClock()
+	: windowTitle(title)
+	, windowSize(size)
+	, done(false)
+	, fullscreen(false)
+	, focused(true)
+	, clearColor(clearColor)
+	, currentRender(Render::twoDimensional)
+	, imGuiUpdateClock()
 {
 	this->create();
 

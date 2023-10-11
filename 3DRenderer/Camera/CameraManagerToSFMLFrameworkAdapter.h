@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CameraManager.h"
-#include "../../AppFramework/EventManager/EventDetails.h"
+#include "AppFramework/EventManager/EventDetails.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 

@@ -3,9 +3,14 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-TexturedPlanet::TexturedPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
-							   const PhysicalUnit& radius, float scale, const std::string& identifier, std::shared_ptr<ShaderManager> shaderManager, const Texture& texture)
-	: RenderablePlanet(position, velocity, mass, radius, scale, identifier, shaderManager)
+TexturedPlanet::TexturedPlanet()
+{
+}
+
+TexturedPlanet::TexturedPlanet(
+	const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+	const PhysicalUnit& radius, float scale, const std::string& identifier, std::shared_ptr<Texture> texture)
+	: RenderablePlanet(position, velocity, mass, radius, scale, identifier)
 	, Textured(texture)
 {
 	std::vector<GLfloat> vertices {};
@@ -27,8 +32,9 @@ TexturedPlanet::TexturedPlanet(const PhysicalUnitVec<3>& position, const Physica
 
 }
 
-void TexturedPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
+void TexturedPlanet::render(SceneContext& sceneContext) const
 {
+	auto& shaderManager = sceneContext.shaderManager;
 	auto shader = shaderManager->getShader("texturedObjectShader");
 	auto& uniforms = shader->getUniformLocations();
 
@@ -38,8 +44,8 @@ void TexturedPlanet::render(std::shared_ptr<SceneContext> sceneContext) const
 		shaderManager->setLastUsedShader(shader);
 	}
 
-	sceneContext->cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	sceneContext->mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
+	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
+	sceneContext.mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
 	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
 
 	texture->useTexture();
@@ -74,7 +80,7 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 
 			if (ImGui::Selectable(textures[i].c_str(), isSelected))
 			{
-				texture = textureToDisplay.get();
+				texture = textureToDisplay;
 			}
 
 			ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(textureToDisplay->getTextureId())),
@@ -105,4 +111,23 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 	{
 		ImGui::End();
 	}
+}
+
+SerializableObjectId TexturedPlanet::getSerializabledId() const
+{
+	return SerializableObjectId::TEXTURED_PLANET;
+}
+
+std::string TexturedPlanet::serializeToString() const
+{
+	std::stringstream ss;
+
+	ss << "witam" << ",ja" << ",testuje" << ",serializacje";
+
+	return ss.str();
+}
+
+bool TexturedPlanet::deserializeFromString(const std::string& data)
+{
+	return false;
 }

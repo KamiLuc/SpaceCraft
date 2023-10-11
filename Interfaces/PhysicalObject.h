@@ -5,6 +5,7 @@
 
 class PhysicalObject : public Moveable, public Scaleable {
 public:
+	PhysicalObject() {}
 	PhysicalObject(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, float scale)
 		: Moveable(position)
 		, Scaleable(scale)
