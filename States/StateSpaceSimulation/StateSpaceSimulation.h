@@ -38,6 +38,7 @@ public:
 	void mouseRightClick(EventDetails* details);
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool begiImGui) override;
 	void testSerialize();
+	void testDeserialize();
 
 private:
 	enum class Mouse {

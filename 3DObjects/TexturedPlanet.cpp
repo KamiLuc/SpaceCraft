@@ -3,7 +3,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-TexturedPlanet::TexturedPlanet()
+TexturedPlanet::TexturedPlanet() : TexturedPlanet({}, {}, {}, {}, 1.0f, "empty", nullptr)
 {
 }
 
@@ -13,23 +13,12 @@ TexturedPlanet::TexturedPlanet(
 	: RenderablePlanet(position, velocity, mass, radius, scale, identifier)
 	, Textured(texture)
 {
-	std::vector<GLfloat> vertices {};
-	std::vector<GLfloat> normals {};
-	std::vector<GLfloat> textureCoordinates {};
-	std::vector<unsigned int> indices {};
+	setUpMesh();
+}
 
-	for (GLuint i = 0; i <= stacks; ++i)
-	{
-		for (GLuint j = 0; j <= sectors; ++j)
-		{
-			textureCoordinates.emplace_back(static_cast<GLfloat>(j) / sectors);
-			textureCoordinates.emplace_back(static_cast<GLfloat>(i) / stacks);
-		}
-	}
-
-	Sphere::createSphere(vertices, normals, indices);
-	this->mesh.createMesh(vertices, indices, normals, textureCoordinates);
-
+std::string TexturedPlanet::getSerializedTextureName() const
+{
+	return serializedTextureName;
 }
 
 void TexturedPlanet::render(SceneContext& sceneContext) const
@@ -49,7 +38,7 @@ void TexturedPlanet::render(SceneContext& sceneContext) const
 	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
 
 	texture->useTexture();
-	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
+	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(getModelMatrix()));
 	mesh.useMesh();
 
 	if (renderOrbit)
@@ -93,7 +82,7 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 		}
 		ImGui::EndCombo();
 	}
-	ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(this->texture->getTextureId())),
+	ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(texture->getTextureId())),
 				 ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
 
 	ImGui::Separator();
@@ -118,16 +107,49 @@ SerializableObjectId TexturedPlanet::getSerializabledId() const
 	return SerializableObjectId::TEXTURED_PLANET;
 }
 
-std::string TexturedPlanet::serializeToString() const
+void TexturedPlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
 {
-	std::stringstream ss;
+	outputArchive& canMove;
+	outputArchive& identifier;
+	outputArchive& mass;
+	//material
+	outputArchive& position;
+	outputArchive& radius;
+	outputArchive& scale;
+	outputArchive& texture->getName();
+	outputArchive& velocity;
 
-	ss << "witam" << ",ja" << ",testuje" << ",serializacje";
-
-	return ss.str();
 }
 
-bool TexturedPlanet::deserializeFromString(const std::string& data)
+void TexturedPlanet::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
 {
-	return false;
+	inputArchive& canMove;
+	inputArchive& identifier;
+	inputArchive& mass;
+	//material
+	inputArchive& position;
+	inputArchive& radius;
+	inputArchive& scale;
+	inputArchive& serializedTextureName;
+	inputArchive& velocity;
+}
+
+void TexturedPlanet::setUpMesh()
+{
+	std::vector<GLfloat> vertices {};
+	std::vector<GLfloat> normals {};
+	std::vector<GLfloat> textureCoordinates {};
+	std::vector<unsigned int> indices {};
+
+	for (GLuint i = 0; i <= stacks; ++i)
+	{
+		for (GLuint j = 0; j <= sectors; ++j)
+		{
+			textureCoordinates.emplace_back(static_cast<GLfloat>(j) / sectors);
+			textureCoordinates.emplace_back(static_cast<GLfloat>(i) / stacks);
+		}
+	}
+
+	Sphere::createSphere(vertices, normals, indices);
+	mesh.createMesh(vertices, indices, normals, textureCoordinates);
 }

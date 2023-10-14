@@ -1,6 +1,6 @@
 #include "RenderablePlanet.h"
 
-RenderablePlanet::RenderablePlanet()
+RenderablePlanet::RenderablePlanet() : RenderablePlanet({}, {}, {}, {}, 1.0f, "")
 {
 }
 

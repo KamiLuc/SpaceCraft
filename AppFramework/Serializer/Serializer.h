@@ -15,13 +15,13 @@
 
 class Serializer {
 public:
-	Serializer(char separator = ',') : separator(separator) {}
+	Serializer() {}
 	virtual ~Serializer() {}
 
 	std::filesystem::path getFilePath() const { return filePath; }
 	void setFilePath(const std::filesystem::path& filePath) { this->filePath = filePath; }
 	void serializeObject(std::shared_ptr<Serializable> object) const;
-	void registerObjectCreator(SerializableObjectId objectId, std::function<bool(const std::string&)> creationFunction);
+	void registerObjectCreator(SerializableObjectId objectId, std::function<void(boost::archive::text_iarchive& ar)> creationFunction);
 	void createSerializedObjects();
 
 	template <typename InputIterator>
@@ -29,32 +29,14 @@ public:
 
 private:
 	std::filesystem::path filePath;
-	char separator;
-	std::map<SerializableObjectId, std::function<bool(const std::string&)>> creators;
+	std::map<SerializableObjectId, std::function<void(boost::archive::text_iarchive& ar)>> creators;
 
-	std::list<std::string> loadSerializedData() const;
-	std::fstream openFile() const;
-	SerializableObjectId getObjectIdFromSerializedObject(const std::string& data) const;
-	std::string getDataFromSerializedObject(const std::string& data) const;
 	void closeFile(std::fstream& file) const;
-	void serializeSingleObject(std::shared_ptr<Serializable> object, std::fstream& file) const;
+	void serializeSingleObject(std::shared_ptr<Serializable> object, boost::archive::text_oarchive& ar) const;
+	std::fstream openFile(int openmode) const;
 };
 
-inline std::list<std::string> Serializer::loadSerializedData() const
-{
-	auto file = openFile();
-	std::string line;
-	std::list<std::string> result;
-
-	while (std::getline(file, line))
-	{
-		result.push_back(line);
-	}
-
-	return result;
-}
-
-inline std::fstream Serializer::openFile() const
+inline std::fstream Serializer::openFile(int openmode) const
 {
 	if (filePath.empty())
 	{
@@ -63,7 +45,7 @@ inline std::fstream Serializer::openFile() const
 		throw std::runtime_error(exceptionMessage.c_str());
 	}
 
-	std::fstream file(filePath, std::ios::in | std::ios::out | std::ios::trunc);
+	std::fstream file(filePath, openmode);
 
 	if (!file.is_open())
 	{
@@ -75,65 +57,58 @@ inline std::fstream Serializer::openFile() const
 	return file;
 }
 
-inline SerializableObjectId Serializer::getObjectIdFromSerializedObject(const std::string& data) const
-{
-	std::istringstream ss(data);
-	std::string id;
-	std::getline(ss, id, separator);
-	return static_cast<SerializableObjectId>(std::stoul(id));
-}
-
-inline std::string Serializer::getDataFromSerializedObject(const std::string& data) const
-{
-	size_t separatorPosition = data.find(separator);
-	if (separatorPosition != std::string::npos)
-	{
-		return data.substr(separatorPosition + 1);
-	}
-	return "";
-}
-
 inline void Serializer::closeFile(std::fstream& file) const
 {
 	file.close();
 }
 
-inline void Serializer::serializeSingleObject(std::shared_ptr<Serializable> object, std::fstream& file) const
+inline void Serializer::serializeSingleObject(std::shared_ptr<Serializable> object, boost::archive::text_oarchive& ar) const
 {
-	file << static_cast<uint32_t>(object->getSerializabledId()) << separator << object->serializeToString() << "\n";
+	ar& object->getSerializabledId();
+	ar&* object;
 }
 
 inline void Serializer::serializeObject(std::shared_ptr<Serializable> object) const
 {
-	auto file = openFile();
-	serializeSingleObject(object, file);
+	auto file = openFile(std::ios::out | std::ios::trunc);
+	boost::archive::text_oarchive ar(file);
+	serializeSingleObject(object, ar);
 	closeFile(file);
 }
 
-inline void Serializer::registerObjectCreator(SerializableObjectId objectId, std::function<bool(const std::string&)> creationFunction)
+inline void Serializer::registerObjectCreator(SerializableObjectId objectId, std::function<void(boost::archive::text_iarchive& ar)> creationFunction)
 {
 	creators[objectId] = creationFunction;
 }
 
 inline void Serializer::createSerializedObjects()
 {
-	auto data = loadSerializedData();
+	auto file = openFile(std::ios::in);
+	boost::archive::text_iarchive ar(file);
+	SerializableObjectId id = SerializableObjectId::NONE;
 
-	for (const auto& singleSerializedObject : data)
+	while (true)
 	{
-		auto objectId = getObjectIdFromSerializedObject(singleSerializedObject);
-		auto objectData = getDataFromSerializedObject(singleSerializedObject);
-
-		if (creators.find(objectId) != creators.end())
+		try
 		{
-			if (!creators.at(objectId)(objectData))
+			ar& id;
+			if (creators.find(id) == creators.end())
 			{
-				printf("%s: ObjectId = %d can not be created from data = %s", __func__, static_cast<uint32_t>(objectId), objectData.c_str());
+				printf("%s: ObjectId = %d is not present in registered creators", __func__, static_cast<uint32_t>(id));
 			}
-		}
-		else
+
+			creators[id](ar);
+
+		} catch (const boost::archive::archive_exception& ex)
 		{
-			printf("%s: ObjectId = %d is not present in registered creators", __func__, static_cast<uint32_t>(objectId));
+			if (ex.code == boost::archive::archive_exception::input_stream_error)
+			{
+				break;
+			}
+			else
+			{
+				printf("%s: Fail occured during object creation ObjectId = %d", __func__, static_cast<uint32_t>(id));
+			}
 		}
 	}
 }
@@ -141,10 +116,11 @@ inline void Serializer::createSerializedObjects()
 template<typename InputIterator>
 inline void Serializer::serializeObjects(InputIterator begin, InputIterator end) const
 {
-	auto file = openFile();
+	auto file = openFile(std::ios::in | std::ios::out | std::ios::trunc);
+	boost::archive::text_oarchive ar(file);
 	while (begin != end)
 	{
-		serializeSingleObject(*begin, file);
+		serializeSingleObject(*begin, ar);
 		++begin;
 	}
 	closeFile(file);

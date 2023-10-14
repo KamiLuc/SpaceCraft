@@ -46,7 +46,7 @@ void SpaceSimulationImGui::createColoredPlanet()
 
 void SpaceSimulationImGui::createTexturedPlanet()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 0.0f, 0 },
@@ -73,7 +73,7 @@ void SpaceSimulationImGui::createSolarSystem()
 
 void SpaceSimulationImGui::createEarth()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.496f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(2.978f, 4)}),
 		{ 5.972f, 24 },
@@ -85,7 +85,7 @@ void SpaceSimulationImGui::createEarth()
 
 void SpaceSimulationImGui::createSun()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 1.989f, 30 },
@@ -99,7 +99,7 @@ void SpaceSimulationImGui::createSun()
 
 void SpaceSimulationImGui::createMercury()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(5.79f, 10), PhysicalUnit(0.0f, 10), PhysicalUnit(0.0f, 10)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(4.787f, 4)}),
 		{ 3.301f, 23 },
@@ -113,7 +113,7 @@ void SpaceSimulationImGui::createMercury()
 
 void SpaceSimulationImGui::createVenus()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.082f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(3.502f, 4)}),
 		{ 4.867f, 24 },
@@ -127,7 +127,7 @@ void SpaceSimulationImGui::createVenus()
 
 void SpaceSimulationImGui::createJupiter()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(7.785f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(1.307f, 4)}),
 		{ 1.898f, 27 },
@@ -141,7 +141,7 @@ void SpaceSimulationImGui::createJupiter()
 
 void SpaceSimulationImGui::createSaturn()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.427f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(9.672f, 3)}),
 		{ 5.683f, 26 },
@@ -155,7 +155,7 @@ void SpaceSimulationImGui::createSaturn()
 
 void SpaceSimulationImGui::createUranus()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(2.871f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(6.81f, 3)}),
 		{ 8.681f, 25 },
@@ -169,7 +169,7 @@ void SpaceSimulationImGui::createUranus()
 
 void SpaceSimulationImGui::createNeptune()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(4.498f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(5.43f, 3)}),
 		{ 1.024f, 26 },
@@ -183,7 +183,7 @@ void SpaceSimulationImGui::createNeptune()
 
 void SpaceSimulationImGui::createMars()
 {
-	auto temp = spaceSimulation.planetCreator.createTexturedPlanet(
+	auto temp = spaceSimulation.planetCreator.CreateColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(2.279f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(2.407f, 4)}),
 		{ 6.39f, 23 },
@@ -200,6 +200,11 @@ void SpaceSimulationImGui::showFileMenu()
 	if (ImGui::Selectable("Serialize test!!!!!!!!!!!!"))
 	{
 		spaceSimulation.testSerialize();
+	}
+
+	if (ImGui::Selectable("Deserialize test!!!!!!!!!!!!"))
+	{
+		spaceSimulation.testDeserialize();
 	}
 }
 

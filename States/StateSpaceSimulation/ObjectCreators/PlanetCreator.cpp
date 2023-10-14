@@ -1,40 +1,41 @@
 #include "PlanetCreator.h"
 
 PlanetCreator::PlanetCreator(
-	std::shared_ptr<ShaderManager> shaderManager, std::list<std::shared_ptr<Renderable>>& renderContainer,
+	std::shared_ptr<TextureManager> textureManager, std::list<std::shared_ptr<Renderable>>& renderContainer,
 	std::list<std::shared_ptr<RenderablePlanet>>& planetContainer)
-	: shaderManager(shaderManager)
+	: textureManager(textureManager)
 	, renderContainer(renderContainer)
 	, planetContainer(planetContainer)
 {
 }
 
-bool PlanetCreator::createColoredPlanetFromString(const std::string& data)
+void PlanetCreator::createColoredPlanetFromArchive(boost::archive::text_iarchive& ar)
 {
-	return false;
+
 }
 
 std::shared_ptr<ColoredPlanet> PlanetCreator::createColoredPlanet(
 	const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
 	float scale, const std::string& identifier, const glm::vec4& color)
 {
-	auto object = std::make_shared<ColoredPlanet>(position, velocity, mass, radius, scale, identifier, color);
-	renderContainer.emplace_back(object);
-	planetContainer.emplace_back(object);
-	return object;
+	auto o = std::make_shared<ColoredPlanet>(position, velocity, mass, radius, scale, identifier, color);
+	addObjectToContainers(o);
+	return o;
 }
 
-bool PlanetCreator::createTexturedPlanetFromString(const std::string& data)
+void PlanetCreator::createTexturedPlanetFromArchive(boost::archive::text_iarchive& ar)
 {
-	return false;
+	auto object = std::make_shared<TexturedPlanet>();
+	ar&* object;
+	object->setTexture(textureManager->getTexture(object->getSerializedTextureName()));
+	addObjectToContainers(object);
 }
 
-std::shared_ptr<TexturedPlanet> PlanetCreator::createTexturedPlanet(
+std::shared_ptr<TexturedPlanet> PlanetCreator::CreateColoredPlanet(
 	const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
 	float scale, const std::string& identifier, std::shared_ptr<Texture> texture)
 {
-	auto object = std::make_shared<TexturedPlanet>(position, velocity, mass, radius, scale, identifier, texture);
-	renderContainer.emplace_back(object);
-	planetContainer.emplace_back(object);
-	return object;
+	auto o = std::make_shared<TexturedPlanet>(position, velocity, mass, radius, scale, identifier, texture);
+	addObjectToContainers(o);
+	return o;
 }

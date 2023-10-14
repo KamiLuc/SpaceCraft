@@ -2,10 +2,10 @@
 
 StateSpaceSimulation::StateSpaceSimulation(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
-	, planetCreator(stateManager->getContext()->shaderManager, objectsToRender, planets)
+	, planetCreator(stateManager->getContext()->textureManager, objectsToRender, planets)
 	, shaderManager(stateManager->getContext()->shaderManager)
 	, textureManager(stateManager->getContext()->textureManager)
-	, serializer(',')
+	, serializer()
 	, sceneContext()
 	, simulationSpeed(8.64f, 4)
 	, gravitationalConstant(6.67430f, -11)
@@ -34,7 +34,9 @@ void StateSpaceSimulation::onCreate()
 
 	serializer.setFilePath("tutajTesty2.txt");
 	serializer.registerObjectCreator(SerializableObjectId::COLORED_PLANET,
-									 [&](const std::string& data) { return planetCreator.createColoredPlanetFromString(data); });
+									 [&](auto& data) { planetCreator.createColoredPlanetFromArchive(data); });
+	serializer.registerObjectCreator(SerializableObjectId::TEXTURED_PLANET,
+									 [&](auto& data) { planetCreator.createTexturedPlanetFromArchive(data); });
 
 	addCallbacks();
 }
@@ -180,6 +182,11 @@ void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandl
 void StateSpaceSimulation::testSerialize()
 {
 	serializer.serializeObjects(planets.begin(), planets.end());
+}
+
+void StateSpaceSimulation::testDeserialize()
+{
+	serializer.createSerializedObjects();
 }
 
 void StateSpaceSimulation::renderObject(const Renderable& renderable)

@@ -3,26 +3,16 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+ColoredPlanet::ColoredPlanet() : ColoredPlanet({}, {}, {}, {}, 1.0f, "empty", {})
+{
+}
+
 ColoredPlanet::ColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
 							 float scale, const std::string& identifier, const glm::vec4& color)
 	: RenderablePlanet(position, velocity, mass, radius, scale, identifier)
 	, Colored(color)
 {
-	std::vector<GLfloat> vertices {};
-	std::vector<GLfloat> normals {};
-	std::vector<unsigned int> indices {};
-	std::vector<GLfloat> colors((stacks + 1) * (sectors + 1) * 4);
-
-	for (size_t i = 0; i < colors.size() / 4; i += 1)
-	{
-		colors[i * 4] = color[0];
-		colors[i * 4 + 1] = color[1];
-		colors[i * 4 + 2] = color[2];
-		colors[i * 4 + 3] = color[3];
-	}
-
-	Sphere::createSphere(vertices, normals, indices);
-	this->mesh.createMesh(vertices, indices, normals, colors);
+	setUpMesh();
 }
 
 void ColoredPlanet::render(SceneContext& sceneContext) const
@@ -41,7 +31,7 @@ void ColoredPlanet::render(SceneContext& sceneContext) const
 	sceneContext.mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
 	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
 
-	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
+	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(getModelMatrix()));
 	mesh.useMesh();
 
 	if (renderOrbit)
@@ -64,7 +54,7 @@ void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, uns
 	RenderablePlanet::editViaImGui(objectHandler, windowID, false);
 
 	ImGui::Separator();
-	if (ImGui::ColorEdit4("Planet color", glm::value_ptr(this->color), ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar))
+	if (ImGui::ColorEdit4("Planet color", glm::value_ptr(color), ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar))
 	{
 		mesh.bindSingleColor(color);
 	}
@@ -92,13 +82,29 @@ SerializableObjectId ColoredPlanet::getSerializabledId() const
 	return SerializableObjectId::COLORED_PLANET;
 }
 
-std::string ColoredPlanet::serializeToString() const
+void ColoredPlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
 {
-	return std::string();
 }
 
-bool ColoredPlanet::deserializeFromString(const std::string& data)
+void ColoredPlanet::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
 {
-	return false;
 }
 
+void ColoredPlanet::setUpMesh()
+{
+	std::vector<GLfloat> vertices {};
+	std::vector<GLfloat> normals {};
+	std::vector<unsigned int> indices {};
+	std::vector<GLfloat> colors((stacks + 1) * (sectors + 1) * 4);
+
+	for (size_t i = 0; i < colors.size() / 4; i += 1)
+	{
+		colors[i * 4] = color[0];
+		colors[i * 4 + 1] = color[1];
+		colors[i * 4 + 2] = color[2];
+		colors[i * 4 + 3] = color[3];
+	}
+
+	Sphere::createSphere(vertices, normals, indices);
+	mesh.createMesh(vertices, indices, normals, colors);
+}

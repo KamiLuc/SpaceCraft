@@ -153,6 +153,18 @@ int* PhysicalUnit::getExponentPtr()
 	return &exponent;
 }
 
+void PhysicalUnit::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
+{
+	outputArchive& base;
+	outputArchive& exponent;
+}
+
+void PhysicalUnit::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
+{
+	inputArchive& base;
+	inputArchive& exponent;
+}
+
 float PhysicalUnit::getValue() const
 {
 	return base * static_cast<float>(std::pow(10, exponent));
