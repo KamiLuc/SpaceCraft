@@ -50,6 +50,11 @@ void ShaderManager::setPath(const std::filesystem::path& shadersPath)
 	this->shadersPath = shadersPath;
 }
 
+void ShaderManager::setLastUsedShader(std::shared_ptr<Shader> lastUsedShader)
+{
+	this->lastUsedShader = lastUsedShader;
+}
+
 void ShaderManager::checkPath(const std::filesystem::path& shadersPath)
 {
 	if (!std::filesystem::exists(shadersPath))
@@ -61,11 +66,17 @@ void ShaderManager::checkPath(const std::filesystem::path& shadersPath)
 	}
 }
 
-std::shared_ptr<Shader> ShaderManager::getShader(const std::string& shader)
+std::shared_ptr<Shader> ShaderManager::useShader(const std::string& shader)
 {
 	if (shaders.contains(shader))
 	{
-		return shaders[shader];
+		auto& ret = shaders[shader];
+		if (ret != lastUsedShader)
+		{
+			ret->useShader();
+			lastUsedShader = ret;
+		}
+		return ret;
 	}
 	else
 	{

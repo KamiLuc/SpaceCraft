@@ -3,7 +3,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-ColoredPlanet::ColoredPlanet() : ColoredPlanet({}, {}, {}, {}, 1.0f, "empty", {})
+ColoredPlanet::ColoredPlanet() : ColoredPlanet({}, {}, {}, {}, 1.0f, {}, glm::vec4(1.0f))
 {
 }
 
@@ -18,14 +18,8 @@ ColoredPlanet::ColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalU
 void ColoredPlanet::render(SceneContext& sceneContext) const
 {
 	auto& shaderManager = sceneContext.shaderManager;
-	auto shader = shaderManager->getShader("coloredObjectShader");
+	auto shader = shaderManager->useShader("coloredObjectShader");
 	auto& uniforms = shader->getUniformLocations();
-
-	if (shader != shaderManager->getLastUsedShader())
-	{
-		shader->useShader();
-		shaderManager->setLastUsedShader(shader);
-	}
 
 	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
 	sceneContext.mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
@@ -84,10 +78,22 @@ SerializableObjectId ColoredPlanet::getSerializabledId() const
 
 void ColoredPlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
 {
+	RenderablePlanet::serialize(outputArchive, version);
+	outputArchive& color[0] & color[1] & color[2] & color[3];
 }
 
 void ColoredPlanet::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
 {
+	RenderablePlanet::serialize(inputArchive, version);
+	glm::vec4 serializedColor {};
+	inputArchive& serializedColor[0] & serializedColor[1] & serializedColor[2] & serializedColor[3];
+	setColor(serializedColor);
+}
+
+void ColoredPlanet::setColor(const glm::vec4 color)
+{
+	this->color = color;
+	mesh.bindSingleColor(color);
 }
 
 void ColoredPlanet::setUpMesh()

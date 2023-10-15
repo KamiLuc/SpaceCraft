@@ -11,7 +11,9 @@ PlanetCreator::PlanetCreator(
 
 void PlanetCreator::createColoredPlanetFromArchive(boost::archive::text_iarchive& ar)
 {
-
+	auto object = std::make_shared<ColoredPlanet>();
+	ar&* object;
+	addObjectToContainers(object);
 }
 
 std::shared_ptr<ColoredPlanet> PlanetCreator::createColoredPlanet(

@@ -69,14 +69,8 @@ void CoordinateSystemAxes::render(SceneContext& sceneContext) const
 	glLineWidth(lineWidth);
 
 	auto& shaderManager = sceneContext.shaderManager;
-	auto shader = shaderManager->getShader("coordinateSystemAxes");
+	auto shader = shaderManager->useShader("coordinateSystemAxes");
 	auto& uniforms = shader->getUniformLocations();
-
-	if (shader != sceneContext.shaderManager->getLastUsedShader())
-	{
-		shader->useShader();
-		shaderManager->setLastUsedShader(shader);
-	}
 
 	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
 

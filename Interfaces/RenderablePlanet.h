@@ -16,6 +16,8 @@ public:
 	virtual ~RenderablePlanet() {}
 	virtual glm::mat4 getModelMatrix() const;
 	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
+	virtual void serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version) override;
+	virtual void serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version) override;
 
 	void update(float simTimeInSec, float realTimeInSec);
 	float getRadiusInWorldSpace() const;

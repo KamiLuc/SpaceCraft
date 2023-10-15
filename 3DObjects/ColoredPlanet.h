@@ -20,6 +20,8 @@ public:
 	virtual void serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version);
 	virtual void serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version);
 
+	void setColor(const glm::vec4 color);
+
 private:
 	ColoredMesh mesh;
 

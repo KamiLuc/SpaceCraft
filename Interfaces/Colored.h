@@ -4,7 +4,7 @@
 
 class Colored {
 public:
-	Colored() {}
+	Colored() : color(0.0f, 0.0f, 0.0f, 0.0f) {}
 	Colored(const glm::vec4& color) : color(color) {}
 	virtual ~Colored() {};
 

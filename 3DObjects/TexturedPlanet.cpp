@@ -3,7 +3,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-TexturedPlanet::TexturedPlanet() : TexturedPlanet({}, {}, {}, {}, 1.0f, "empty", nullptr)
+TexturedPlanet::TexturedPlanet() : TexturedPlanet({}, {}, {}, {}, 1.0f, {}, nullptr)
 {
 }
 
@@ -24,14 +24,8 @@ std::string TexturedPlanet::getSerializedTextureName() const
 void TexturedPlanet::render(SceneContext& sceneContext) const
 {
 	auto& shaderManager = sceneContext.shaderManager;
-	auto shader = shaderManager->getShader("texturedObjectShader");
+	auto shader = shaderManager->useShader("texturedObjectShader");
 	auto& uniforms = shader->getUniformLocations();
-
-	if (shader != shaderManager->getLastUsedShader())
-	{
-		shader->useShader();
-		shaderManager->setLastUsedShader(shader);
-	}
 
 	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
 	sceneContext.mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
@@ -109,29 +103,14 @@ SerializableObjectId TexturedPlanet::getSerializabledId() const
 
 void TexturedPlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
 {
-	outputArchive& canMove;
-	outputArchive& identifier;
-	outputArchive& mass;
-	//material
-	outputArchive& position;
-	outputArchive& radius;
-	outputArchive& scale;
+	RenderablePlanet::serialize(outputArchive, version);
 	outputArchive& texture->getName();
-	outputArchive& velocity;
-
 }
 
 void TexturedPlanet::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
 {
-	inputArchive& canMove;
-	inputArchive& identifier;
-	inputArchive& mass;
-	//material
-	inputArchive& position;
-	inputArchive& radius;
-	inputArchive& scale;
+	RenderablePlanet::serialize(inputArchive, version);
 	inputArchive& serializedTextureName;
-	inputArchive& velocity;
 }
 
 void TexturedPlanet::setUpMesh()
