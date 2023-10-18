@@ -28,7 +28,7 @@ void TexturedPlanet::render(SceneContext& sceneContext) const
 	auto& uniforms = shader->getUniformLocations();
 
 	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	sceneContext.mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
+	sceneContext.mainLight->useLight(uniforms.uniformAmbientColor, uniforms.uniformAmbientIntensity);
 	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
 
 	texture->useTexture();
@@ -99,6 +99,11 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 SerializableObjectId TexturedPlanet::getSerializabledId() const
 {
 	return SerializableObjectId::TEXTURED_PLANET;
+}
+
+void TexturedPlanet::serializeFromBase(boost::archive::text_oarchive & outputArchive, std::shared_ptr<Serializable> obj)
+{
+	outputArchive & *std::dynamic_pointer_cast<TexturedPlanet>(obj);
 }
 
 void TexturedPlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)

@@ -1,29 +1,22 @@
 #pragma once
 
-#include "AppFramework/GUI/EditableViaImGui.h"
-#include "Settings/LightSettings.h"
-
 #include <glm\glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <GL\glew.h>
 
-using namespace Settings;
-
-class Light : public EditableViaImGui
+class Light
 {
 public:
-	Light(const LightSettings& settings);
-	Light(const glm::vec3& color, GLfloat ambiendIntenisty, GLfloat diffuseIntensity, const glm::vec3& direction);
-	~Light();
+	Light(const glm::vec3& color, GLfloat ambientIntenisty);
+	virtual ~Light();
 
+	glm::vec3 getColor() const;
+	void setColor(const glm::vec3 color);
+	GLfloat getAmbientIntensity() const;
 	void setAmbientIntensity(GLfloat ambientIntensity);
-	void setDirection(const glm::vec3& direction);
-	void useLight(GLint ambientIntensityLocation, GLint colorLocation, GLint diffuseIntensityLocation, GLint directionLocation);
-	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
 
-private:
+protected:
 	glm::vec3 color;
-	glm::vec3 direction;
 	GLfloat ambientIntensity;
-	GLfloat diffuseIntensity;
 };
 

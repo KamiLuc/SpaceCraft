@@ -18,6 +18,7 @@ public:
 	virtual void render(SceneContext& sceneContext) const override;
 	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui);
 	virtual SerializableObjectId getSerializabledId() const override;
+	virtual void serializeFromBase(boost::archive::text_oarchive& outputArchive, std::shared_ptr<Serializable> obj) override;
 	virtual void serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version);
 	virtual void serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version);
 

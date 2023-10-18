@@ -12,7 +12,7 @@ PlanetCreator::PlanetCreator(
 void PlanetCreator::createColoredPlanetFromArchive(boost::archive::text_iarchive& ar)
 {
 	auto object = std::make_shared<ColoredPlanet>();
-	ar&* object;
+	ar & *object;
 	addObjectToContainers(object);
 }
 
@@ -28,7 +28,7 @@ std::shared_ptr<ColoredPlanet> PlanetCreator::createColoredPlanet(
 void PlanetCreator::createTexturedPlanetFromArchive(boost::archive::text_iarchive& ar)
 {
 	auto object = std::make_shared<TexturedPlanet>();
-	ar&* object;
+	ar & *object;
 	object->setTexture(textureManager->getTexture(object->getSerializedTextureName()));
 	addObjectToContainers(object);
 }

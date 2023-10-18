@@ -6,7 +6,11 @@
 
 class Moveable {
 public:
-	Moveable() {}
+	Moveable()
+		: position(0.0f)
+		, canMove(true)
+	{
+	}
 	Moveable(const PhysicalUnitVec<3>& position)
 		: position(position)
 		, canMove(true)

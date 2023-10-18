@@ -308,7 +308,7 @@ inline void PhysicalUnitVec<Elements>::serialize(boost::archive::text_oarchive& 
 {
 	for (auto i = 0; i < Elements; ++i)
 	{
-		outputArchive& vec[i];
+		outputArchive & vec[i];
 	}
 }
 
@@ -317,6 +317,6 @@ inline void PhysicalUnitVec<Elements>::serialize(boost::archive::text_iarchive& 
 {
 	for (auto i = 0; i < Elements; ++i)
 	{
-		inputArchive& vec[i];
+		inputArchive & vec[i];
 	}
 }

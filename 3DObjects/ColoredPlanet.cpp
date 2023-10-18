@@ -3,7 +3,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-ColoredPlanet::ColoredPlanet() : ColoredPlanet({}, {}, {}, {}, 1.0f, {}, glm::vec4(1.0f))
+ColoredPlanet::ColoredPlanet()
+	: ColoredPlanet({}, {}, {}, {}, 1.0f, {}, glm::vec4(1.0f))
 {
 }
 
@@ -22,7 +23,7 @@ void ColoredPlanet::render(SceneContext& sceneContext) const
 	auto& uniforms = shader->getUniformLocations();
 
 	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	sceneContext.mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
+	sceneContext.mainLight->useLight(uniforms.uniformAmbientColor, uniforms.uniformAmbientIntensity);
 	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
 
 	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(getModelMatrix()));
@@ -74,6 +75,11 @@ void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, uns
 SerializableObjectId ColoredPlanet::getSerializabledId() const
 {
 	return SerializableObjectId::COLORED_PLANET;
+}
+
+void ColoredPlanet::serializeFromBase(boost::archive::text_oarchive & outputArchive, std::shared_ptr<Serializable> obj)
+{
+	outputArchive & *std::dynamic_pointer_cast<ColoredPlanet>(obj);
 }
 
 void ColoredPlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)

@@ -24,15 +24,15 @@ void StateSpaceSimulation::onCreate()
 
 	auto& settings = Settings::GlobalSettings::getInstance();
 
-	auto cameraManager = std::make_shared<CameraManagerToSFMLFrameworkAdapter>(settings.getArcBallCameraSettings(),
-																			   settings.getFirstPersonCameraSettings(), window->getRenderWindow());
-	auto mainLight = std::make_shared<Light>(settings.getMainLightSettings());
+	auto cameraManager = std::make_shared<CameraManagerToSFMLFrameworkAdapter>(settings.arcBallCameraSettings,
+																			   settings.firstPesonCameraSettings, window->getRenderWindow());
+	auto mainLight = std::make_shared<OmnipresentLight>(settings.mainLightSettings.color, settings.mainLightSettings.ambientIntensity);
 
 	simulationGui = std::make_unique<SpaceSimulationImGui>(*this, *textureManager);
 
-	sceneContext = SceneContext(cameraManager, stateManager->getContext()->shaderManager, mainLight, std::make_shared<Material>(0.3f, 4.0f));
+	sceneContext = SceneContext(cameraManager, stateManager->getContext()->shaderManager, mainLight);
 
-	serializer.setFilePath("tutajTesty2.txt");
+	serializer.setSaveDirectiory(settings.savedSimulationsPath);
 	serializer.registerObjectCreator(SerializableObjectId::COLORED_PLANET,
 									 [&](auto& data) { planetCreator.createColoredPlanetFromArchive(data); });
 	serializer.registerObjectCreator(SerializableObjectId::TEXTURED_PLANET,
@@ -179,14 +179,22 @@ void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandl
 	}
 }
 
-void StateSpaceSimulation::testSerialize()
+void StateSpaceSimulation::saveSimulation(const std::string& fileName)
 {
-	serializer.serializeObjects(planets.begin(), planets.end());
+	serializer.serializeObjects(fileName, planets.begin(), planets.end());
 }
 
-void StateSpaceSimulation::testDeserialize()
+void StateSpaceSimulation::loadSimulation(const std::string& fileName)
 {
-	serializer.createSerializedObjects();
+	resetSimulation();
+	serializer.createSerializedObjects(fileName);
+}
+
+void StateSpaceSimulation::resetSimulation()
+{
+	pauseSimulation = true;
+	objectsToRender.clear();
+	planets.clear();
 }
 
 void StateSpaceSimulation::renderObject(const Renderable& renderable)
@@ -214,7 +222,6 @@ void StateSpaceSimulation::mouseRightClick(EventDetails* details)
 {
 	handleMouse(details, Mouse::RIGHT);
 }
-
 
 void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)
 {

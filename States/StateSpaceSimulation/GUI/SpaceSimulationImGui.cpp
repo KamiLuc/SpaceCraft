@@ -195,19 +195,35 @@ void SpaceSimulationImGui::createMars()
 	addObjectToEdit(temp.get());
 }
 
-void SpaceSimulationImGui::showFileMenu()
+void SpaceSimulationImGui::loadSavedSimulations()
 {
-	if (ImGui::Selectable("Serialize test!!!!!!!!!!!!"))
-	{
-		spaceSimulation.testSerialize();
-	}
+	savedSimulations.clear();
+	auto savedSimulationsDirectory = spaceSimulation.serializer.getSaveDirectiory();
 
-	if (ImGui::Selectable("Deserialize test!!!!!!!!!!!!"))
+	for (const auto& dirEntry : std::filesystem::directory_iterator { savedSimulationsDirectory })
 	{
-		spaceSimulation.testDeserialize();
+		if (dirEntry.is_regular_file() && dirEntry.path().extension().string() == ".sc")
+		{
+			savedSimulations.emplace_back(dirEntry.path().stem().string().append(".sc"));
+		}
 	}
 }
 
+void SpaceSimulationImGui::showFileMenu()
+{
+	if (ImGui::Button("Save", ImVec2(70, 30)))
+	{
+		ImGui::OpenPopup("Save simulation");
+	}
+	showSaveSimulationModal("Save simulation");
+
+	if (ImGui::Button("Load", ImVec2(70, 30)))
+	{
+		loadSavedSimulations();
+		ImGui::OpenPopup("Load simulation");
+	}
+	showLoadSimulationModal("Load simulation");
+}
 
 void SpaceSimulationImGui::showObjectsMenu()
 {
@@ -281,7 +297,6 @@ void SpaceSimulationImGui::showObjectsMenu()
 	auto& planets = spaceSimulation.planets;
 	if (planets.size() > 0)
 	{
-
 		ImGui::Separator();
 		if (ImGui::BeginMenu("Delete planets"))
 		{
@@ -392,12 +407,103 @@ void SpaceSimulationImGui::showObjectFocusMenu()
 	}
 }
 
+void SpaceSimulationImGui::showSaveSimulationModal(const std::string & modal)
+{
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+	ImGui::SetNextWindowSize(ImVec2(250, 80));
+	if (ImGui::BeginPopupModal(modal.c_str(), nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize))
+	{
+		static char inputText[256] = "";
+
+		ImGui::InputText("File name", inputText, sizeof(inputText));
+
+		if (ImGui::Button("Save", ImVec2(120, 0)))
+		{
+			std::string fileName { inputText };
+			if (fileName.empty())
+			{
+				boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+				fileName = to_simple_string(now);
+
+				std::for_each(fileName.begin(), fileName.end(), [](auto &el)
+							  {
+								  if (el == ':')
+								  {
+									  el = '-';
+								  }
+							  });
+			}
+
+			spaceSimulation.saveSimulation(fileName.append(".sc"));
+			memset(inputText, 0, 256);
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SetItemDefaultFocus();
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel", ImVec2(120, 0)))
+		{
+			memset(inputText, 0, 256);
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void SpaceSimulationImGui::showLoadSimulationModal(const std::string & modal)
+{
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+	ImGui::SetNextWindowSize(ImVec2(300, 300));
+	if (ImGui::BeginPopupModal(modal.c_str(), nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize))
+	{
+		int selectedId = -1;
+
+		for (int i = 0; i < savedSimulations.size(); ++i)
+		{
+			ImGui::PushID(i);
+			bool isSelected = (i == selectedId);
+
+			if (ImGui::Selectable(savedSimulations[i].c_str(), isSelected))
+			{
+				if (isSelected)
+				{
+					selectedId = -1;
+				}
+				else
+				{
+					selectedId = i;
+				}
+
+				spaceSimulation.loadSimulation(savedSimulations[selectedId]);
+			}
+
+			ImGui::PopID();
+		}
+
+		ImGui::Separator();
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 120) * 0.5f);
+		ImGui::SetCursorPosY((ImGui::GetWindowHeight() - ImGui::GetFrameHeightWithSpacing()) * 0.9f);
+		if (ImGui::Button("Cancel", ImVec2(120, 30)))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
 void SpaceSimulationImGui::deleteObject(std::shared_ptr<EditableViaImGui> object)
 {
 	deleteObject(object.get());
 }
 
-void SpaceSimulationImGui::deleteObject(EditableViaImGui* object)
+void SpaceSimulationImGui::deleteObject(EditableViaImGui * object)
 {
 	auto& planets = spaceSimulation.planets;
 	auto planet = std::find_if(planets.begin(), planets.end(), [&object](std::shared_ptr<RenderablePlanet> obj)
@@ -414,7 +520,6 @@ void SpaceSimulationImGui::deleteObject(EditableViaImGui* object)
 
 void SpaceSimulationImGui::showSettingsMenu()
 {
-	ImGui::Separator();
 	if (ImGui::Selectable("Simulation settings"))
 	{
 		addObjectToEdit(&spaceSimulation);

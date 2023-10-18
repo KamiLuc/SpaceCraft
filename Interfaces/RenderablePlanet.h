@@ -7,7 +7,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-class RenderablePlanet : public Planet, public Renderable, public Serializable {
+class RenderablePlanet : public Planet, public Renderable, public Serializable
+{
 public:
 	RenderablePlanet();
 	RenderablePlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,

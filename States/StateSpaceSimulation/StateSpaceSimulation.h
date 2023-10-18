@@ -25,8 +25,8 @@ public:
 	virtual void update(const sf::Time& time) override;
 	virtual void draw() override;
 
+	void resetSimulation();
 	void renderObject(const Renderable& renderable);
-
 	void addPlanetToSimulation(std::shared_ptr<RenderablePlanet> planet);
 	void removePlanetFromSimulation(std::shared_ptr<RenderablePlanet> planet);
 	void addObjectToRender(std::shared_ptr<Renderable> object);
@@ -37,11 +37,12 @@ public:
 	void mouseLeftClick(EventDetails* details);
 	void mouseRightClick(EventDetails* details);
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool begiImGui) override;
-	void testSerialize();
-	void testDeserialize();
+	void saveSimulation(const std::string& fileName);
+	void loadSimulation(const std::string& fileName);
 
 private:
-	enum class Mouse {
+	enum class Mouse
+	{
 		LEFT,
 		RIGHT
 	};

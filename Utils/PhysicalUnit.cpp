@@ -99,7 +99,7 @@ PhysicalUnit& PhysicalUnit::operator*=(float other)
 
 PhysicalUnit PhysicalUnit::getSqrt() const
 {
-	if (exponent % 2 == 0)
+	if(exponent % 2 == 0)
 	{
 		return PhysicalUnit(std::sqrt(base), exponent / 2);
 	}
@@ -121,12 +121,12 @@ PhysicalUnit::operator float() const
 
 void PhysicalUnit::normalize()
 {
-	while (base >= 10.0)
+	while(base >= 10.0)
 	{
 		base /= 10.0;
 		exponent++;
 	}
-	while (base < 1.0)
+	while(base < 1.0)
 	{
 		base *= 10.0;
 		exponent--;
@@ -155,14 +155,14 @@ int* PhysicalUnit::getExponentPtr()
 
 void PhysicalUnit::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
 {
-	outputArchive& base;
-	outputArchive& exponent;
+	outputArchive & base;
+	outputArchive & exponent;
 }
 
 void PhysicalUnit::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
 {
-	inputArchive& base;
-	inputArchive& exponent;
+	inputArchive & base;
+	inputArchive & exponent;
 }
 
 float PhysicalUnit::getValue() const

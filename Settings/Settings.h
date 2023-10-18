@@ -16,24 +16,17 @@ namespace Settings {
 			return instance;
 		}
 
-		CameraSettings getArcBallCameraSettings();
-		CameraSettings getFirstPersonCameraSettings();
-		LightSettings getMainLightSettings();
-		std::filesystem::path getTexturesPath();
-		std::filesystem::path getShadersPath();
-
-	private:
 		GlobalSettings();
 		~GlobalSettings() = default;
 		GlobalSettings(const GlobalSettings&) = delete;
-
 		GlobalSettings operator=(const GlobalSettings&) = delete;
 
 		CameraSettings arcBallCameraSettings;
 		CameraSettings firstPesonCameraSettings;
-		LightSettings mainLightSettings;
+		MainLightSettings mainLightSettings;
 		const std::filesystem::path texturesPath;
 		const std::filesystem::path shadersPath;
+		const std::filesystem::path savedSimulationsPath;
 	};
 }
 

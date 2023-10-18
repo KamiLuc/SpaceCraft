@@ -3,8 +3,7 @@
 #include <memory>
 
 #include "Camera/CameraManagerToSFMLFrameworkAdapter.h"
-#include "Light/Light.h"
-#include "3DRenderer/Material.h"
+#include "Light/OmnipresentLight.h"
 #include "3DRenderer/Shader/ShaderManager.h"
 
 struct SceneContext
@@ -12,18 +11,16 @@ struct SceneContext
 public:
 	SceneContext(
 		std::shared_ptr<CameraManagerToSFMLFrameworkAdapter> cameraManager, std::shared_ptr<ShaderManager> shaderManager,
-		std::shared_ptr<Light> mainLight, std::shared_ptr<Material> material)
+		std::shared_ptr<OmnipresentLight> mainLight)
 		: mainLight(mainLight)
 		, cameraManager(cameraManager)
-		, defaultMaterial(material)
 		, shaderManager(shaderManager)
 	{
 	}
 
-	SceneContext() : SceneContext(nullptr, nullptr, nullptr, nullptr) {}
+	SceneContext() : SceneContext(nullptr, nullptr, nullptr) {}
 	std::shared_ptr<CameraManagerToSFMLFrameworkAdapter> cameraManager;
 	std::shared_ptr<ShaderManager> shaderManager;
-	std::shared_ptr<Light> mainLight;
-	std::shared_ptr<Material> defaultMaterial;
+	std::shared_ptr<OmnipresentLight> mainLight;
 };
 
