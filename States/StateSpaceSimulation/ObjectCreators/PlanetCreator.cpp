@@ -2,10 +2,11 @@
 
 PlanetCreator::PlanetCreator(
 	std::shared_ptr<TextureManager> textureManager, std::list<std::shared_ptr<Renderable>>& renderContainer,
-	std::list<std::shared_ptr<RenderablePlanet>>& planetContainer)
+	std::list<std::shared_ptr<RenderablePlanet>>& planetContainer, std::list<std::shared_ptr<PointLight>>& pointLightContainer)
 	: textureManager(textureManager)
 	, renderContainer(renderContainer)
 	, planetContainer(planetContainer)
+	, pointLightContainer(pointLightContainer)
 {
 }
 
@@ -16,7 +17,7 @@ void PlanetCreator::createColoredPlanetFromArchive(boost::archive::text_iarchive
 	addObjectToContainers(object);
 }
 
-std::shared_ptr<ColoredPlanet> PlanetCreator::createColoredPlanet(
+std::shared_ptr<ColoredPlanet> PlanetCreator::buildColoredPlanet(
 	const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
 	float scale, const std::string& identifier, const glm::vec4& color)
 {
@@ -33,7 +34,7 @@ void PlanetCreator::createTexturedPlanetFromArchive(boost::archive::text_iarchiv
 	addObjectToContainers(object);
 }
 
-std::shared_ptr<TexturedPlanet> PlanetCreator::CreateColoredPlanet(
+std::shared_ptr<TexturedPlanet> PlanetCreator::buildTexturedPlanet(
 	const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
 	float scale, const std::string& identifier, std::shared_ptr<Texture> texture)
 {

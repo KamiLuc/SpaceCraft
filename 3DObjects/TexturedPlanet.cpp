@@ -3,7 +3,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-TexturedPlanet::TexturedPlanet() : TexturedPlanet({}, {}, {}, {}, 1.0f, {}, nullptr)
+TexturedPlanet::TexturedPlanet()
+	: TexturedPlanet({}, {}, {}, {}, 1.0f, {}, nullptr)
 {
 }
 
@@ -23,16 +24,15 @@ std::string TexturedPlanet::getSerializedTextureName() const
 
 void TexturedPlanet::render(SceneContext& sceneContext) const
 {
-	auto& shaderManager = sceneContext.shaderManager;
-	auto shader = shaderManager->useShader("texturedObjectShader");
-	auto& uniforms = shader->getUniformLocations();
+	auto shader = sceneContext.shaderManager->useShader("texturedObjectShader");
 
-	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	sceneContext.mainLight->useLight(uniforms.uniformAmbientColor, uniforms.uniformAmbientIntensity);
-	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
+	shader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
+	shader->useOmnipresentLight(*sceneContext.mainLight);
+	shader->usePointLights(sceneContext.pointLights);
+	shader->useMaterial(material);
+	shader->useModel(getModelMatrix());
 
 	texture->useTexture();
-	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(getModelMatrix()));
 	mesh.useMesh();
 
 	if (renderOrbit)

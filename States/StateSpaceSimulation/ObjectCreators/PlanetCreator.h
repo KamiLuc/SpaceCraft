@@ -2,26 +2,25 @@
 
 #include "3DObjects/ColoredPlanet.h"
 #include "3DObjects/TexturedPlanet.h"
+#include "3DObjects/TexturedStar.h"
 
 #include <list>
-
-//zmienic create/build
 
 class PlanetCreator
 {
 public:
 	PlanetCreator(
 		std::shared_ptr<TextureManager> textureManager, std::list<std::shared_ptr<Renderable>>& renderContainer,
-		std::list<std::shared_ptr<RenderablePlanet>>& planetContainer);
+		std::list<std::shared_ptr<RenderablePlanet>>& planetContainer, std::list<std::shared_ptr<PointLight>>& pointLightContainer);
 	virtual ~PlanetCreator() {}
 
 	void createColoredPlanetFromArchive(boost::archive::text_iarchive& ar);
-	std::shared_ptr<ColoredPlanet> createColoredPlanet(
+	std::shared_ptr<ColoredPlanet> buildColoredPlanet(
 		const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
 		const PhysicalUnit& radius, float scale, const std::string& identifier, const glm::vec4& color);
 
 	void createTexturedPlanetFromArchive(boost::archive::text_iarchive& ar);
-	std::shared_ptr<TexturedPlanet> CreateColoredPlanet(
+	std::shared_ptr<TexturedPlanet> buildTexturedPlanet(
 		const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
 		const PhysicalUnit& radius, float scale, const std::string& identifier, std::shared_ptr<Texture> texture);
 
@@ -36,5 +35,6 @@ private:
 
 	std::list<std::shared_ptr<Renderable>>& renderContainer;
 	std::list<std::shared_ptr<RenderablePlanet>>& planetContainer;
+	std::list<std::shared_ptr<PointLight>>& pointLightContainer;
 	std::shared_ptr<TextureManager> textureManager;
 };

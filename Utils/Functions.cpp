@@ -33,3 +33,14 @@ void calculateAverageNormals(const std::vector<unsigned int>& indices, const std
 	}
 
 }
+
+glm::vec2 getObjectPositionOnScreen(const glm::vec3 & objectPositionIn3dSpace, const glm::mat4 & viewMatrix, const glm::mat4 & projectionMatrix, const glm::vec2 & screenSize)
+{
+	glm::vec4 objectPositionInViewSpace = viewMatrix * glm::vec4(objectPositionIn3dSpace, 1.0);
+	glm::vec4 objectPositionInClipSpace = projectionMatrix * objectPositionInViewSpace;
+
+	float xScreenSpace = static_cast<float>((objectPositionInClipSpace.x + 1.0) * 0.5 * screenSize.x);
+	float yScreenSpace = static_cast<float>((1.0 - objectPositionInClipSpace.y) * 0.5 * screenSize.y);
+
+	return { xScreenSpace, yScreenSpace };
+}

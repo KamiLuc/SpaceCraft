@@ -16,7 +16,7 @@ class StateSpaceSimulation : public BaseState, public EditableViaImGui
 public:
 	friend class SpaceSimulationImGui;
 
-	StateSpaceSimulation(StateManager* stateManager, Render render = Render::twoDimensional);
+	StateSpaceSimulation(StateManager* stateManager, Render render = Render::threeDimensional);
 
 	virtual void onCreate() override;
 	virtual void onDestroy() override;
@@ -25,6 +25,15 @@ public:
 	virtual void update(const sf::Time& time) override;
 	virtual void draw() override;
 
+private:
+	enum class Mouse
+	{
+		LEFT,
+		RIGHT
+	};
+
+	void enableEvents();
+	void disableEvents();
 	void resetSimulation();
 	void renderObject(const Renderable& renderable);
 	void addPlanetToSimulation(std::shared_ptr<RenderablePlanet> planet);
@@ -37,15 +46,8 @@ public:
 	void mouseLeftClick(EventDetails* details);
 	void mouseRightClick(EventDetails* details);
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool begiImGui) override;
-	void saveSimulation(const std::string& fileName);
-	void loadSimulation(const std::string& fileName);
-
-private:
-	enum class Mouse
-	{
-		LEFT,
-		RIGHT
-	};
+	void saveSimulation(const std::filesystem::path& filePath);
+	void loadSimulation(const std::filesystem::path& filePath);
 
 	bool pauseSimulation;
 	bool renderCoordinateAxes;
@@ -59,8 +61,7 @@ private:
 	std::list<std::shared_ptr<RenderablePlanet>> planets;
 	std::unique_ptr<SpaceSimulationImGui> simulationGui;
 	std::shared_ptr<TextureManager> textureManager;
-	std::shared_ptr<ShaderManager> shaderManager;
-	PlanetCreator planetCreator;
+	std::unique_ptr<PlanetCreator> planetCreator;
 
 	void addCallbacks();
 	void removeCallbacks();

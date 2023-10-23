@@ -18,15 +18,14 @@ ColoredPlanet::ColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalU
 
 void ColoredPlanet::render(SceneContext& sceneContext) const
 {
-	auto& shaderManager = sceneContext.shaderManager;
-	auto shader = shaderManager->useShader("coloredObjectShader");
-	auto& uniforms = shader->getUniformLocations();
+	auto shader = sceneContext.shaderManager->useShader("coloredObjectShader");
 
-	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	sceneContext.mainLight->useLight(uniforms.uniformAmbientColor, uniforms.uniformAmbientIntensity);
-	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
+	shader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
+	shader->useOmnipresentLight(*sceneContext.mainLight);
+	shader->usePointLights(sceneContext.pointLights);
+	shader->useMaterial(material);
+	shader->useModel(getModelMatrix());
 
-	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(getModelMatrix()));
 	mesh.useMesh();
 
 	if (renderOrbit)
@@ -85,7 +84,7 @@ void ColoredPlanet::serializeFromBase(boost::archive::text_oarchive & outputArch
 void ColoredPlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
 {
 	RenderablePlanet::serialize(outputArchive, version);
-	outputArchive& color[0] & color[1] & color[2] & color[3];
+	outputArchive & color[0] & color[1] & color[2] & color[3];
 }
 
 void ColoredPlanet::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)

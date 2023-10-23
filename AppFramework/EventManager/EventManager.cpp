@@ -1,6 +1,8 @@
 #include "EventManager.h"
 
-EventManager::EventManager() : focus(true)
+EventManager::EventManager()
+	: focus(true)
+	, callbacksEnabled(true)
 {
 	this->loadBindings();
 }
@@ -66,6 +68,16 @@ bool EventManager::removeCallback(StateType state, const std::string& callbackNa
 
 	it->second.erase(callbackName);
 	return true;
+}
+
+void EventManager::enableCallbacks()
+{
+	callbacksEnabled = true;
+}
+
+void EventManager::disableCallbacks()
+{
+	callbacksEnabled = false;
 }
 
 void EventManager::handleEvent(sf::Event& event)
@@ -170,7 +182,7 @@ void EventManager::update()
 			}
 		}
 
-		if (bind->events.size() == bind->eventsHappening)
+		if (bind->events.size() == bind->eventsHappening && callbacksEnabled)
 		{
 			auto stateCallbacks = this->callbacks.find(this->currentState);
 			auto otherCallbacks = this->callbacks.find(StateType(0));

@@ -24,6 +24,9 @@ public:
 	bool addBinding(std::shared_ptr<Binding> binding);
 	bool removeBinding(std::string bindingName);
 	bool removeCallback(StateType state, const std::string& callbackName);
+	bool callbacksEnabled;
+	void enableCallbacks();
+	void disableCallbacks();
 	void setFocus(bool focus);
 	void setCurrentState(const StateType& state);
 	void handleEvent(sf::Event& event);

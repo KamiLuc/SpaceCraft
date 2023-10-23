@@ -27,7 +27,7 @@ private:
 	StateSpaceSimulation& spaceSimulation;
 	TextureManager& textureManager;
 	std::vector<unsigned int> planetsToDelete;
-	std::vector<std::string> savedSimulations;
+	std::vector<std::filesystem::path> savedSimulations;
 	bool renderCoordinateSystemAxis;
 
 	void showFileMenu();

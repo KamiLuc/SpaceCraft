@@ -30,9 +30,3 @@ void OmnipresentLight::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, 
 		ImGui::End();
 	}
 }
-
-void OmnipresentLight::useLight(GLint colorLocation, GLint ambientIntensityLocation)
-{
-	glUniform3f(colorLocation, color.r, color.g, color.b);
-	glUniform1f(ambientIntensityLocation, ambientIntensity);
-}

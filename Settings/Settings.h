@@ -26,6 +26,7 @@ namespace Settings {
 		MainLightSettings mainLightSettings;
 		const std::filesystem::path texturesPath;
 		const std::filesystem::path shadersPath;
+		const std::filesystem::path commonShaderCodePath;
 		const std::filesystem::path savedSimulationsPath;
 	};
 }

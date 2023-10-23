@@ -1,33 +1,108 @@
 #include "UniformLocations.h"
 
 UniformLocations::UniformLocations()
-	: uniformModel(-1)
-	, uniformProjection(-1)
-	, uniformView(-1)
-	, uniformAmbientColor(-1)
-	, uniformAmbientIntensity(-1)
-	, uniformCameraPosition(-1)
-	, uniformDiffuseIntensity(-1)
-	, uniformLightDirection(-1)
-	, uniformSpecularIntensity(-1)
-	, uniformShininess(-1)
-	, uniformWorldScale(-1)
-	, uniformOrbitColor(-1)
+	: model(0)
+	, worldScale(0)
+	, orbitColor(0)
+	, pointLightCount(0)
+	, omnipresentLight(0, 0)
 {
 }
 
 void UniformLocations::clear()
 {
-	uniformProjection = 0;
-	uniformModel = 0;
-	uniformView = 0;
-	uniformAmbientIntensity = 0;
-	uniformAmbientColor = 0;
-	uniformDiffuseIntensity = 0;
-	uniformLightDirection = 0;
-	uniformCameraPosition = 0;
-	uniformSpecularIntensity = 0;
-	uniformShininess = 0;
-	uniformWorldScale = 0;
-	uniformOrbitColor = 0;
+	model = 0;
+	worldScale = 0;
+	orbitColor = 0;
+	pointLightCount = 0;
+	omnipresentLight.clear();
+	camera.clear();
+	material.clear();
+
+	for (auto& el : pointLights)
+	{
+		el.clear();
+	}
+}
+
+UniformPointLight::UniformPointLight()
+	: UniformPointLight(0, 0, 0, 0, 0, 0, 0)
+{
+}
+
+UniformPointLight::UniformPointLight(GLuint uniformColor, GLuint uniformAmbientIntensity, GLuint uniformDiffuseIntensity,
+									 GLuint uniformPosition, GLuint uniformConstant, GLuint uniformLinear, GLuint uniformExponent)
+	: color(uniformColor)
+	, ambientIntensity(uniformAmbientIntensity)
+	, diffuseIntensity(uniformDiffuseIntensity)
+	, position(uniformPosition)
+	, constant(uniformConstant)
+	, linear(uniformLinear)
+	, exponent(uniformExponent)
+{
+
+}
+
+void UniformPointLight::clear()
+{
+	color = 0;
+	ambientIntensity = 0;
+	diffuseIntensity = 0;
+	position = 0;
+	constant = 0;
+	linear = 0;
+	exponent = 0;
+}
+
+UniformOmnipresentLight::UniformOmnipresentLight()
+	: UniformOmnipresentLight(0, 0)
+{
+}
+
+UniformOmnipresentLight::UniformOmnipresentLight(GLuint uniformColor, GLuint uniformAmbientIntensity)
+	: color(uniformColor)
+	, ambientIntensity(uniformAmbientIntensity)
+{
+}
+
+void UniformOmnipresentLight::clear()
+{
+	color = 0;
+	ambientIntensity = 0;
+}
+
+UniformCamera::UniformCamera()
+	: UniformCamera(0, 0, 0)
+{
+}
+
+UniformCamera::UniformCamera(GLuint uniformProjection, GLuint uniformView, GLuint uniformPosition)
+	: projection(uniformProjection)
+	, view(uniformView)
+	, position(uniformPosition)
+{
+}
+
+void UniformCamera::clear()
+{
+	projection = 0;
+	view = 0;
+	position = 0;
+}
+
+UniformMaterial::UniformMaterial()
+	: UniformMaterial(0, 0)
+{
+}
+
+UniformMaterial::UniformMaterial(GLuint specularIntensity, GLuint shininess)
+	: specularIntensity(specularIntensity)
+	, shininess(shininess)
+{
+}
+
+void UniformMaterial::clear()
+{
+	specularIntensity = 0;
+	shininess = 0;
 }

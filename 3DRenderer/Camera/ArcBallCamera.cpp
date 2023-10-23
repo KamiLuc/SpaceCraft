@@ -62,7 +62,7 @@ void ArcBallCamera::handleMouse(const glm::vec2& oldMousePosition, const glm::ve
 	updateCameraProperties();
 }
 
-glm::mat4 ArcBallCamera::calculateViewMatrix() const
+glm::mat4 ArcBallCamera::getViewMatrix() const
 {
 	return viewMatrix;
 }

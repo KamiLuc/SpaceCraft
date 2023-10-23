@@ -10,11 +10,3 @@ DirectionalLight::DirectionalLight(const glm::vec3& color, GLfloat ambientInteni
 DirectionalLight::~DirectionalLight()
 {
 }
-
-void DirectionalLight::useLight(GLint colorLocation, GLint ambientIntensityLocation, GLint diffuseIntensityLocation, GLint directionLocation)
-{
-	glUniform3f(colorLocation, color.r, color.g, color.b);
-	glUniform3f(directionLocation, direction.x, direction.y, direction.z);
-	glUniform1f(ambientIntensityLocation, ambientIntensity);
-	glUniform1f(diffuseIntensityLocation, diffuseIntensity);
-}

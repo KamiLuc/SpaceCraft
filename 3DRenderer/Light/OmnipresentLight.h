@@ -3,6 +3,8 @@
 #include "AppFramework/GUI/EditableViaImGui.h"
 #include "Light.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 class OmnipresentLight : public Light, public EditableViaImGui
 {
 public:
@@ -10,7 +12,6 @@ public:
 	virtual ~OmnipresentLight();
 
 	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
-	void useLight(GLint colorLocation, GLint ambientIntensityLocation);
 
 private:
 };

@@ -6,7 +6,6 @@ int main(int argc, char* argvp[])
 
 	while (!app.getWindow()->isDone())
 	{
-		app.handleInput();
 		app.update();
 		app.render();
 		app.lateUpdate();

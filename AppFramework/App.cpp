@@ -14,7 +14,8 @@ App::App()
 
 	auto& settings = Settings::GlobalSettings::getInstance();
 
-	shaderManager->setPath(settings.shadersPath);
+	shaderManager->setShadersPath(settings.shadersPath);
+	shaderManager->setIncludePath(settings.commonShaderCodePath);
 	textureManager->setPath(settings.texturesPath);
 
 	window.start3D();

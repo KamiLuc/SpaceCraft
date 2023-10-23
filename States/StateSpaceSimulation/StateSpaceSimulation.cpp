@@ -2,15 +2,12 @@
 
 StateSpaceSimulation::StateSpaceSimulation(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
-	, planetCreator(stateManager->getContext()->textureManager, objectsToRender, planets)
-	, shaderManager(stateManager->getContext()->shaderManager)
 	, textureManager(stateManager->getContext()->textureManager)
-	, serializer()
-	, sceneContext()
+
 	, simulationSpeed(8.64f, 4)
 	, gravitationalConstant(6.67430f, -11)
 	, pauseSimulation(true)
-	, renderCoordinateAxes(true)
+	, renderCoordinateAxes(false)
 {
 }
 
@@ -32,11 +29,18 @@ void StateSpaceSimulation::onCreate()
 
 	sceneContext = SceneContext(cameraManager, stateManager->getContext()->shaderManager, mainLight);
 
+	planetCreator = std::make_unique<PlanetCreator>(textureManager, objectsToRender, planets, sceneContext.pointLights);
+
 	serializer.setSaveDirectiory(settings.savedSimulationsPath);
 	serializer.registerObjectCreator(SerializableObjectId::COLORED_PLANET,
-									 [&](auto& data) { planetCreator.createColoredPlanetFromArchive(data); });
+									 [&](auto& data) { planetCreator->createColoredPlanetFromArchive(data); });
 	serializer.registerObjectCreator(SerializableObjectId::TEXTURED_PLANET,
-									 [&](auto& data) { planetCreator.createTexturedPlanetFromArchive(data); });
+									 [&](auto& data) { planetCreator->createTexturedPlanetFromArchive(data); });
+
+	glm::vec3 position(0.0f, 0.0f, 0.0f);
+	glm::vec3 color(1.0f, 1.0f, 1.0f);
+
+	sceneContext.pointLights.push_back(std::make_shared<PointLight>(color, 0.0f, position, 1.0f, 0.01f, 0.01f, 0.01f));
 
 	addCallbacks();
 }
@@ -58,6 +62,7 @@ void StateSpaceSimulation::update(const sf::Time& time)
 {
 	auto realTimeInSec = static_cast<float>(time.asSeconds());
 	sceneContext.cameraManager->updateCameraPosition(realTimeInSec);
+	sceneContext.lastUpdateInSec = realTimeInSec;
 
 	float simTime = realTimeInSec * static_cast<float>(this->simulationSpeed.getValue());
 
@@ -112,7 +117,7 @@ void StateSpaceSimulation::draw()
 		renderObject(*coordinateSystemAxes);
 	}
 
-	shaderManager->setLastUsedShader(nullptr);
+	sceneContext.shaderManager->setLastUsedShader(nullptr);
 	stateManager->getContext()->window->renderImGui();
 }
 
@@ -179,15 +184,25 @@ void StateSpaceSimulation::editViaImGui(ImGuiEditableObjectsHandler& objectHandl
 	}
 }
 
-void StateSpaceSimulation::saveSimulation(const std::string& fileName)
+void StateSpaceSimulation::saveSimulation(const std::filesystem::path& filePath)
 {
-	serializer.serializeObjects(fileName, planets.begin(), planets.end());
+	serializer.serializeObjects(filePath, planets.begin(), planets.end());
 }
 
-void StateSpaceSimulation::loadSimulation(const std::string& fileName)
+void StateSpaceSimulation::loadSimulation(const std::filesystem::path& filePath)
 {
 	resetSimulation();
-	serializer.createSerializedObjects(fileName);
+	serializer.createSerializedObjects(filePath);
+}
+
+void StateSpaceSimulation::enableEvents()
+{
+	stateManager->getContext()->eventManager->enableCallbacks();
+}
+
+void StateSpaceSimulation::disableEvents()
+{
+	stateManager->getContext()->eventManager->disableCallbacks();
 }
 
 void StateSpaceSimulation::resetSimulation()
@@ -231,9 +246,10 @@ void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)
 		float y = static_cast<float>(details->mouse.y);
 		float z = 0.5f;
 		auto winSize = stateManager->getContext()->window->getRenderWindow()->getSize();
+		auto currentCamera = sceneContext.cameraManager->getCurrentCamera();
 		glm::vec4 viewPort { 0.0f, 0.0f, winSize.x, winSize.y };
-		glm::mat4 projectionMatrix = sceneContext.cameraManager->getProjectionMatrix();
-		glm::mat4 viewMatrix = sceneContext.cameraManager->getViewMatrix();
+		glm::mat4 projectionMatrix = currentCamera->getProjectionMatrix();
+		glm::mat4 viewMatrix = currentCamera->getViewMatrix();
 
 		glm::vec3 nearPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.0f), viewMatrix, projectionMatrix, viewPort);
 		glm::vec3 farPlane = glm::unProject(glm::vec3(x, winSize.y - y, 0.99f), viewMatrix, projectionMatrix, viewPort);

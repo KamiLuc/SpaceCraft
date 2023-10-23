@@ -22,10 +22,10 @@ public:
 	std::filesystem::path getSaveDirectiory() const { return saveDirectory; }
 	void setSaveDirectiory(const std::filesystem::path& filePath) { this->saveDirectory = filePath; }
 	void registerObjectCreator(SerializableObjectId objectId, std::function<void(boost::archive::text_iarchive& ar)> creationFunction);
-	void createSerializedObjects(const std::string& fileName);
+	void createSerializedObjects(const std::filesystem::path& filePath);
 
 	template <typename InputIterator>
-	void serializeObjects(const std::string& fileName, InputIterator begin, InputIterator end) const;
+	void serializeObjects(const std::filesystem::path& filePath, InputIterator begin, InputIterator end) const;
 
 private:
 	std::filesystem::path saveDirectory;
@@ -34,7 +34,6 @@ private:
 	void closeFile(std::fstream& file) const;
 	void serializeSingleObject(std::shared_ptr<Serializable> object, boost::archive::text_oarchive& ar) const;
 	std::fstream openFile(const std::filesystem::path& filePath, unsigned int openmode) const;
-	std::filesystem::path combineFileNameWithSaveDirectory(const std::string& fileName) const;
 };
 
 inline std::fstream Serializer::openFile(const std::filesystem::path& filePath, unsigned int openmode) const
@@ -58,11 +57,6 @@ inline std::fstream Serializer::openFile(const std::filesystem::path& filePath, 
 	return file;
 }
 
-inline std::filesystem::path Serializer::combineFileNameWithSaveDirectory(const std::string & fileName) const
-{
-	return saveDirectory / fileName;
-}
-
 inline void Serializer::closeFile(std::fstream& file) const
 {
 	file.close();
@@ -79,10 +73,9 @@ inline void Serializer::registerObjectCreator(SerializableObjectId objectId, std
 	creators[objectId] = creationFunction;
 }
 
-inline void Serializer::createSerializedObjects(const std::string& fileName)
+inline void Serializer::createSerializedObjects(const std::filesystem::path& filePath)
 {
-	auto loadPath = combineFileNameWithSaveDirectory(fileName);
-	auto file = openFile(loadPath, std::ios::in);
+	auto file = openFile(filePath, std::ios::in);
 	boost::archive::text_iarchive ar(file);
 	SerializableObjectId id = SerializableObjectId::NONE;
 
@@ -118,10 +111,9 @@ inline void Serializer::createSerializedObjects(const std::string& fileName)
 }
 
 template<typename InputIterator>
-inline void Serializer::serializeObjects(const std::string& fileName, InputIterator begin, InputIterator end) const
+inline void Serializer::serializeObjects(const std::filesystem::path& filePath, InputIterator begin, InputIterator end) const
 {
-	auto savePath = combineFileNameWithSaveDirectory(fileName);
-	auto file = openFile(savePath, std::ios::in | std::ios::out | std::ios::trunc);
+	auto file = openFile(filePath, std::ios::in | std::ios::out | std::ios::trunc);
 	boost::archive::text_oarchive ar(file);
 
 	while (begin != end)

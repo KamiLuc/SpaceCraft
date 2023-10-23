@@ -2,11 +2,16 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-CameraManager::CameraManager(const Settings::CameraSettings& arcBallCameraSettings, const Settings::CameraSettings& firstPersonCameraSettings, const glm::vec2& windowSize)
-	: fpCamera(firstPersonCameraSettings), arcBallCamera(arcBallCameraSettings, windowSize),
-	windowSize(windowSize), currentCamera(&arcBallCamera)
+CameraManager::CameraManager(const Settings::CameraSettings& arcBallCameraSettings,
+							 const Settings::CameraSettings& firstPersonCameraSettings, const glm::vec2& windowSize)
+	: windowSize(windowSize)
+	, currentCamera(&arcBallCamera)
+	, fpCamera(firstPersonCameraSettings)
+	, arcBallCamera(arcBallCameraSettings, windowSize)
 {
-	calculateProjectionMatrix();
+	auto projMat = calculateProjectionMatrix();
+	fpCamera.setProjectionMatrix(projMat);
+	arcBallCamera.setProjectionMatrix(projMat);
 }
 
 void CameraManager::addCameraMoveDirection(const CameraMoveDirection& direction)
@@ -33,14 +38,6 @@ void CameraManager::updateCameraPosition(const GLfloat& timeInSec)
 	{
 		currentCamera->updateCameraPosition(it, timeInSec);
 	}
-}
-
-void CameraManager::useCamera(GLuint uniformView, GLuint uniformEyePosition, GLuint uniformProjection)
-{
-	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(currentCamera->calculateViewMatrix()));
-	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	auto cPos = currentCamera->getPosition();
-	glUniform3f(uniformEyePosition, cPos.x, cPos.y, cPos.z);
 }
 
 void CameraManager::changeCamera()
@@ -75,17 +72,17 @@ ArcBallCamera& CameraManager::getArcBallCameraRef()
 	return arcBallCamera;
 }
 
-glm::mat4 CameraManager::getProjectionMatrix() const
+CameraInterface * CameraManager::getCurrentCamera()
 {
-	return projectionMatrix;
+	return currentCamera;
 }
 
-glm::mat4 CameraManager::getViewMatrix() const
+glm::vec2 CameraManager::getWindowSize() const
 {
-	return currentCamera->calculateViewMatrix();
+	return windowSize;
 }
 
-void CameraManager::calculateProjectionMatrix()
+glm::mat4 CameraManager::calculateProjectionMatrix()
 {
-	projectionMatrix = glm::perspective(glm::radians(45.0f), windowSize.x / windowSize.y, 0.001f, 100000.0f);
+	return glm::perspective(glm::radians(45.0f), windowSize.x / windowSize.y, 0.001f, 100000.0f);
 }
