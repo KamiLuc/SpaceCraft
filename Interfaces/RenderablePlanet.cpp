@@ -1,6 +1,6 @@
 #include "RenderablePlanet.h"
 
-RenderablePlanet::RenderablePlanet()
+RenderablePlanet::RenderablePlanet() : RenderablePlanet({}, {}, {}, {}, 1.0f, "")
 {
 }
 
@@ -93,4 +93,28 @@ float RenderablePlanet::getRadiusInWorldSpace() const
 glm::vec3 RenderablePlanet::getPositionInWorldSpace() const
 {
 	return (position / worldScale).getGlmVec();
+}
+
+void RenderablePlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
+{
+	outputArchive & canMove;
+	outputArchive & identifier;
+	outputArchive & mass;
+	////material
+	outputArchive & position;
+	outputArchive & radius;
+	outputArchive & scale;
+	outputArchive & velocity;
+}
+
+void RenderablePlanet::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
+{
+	inputArchive & canMove;
+	inputArchive & identifier;
+	inputArchive & mass;
+	//material
+	inputArchive & position;
+	inputArchive & radius;
+	inputArchive & scale;
+	inputArchive & velocity;
 }

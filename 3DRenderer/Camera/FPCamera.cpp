@@ -65,7 +65,7 @@ void FPCamera::updateCameraProperties()
 	up = glm::normalize(glm::cross(right, front));
 }
 
-glm::mat4 FPCamera::calculateViewMatrix() const
+glm::mat4 FPCamera::getViewMatrix() const
 {
 	return glm::lookAt(position, position + front, up);
 }

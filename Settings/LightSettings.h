@@ -5,21 +5,17 @@
 
 namespace Settings {
 
-	struct LightSettings {
+	struct MainLightSettings {
+
 		glm::vec3 color;
 		GLfloat ambientIntensity;
-		GLfloat diffuseIntensity;
-		glm::vec3 direction;
 
-		LightSettings(glm::vec3 color, GLfloat ambientIntensity,
-					  GLfloat diffuseIntensity, const glm::vec3& direction)
+		MainLightSettings(glm::vec3 color, GLfloat ambientIntensity)
 			: color(color)
 			, ambientIntensity(ambientIntensity)
-			, diffuseIntensity(diffuseIntensity)
-			, direction(direction)
 		{
 		}
 
-		LightSettings() : LightSettings({ 1.0f, 1.0f, 1.0f }, 1.0f, 0.0f, { 0.0f, 0.0f, 0.0f }) {}
+		MainLightSettings() : MainLightSettings({ 1.0f, 1.0f, 1.0f }, 1.0f) {}
 	};
 }

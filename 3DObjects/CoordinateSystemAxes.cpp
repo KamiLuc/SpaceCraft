@@ -68,19 +68,10 @@ void CoordinateSystemAxes::render(SceneContext& sceneContext) const
 	glPushMatrix();
 	glLineWidth(lineWidth);
 
-	auto& shaderManager = sceneContext.shaderManager;
-	auto shader = shaderManager->getShader("coordinateSystemAxes");
-	auto& uniforms = shader->getUniformLocations();
+	auto shader = sceneContext.shaderManager->useShader("coordinateSystemAxes");
+	shader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
+	shader->useModel(getModelMatrix());
 
-	if (shader != sceneContext.shaderManager->getLastUsedShader())
-	{
-		shader->useShader();
-		shaderManager->setLastUsedShader(shader);
-	}
-
-	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-
-	glUniformMatrix4fv(shader->getUniformLocations().uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINES, 0, 12);
 	glBindVertexArray(0);
@@ -108,11 +99,11 @@ void CoordinateSystemAxes::renderWithImmediateMode(SceneContext& sceneContext) c
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(glm::value_ptr(sceneContext.cameraManager->getProjectionMatrix()));
+	glLoadMatrixf(glm::value_ptr(sceneContext.cameraManager->getCurrentCamera()->getProjectionMatrix()));
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glLoadMatrixf(glm::value_ptr(sceneContext.cameraManager->getViewMatrix()));
+	glLoadMatrixf(glm::value_ptr(sceneContext.cameraManager->getCurrentCamera()->getViewMatrix()));
 
 	glBegin(GL_LINES);
 

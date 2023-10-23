@@ -10,6 +10,7 @@
 #include <vector>
 #include <imgui.h>
 #include <array>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 using namespace Settings;
 
@@ -21,6 +22,23 @@ public:
 	SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, TextureManager& textureManager);
 
 	void draw();
+
+private:
+	StateSpaceSimulation& spaceSimulation;
+	TextureManager& textureManager;
+	std::vector<unsigned int> planetsToDelete;
+	std::vector<std::filesystem::path> savedSimulations;
+	bool renderCoordinateSystemAxis;
+
+	void showFileMenu();
+	void showSettingsMenu();
+	void showObjectsMenu();
+	void showDeletePlanetsMenu();
+	void showEditPlanetsMenu();
+	void showObjectFocusMenu();
+	void showSaveSimulationModal(const std::string& modal);
+	void showLoadSimulationModal(const std::string& modal);
+
 	void createColoredPlanet();
 	void createTexturedPlanet();
 	void createSolarSystem();
@@ -34,20 +52,9 @@ public:
 	void createNeptune();
 	void createMars();
 
-private:
-	StateSpaceSimulation& spaceSimulation;
-	TextureManager& textureManager;
-	std::vector<unsigned int> planetsToDelete;
-	bool renderCoordinateSystemAxis;
+	void loadSavedSimulations();
 
-	void showFileMenu();
-	void showSettingsMenu();
-	void showObjectsMenu();
-	void showDeletePlanetsMenu();
-	void showEditPlanetsMenu();
-	void showObjectFocusMenu();
-
-	virtual void deleteObject(std::shared_ptr<EditableViaImGui> object);
-	virtual void deleteObject(EditableViaImGui* object);
+	virtual void deleteObject(std::shared_ptr<EditableViaImGui> object) override;
+	virtual void deleteObject(EditableViaImGui* object) override;
 };
 

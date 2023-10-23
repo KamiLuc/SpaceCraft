@@ -1,54 +1,30 @@
 #version 330
 
+#include "commonStructs"
+
+const int MAX_POINT_LIGHTS = 124;
+
 in vec4 vCol;
 in vec2 texCoord;
 in vec3 normal;
 in vec3 fragPos;
-
 out vec4 color;
 
-struct DirectionalLight 
-{
-	vec3 color;
-	float ambientIntensity;
-	vec3 direction;
-	float diffuseIntensity;
-};
-
-struct Material
-{
-	float specularIntensity;
-	float shininess;
-};
+uniform Light omnipresentLight;
+uniform int pointLightCount;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform vec3 cameraPosition;
 
 //acces via glActiveTexture
 uniform sampler2D theTexture;
-uniform DirectionalLight directionalLight;
 uniform Material material;
 
-uniform vec3 cameraPosition;
+#include "commonFunctions"
 
 void main()
 {
-	vec4 ambientColor = vec4(directionalLight.color, 1.0f) * directionalLight.ambientIntensity;
-	
-	float diffuseFactor = max(dot(normalize(normal), normalize(directionalLight.direction)), 0.0f);
-	vec4 diffuseColor = vec4(directionalLight.color, 1.0f) * directionalLight.diffuseIntensity * diffuseFactor;
-	
-	vec4 specularColor = vec4(0, 0, 0, 0);
-	
-	if(diffuseFactor > 0.0f)
-	{
-		vec3 fragToCamera = normalize(cameraPosition - fragPos);
-		vec3 reflectedVertex = normalize(reflect(directionalLight.direction, normalize(normal)));
-		
-		float specularFactor = dot(fragToCamera, reflectedVertex);
-		if(specularFactor > 0.0f)
-		{
-			specularFactor = pow(specularFactor, material.shininess);
-			specularColor = vec4(directionalLight.color * material.specularIntensity * specularFactor, 1.0f);
-		}
-	}
-	
-	color = texture(theTexture, texCoord) * (ambientColor + diffuseColor + specularColor);
+	vec4 finalColor = calculatePointLights();
+	finalColor += calculateOmnipresentLight();
+
+	color = texture(theTexture, texCoord) * finalColor;
 }

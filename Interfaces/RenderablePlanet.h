@@ -7,7 +7,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-class RenderablePlanet : public Planet, public Renderable, public Serializable {
+class RenderablePlanet : public Planet, public Renderable, public Serializable
+{
 public:
 	RenderablePlanet();
 	RenderablePlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
@@ -16,6 +17,8 @@ public:
 	virtual ~RenderablePlanet() {}
 	virtual glm::mat4 getModelMatrix() const;
 	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
+	virtual void serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version) override;
+	virtual void serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version) override;
 
 	void update(float simTimeInSec, float realTimeInSec);
 	float getRadiusInWorldSpace() const;

@@ -13,12 +13,18 @@ public:
 				   float scale, const std::string& identifier, std::shared_ptr<Texture> texture);
 	virtual ~TexturedPlanet() {}
 
-	virtual void render(SceneContext& sceneContext) const override;
-	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui);
-	virtual SerializableObjectId getSerializabledId() const override;
-	virtual std::string serializeToString() const override;
-	virtual bool deserializeFromString(const std::string& data) override;
+	std::string getSerializedTextureName() const;
 
-private:
+	virtual void render(SceneContext& sceneContext) const override;
+	virtual void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
+	virtual SerializableObjectId getSerializabledId() const override;
+	virtual void serializeFromBase(boost::archive::text_oarchive& outputArchive, std::shared_ptr<Serializable> obj) override;
+	virtual void serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version) override;
+	virtual void serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version) override;
+
+protected:
 	TexturedMesh mesh;
+	std::string serializedTextureName;
+
+	void setUpMesh();
 };

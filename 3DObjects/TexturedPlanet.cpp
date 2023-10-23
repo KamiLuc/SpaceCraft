@@ -4,6 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 TexturedPlanet::TexturedPlanet()
+	: TexturedPlanet({}, {}, {}, {}, 1.0f, {}, nullptr)
 {
 }
 
@@ -13,43 +14,25 @@ TexturedPlanet::TexturedPlanet(
 	: RenderablePlanet(position, velocity, mass, radius, scale, identifier)
 	, Textured(texture)
 {
-	std::vector<GLfloat> vertices {};
-	std::vector<GLfloat> normals {};
-	std::vector<GLfloat> textureCoordinates {};
-	std::vector<unsigned int> indices {};
+	setUpMesh();
+}
 
-	for (GLuint i = 0; i <= stacks; ++i)
-	{
-		for (GLuint j = 0; j <= sectors; ++j)
-		{
-			textureCoordinates.emplace_back(static_cast<GLfloat>(j) / sectors);
-			textureCoordinates.emplace_back(static_cast<GLfloat>(i) / stacks);
-		}
-	}
-
-	Sphere::createSphere(vertices, normals, indices);
-	this->mesh.createMesh(vertices, indices, normals, textureCoordinates);
-
+std::string TexturedPlanet::getSerializedTextureName() const
+{
+	return serializedTextureName;
 }
 
 void TexturedPlanet::render(SceneContext& sceneContext) const
 {
-	auto& shaderManager = sceneContext.shaderManager;
-	auto shader = shaderManager->getShader("texturedObjectShader");
-	auto& uniforms = shader->getUniformLocations();
+	auto shader = sceneContext.shaderManager->useShader("texturedObjectShader");
 
-	if (shader != shaderManager->getLastUsedShader())
-	{
-		shader->useShader();
-		shaderManager->setLastUsedShader(shader);
-	}
-
-	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	sceneContext.mainLight->useLight(uniforms.uniformAmbientIntensity, uniforms.uniformAmbientColor, uniforms.uniformDiffuseIntensity, uniforms.uniformLightDirection);
-	material.useMaterial(uniforms.uniformSpecularIntensity, uniforms.uniformShininess);
+	shader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
+	shader->useOmnipresentLight(*sceneContext.mainLight);
+	shader->usePointLights(sceneContext.pointLights);
+	shader->useMaterial(material);
+	shader->useModel(getModelMatrix());
 
 	texture->useTexture();
-	glUniformMatrix4fv(uniforms.uniformModel, 1, GL_FALSE, glm::value_ptr(this->getModelMatrix()));
 	mesh.useMesh();
 
 	if (renderOrbit)
@@ -93,7 +76,7 @@ void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, un
 		}
 		ImGui::EndCombo();
 	}
-	ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(this->texture->getTextureId())),
+	ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(texture->getTextureId())),
 				 ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
 
 	ImGui::Separator();
@@ -118,16 +101,39 @@ SerializableObjectId TexturedPlanet::getSerializabledId() const
 	return SerializableObjectId::TEXTURED_PLANET;
 }
 
-std::string TexturedPlanet::serializeToString() const
+void TexturedPlanet::serializeFromBase(boost::archive::text_oarchive & outputArchive, std::shared_ptr<Serializable> obj)
 {
-	std::stringstream ss;
-
-	ss << "witam" << ",ja" << ",testuje" << ",serializacje";
-
-	return ss.str();
+	outputArchive & *std::dynamic_pointer_cast<TexturedPlanet>(obj);
 }
 
-bool TexturedPlanet::deserializeFromString(const std::string& data)
+void TexturedPlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
 {
-	return false;
+	RenderablePlanet::serialize(outputArchive, version);
+	outputArchive& texture->getName();
+}
+
+void TexturedPlanet::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
+{
+	RenderablePlanet::serialize(inputArchive, version);
+	inputArchive& serializedTextureName;
+}
+
+void TexturedPlanet::setUpMesh()
+{
+	std::vector<GLfloat> vertices {};
+	std::vector<GLfloat> normals {};
+	std::vector<GLfloat> textureCoordinates {};
+	std::vector<unsigned int> indices {};
+
+	for (GLuint i = 0; i <= stacks; ++i)
+	{
+		for (GLuint j = 0; j <= sectors; ++j)
+		{
+			textureCoordinates.emplace_back(static_cast<GLfloat>(j) / sectors);
+			textureCoordinates.emplace_back(static_cast<GLfloat>(i) / stacks);
+		}
+	}
+
+	Sphere::createSphere(vertices, normals, indices);
+	mesh.createMesh(vertices, indices, normals, textureCoordinates);
 }

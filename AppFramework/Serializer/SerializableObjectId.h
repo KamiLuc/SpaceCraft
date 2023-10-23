@@ -2,6 +2,7 @@
 
 enum class SerializableObjectId : unsigned
 {
+	NONE,
 	COLORED_PLANET,
 	TEXTURED_PLANET
 };

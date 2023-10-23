@@ -1,9 +1,13 @@
 #pragma once
 
+#include "AppFramework/Serializer/Serializable.h"
+
 #include <cmath>
 #include <ostream>
+#include <string>
+#include <sstream>
 
-class PhysicalUnit
+class PhysicalUnit : public Serializable
 {
 public:
 	PhysicalUnit();
@@ -33,8 +37,10 @@ public:
 	int getExponent() const;
 	int* getExponentPtr();
 
+	void serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version) override;
+	void serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version) override;
+
 private:
 	float base;
 	int exponent;
 };
-

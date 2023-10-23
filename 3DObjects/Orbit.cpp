@@ -45,19 +45,11 @@ void Orbit::addPoint(const glm::vec3& point)
 
 void Orbit::render(SceneContext& sceneContext) const
 {
-	auto& shaderManager = sceneContext.shaderManager;
-	auto shader = sceneContext.shaderManager->getShader("orbitShader");
-	auto& uniforms = shader->getUniformLocations();
+	auto shader = sceneContext.shaderManager->useShader("orbitShader");
 
-	if (shader != shaderManager->getLastUsedShader())
-	{
-		shader->useShader();
-		shaderManager->setLastUsedShader(shader);
-	}
+	shader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
 
-	sceneContext.cameraManager->useCamera(uniforms.uniformView, uniforms.uniformCameraPosition, uniforms.uniformProjection);
-	glUniform3f(uniforms.uniformOrbitColor, color.r, color.g, color.b);
-
+	glUniform3f(shader->getUniformLocations().orbitColor, color.r, color.g, color.b);
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINE_STRIP, 0, static_cast<GLsizei>(CircularVector::getActualSize()));
 	glBindVertexArray(0);
