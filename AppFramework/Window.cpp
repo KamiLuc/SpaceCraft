@@ -1,7 +1,7 @@
 #include "Window.h"
 
-Window::Window() : Window("No name", { 640, 480 }
-						  , sf::Color::White)
+Window::Window()
+	: Window("No name", { 640, 480 }, sf::Color::White)
 {
 }
 
@@ -15,69 +15,62 @@ Window::Window(const std::string& title, const sf::Vector2u& size, const sf::Col
 	, currentRender(Render::twoDimensional)
 	, imGuiUpdateClock()
 {
-	this->create();
-
-	this->eventManager.addCallback(StateType(0), "Fullscreen_toggle",
-								   &Window::toggleFullscreen, this);
-	this->eventManager.addCallback(StateType(0), "Window_close",
-								   &Window::close, this);
+	eventManager.addCallback(StateType(0), "Window_close", &Window::close, this);
 }
 
 Window::~Window()
 {
 	ImGui::SFML::Shutdown();
-	this->window.close();
+	window.close();
 }
 
 void Window::beginDraw()
 {
-	this->window.clear(this->clearColor);
+	window.clear(clearColor);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::endDraw()
 {
 	ImGui::SFML::Render();
-	this->window.display();
+	window.display();
 }
 
 void Window::update()
 {
 	sf::Event event;
-	while (this->window.pollEvent(event))
+	while (window.pollEvent(event))
 	{
 		ImGui::SFML::ProcessEvent(event);
 		if (event.type == sf::Event::LostFocus)
 		{
-			this->focused = false;
-			this->eventManager.setFocus(false);
+			focused = false;
+			eventManager.setFocus(false);
 		}
 		else if (event.type == sf::Event::GainedFocus)
 		{
-			this->focused = true;
-			this->eventManager.setFocus(true);
+			focused = true;
+			eventManager.setFocus(true);
 		}
-		this->eventManager.handleEvent(event);
+		eventManager.handleEvent(event);
 	}
 	ImGui::SFML::Update(window, imGuiUpdateClock.restart());
-	this->eventManager.update();
+	eventManager.update();
+}
+
+void Window::setWindowSize(const sf::Vector2u& size)
+{
+	windowSize = size;
 }
 
 void Window::close(EventDetails* details)
 {
-	this->done = true;
-}
-
-void Window::toggleFullscreen(EventDetails* details)
-{
-	this->fullscreen = !this->fullscreen;
-	this->destroy();
-	this->create();
+	done = true;
 }
 
 void Window::draw(const sf::Drawable& drawable)
 {
-	this->window.draw(drawable);
+	window.draw(drawable);
 }
 
 void Window::renderImGui()
@@ -88,72 +81,79 @@ void Window::renderImGui()
 
 void Window::start2D()
 {
-	if (this->currentRender != Render::twoDimensional)
+	if (currentRender != Render::twoDimensional)
 	{
-		this->window.setActive(false);
-		this->window.pushGLStates();
-		this->currentRender = Render::twoDimensional;
+		window.setActive(false);
+		window.pushGLStates();
+		currentRender = Render::twoDimensional;
 	}
 }
 
 void Window::start3D()
 {
-	if (this->currentRender != Render::threeDimensional)
+	if (currentRender != Render::threeDimensional)
 	{
-		this->window.popGLStates();
-		this->window.setActive(true);
-		this->currentRender = Render::threeDimensional;
+		window.popGLStates();
+		window.setActive(true);
+		currentRender = Render::threeDimensional;
 	}
+}
+
+void Window::startWindow()
+{
+	create();
 }
 
 bool Window::isDone() const
 {
-	return this->done;
+	return done;
 }
 
 bool Window::isFocused() const
 {
-	return this->focused;
+	return focused;
 }
 
 bool Window::isFullscreen() const
 {
-	return this->fullscreen;
+	return fullscreen;
 }
 
 sf::Vector2u Window::getWindowSize() const
 {
-	return this->windowSize;
+	return windowSize;
 }
 
 sf::Vector2i Window::getMousePosition() const
 {
-	return sf::Mouse::getPosition(this->window);
+	return sf::Mouse::getPosition(window);
 }
 
 sf::RenderWindow* Window::getRenderWindow()
 {
-	return &this->window;
+	return &window;
 }
 
 EventManager* Window::getEventManager()
 {
-	return &this->eventManager;
+	return &eventManager;
 }
 
 sf::Color Window::getClearColor() const
 {
-	return this->clearColor;
+	return clearColor;
 }
 
 void Window::setClearColor(const sf::Color& color)
 {
-	this->clearColor = color;
+	clearColor = color;
 }
 
 void Window::destroy()
 {
-	this->window.close();
+	window.setActive(false);
+	ImGui::SFML::Shutdown(window);
+	window.close();
 }
 
 void Window::create()
@@ -165,25 +165,25 @@ void Window::create()
 	settings.majorVersion = 3;
 	settings.minorVersion = 3;
 
-	auto style = (this->fullscreen ? sf::Style::Fullscreen : sf::Style::Close | sf::Style::Titlebar);
-	window.create({ this->windowSize.x, this->windowSize.y, 32 }, this->windowTitle, style, settings);
+	auto style = (fullscreen ? sf::Style::Fullscreen | sf::Style::Close : sf::Style::Close | sf::Style::Titlebar);
+	window.create({ windowSize.x, windowSize.y, 32 }, windowTitle, style, settings);
 	window.setKeyRepeatEnabled(false);
-	ImGui::SFML::Init(this->window);
+	ImGui::SFML::Init(window);
 
-	this->window.setActive(true);
-	this->initGLEW();
+	window.setActive(true);
+	initGLEW();
 	glEnable(GL_DEPTH_TEST);
-	glViewport(0, 0, this->windowSize.x, this->windowSize.y);
-	this->window.setActive(false);
-	this->window.pushGLStates();
+	glViewport(0, 0, windowSize.x, windowSize.y);
+	window.setActive(false);
+	window.pushGLStates();
 
-	if (this->currentRender == Render::twoDimensional)
+	if (currentRender == Render::twoDimensional)
 	{
-		this->start2D();
+		start2D();
 	}
 	else
 	{
-		this->start3D();
+		start3D();
 	}
 }
 

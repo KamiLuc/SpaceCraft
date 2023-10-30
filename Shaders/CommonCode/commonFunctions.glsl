@@ -36,7 +36,12 @@ vec4 calculatePointLights()
 		vec4 color = calculateLightByDirection(pointLights[i].base, direction, pointLights[i].diffuseIntensity);
 		float attenuation = pointLights[i].exponent * distance * distance + pointLights[i].linear * distance + pointLights[i].constant;
 
-		totalColor += (color / attenuation);
+		if (attenuation < 1.0f)
+		{
+			attenuation = 1.0f;
+		}
+
+		totalColor += color / attenuation;
 	}
 
 	return totalColor;

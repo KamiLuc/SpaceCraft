@@ -1,10 +1,10 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <glm/ext/vector_float3.hpp>
 #include <string>
-#include <glm/glm.hpp>
+#include <GL/glew.h>
 #include <stdexcept>
+#include <glm/glm.hpp>
+#include <glm/ext/vector_float3.hpp>
 
 #include "Settings/Settings.h"
 #include "CameraMoveDirection.h"
@@ -27,8 +27,8 @@ public:
 	}
 
 	CameraInterface(const Settings::CameraSettings& settings)
-		: CameraInterface(settings.moveSpeed, settings.turnSpeed, settings.pitch, settings.yaw, settings.lookAt,
-						  settings.position, settings.worldUp, {}, settings.cameraName)
+		: CameraInterface(settings.moveSpeed, settings.turnSpeed, settings.pitch, settings.yaw,
+						  settings.lookAt, settings.position, settings.worldUp, {}, settings.cameraName)
 	{
 	}
 

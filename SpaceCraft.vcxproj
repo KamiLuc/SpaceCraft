@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{c3619478-4bfe-4352-b4c5-4171c52360f8}</ProjectGuid>
+    <RootNamespace>SpaceCraft</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>;$(SolutionDir)\Submodules\imgui</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>;$(SolutionDir)\Submodules\imgui</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../External Libs/boost_1_83_0;$(SolutionDir);$(SolutionDir)/../External Libs/SFML-2.5.1/include;$(SolutionDir)/../External Libs/GLEW/include;$(SolutionDir)/../External Libs/GLM;%(AdditionalIncludeDirectories);$(SolutionDir)\Submodules\imgui</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)/../External Libs/boost_1_83_0/stage/lib;$(SolutionDir)/../External Libs\SFML-2.5.1\lib;$(SolutionDir)/../External Libs\GLFW\lib-vc2022;$(SolutionDir)/../External Libs/GLEW/lib/Release/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-audio-s-d.lib;sfml-network-s-d.lib;sfml-system-s-d.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;ws2_32.lib;glew32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../External Libs/boost_1_83_0/boost;$(SolutionDir);$(SolutionDir)/..External Libs/SFML-2.5.1/include;$(SolutionDir)/../External Libs/GLEW/include;$(SolutionDir)/../External Libs/GLM;%(AdditionalIncludeDirectories);$(SolutionDir)\Submodules\imgui</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)/../External Libs/boost_1_83_0/stage/lib;$(SolutionDir)/../External Libs\SFML-2.5.1\lib;$(SolutionDir)/../External Libs\GLFW\lib-vc2022;$(SolutionDir)/../External Libs/GLEW/lib/Release/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-s.lib;sfml-window-s.lib;sfml-audio-s.lib;sfml-network-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;ws2_32.lib;glew32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="3DObjects\ColoredPlanet.cpp" />
+    <ClCompile Include="3DObjects\CoordinateSystemAxes.cpp" />
+    <ClCompile Include="3DObjects\Orbit.cpp" />
+    <ClCompile Include="3DObjects\TexturedPlanet.cpp" />
+    <ClCompile Include="3DObjects\TexturedStar.cpp" />
+    <ClCompile Include="3DRenderer\Camera\ArcBallCamera.cpp" />
+    <ClCompile Include="3DRenderer\Camera\CameraManager.cpp" />
+    <ClCompile Include="3DRenderer\Camera\CameraManagerToSFMLFrameworkAdapter.cpp" />
+    <ClCompile Include="3DRenderer\Camera\FPCamera.cpp" />
+    <ClCompile Include="3DRenderer\Light\DirectionalLight.cpp" />
+    <ClCompile Include="3DRenderer\Light\Light.cpp" />
+    <ClCompile Include="3DRenderer\Light\OmnipresentLight.cpp" />
+    <ClCompile Include="3DRenderer\Light\PointLight.cpp" />
+    <ClCompile Include="3DRenderer\Material.cpp" />
+    <ClCompile Include="3DRenderer\Mesh\BasicMesh.cpp" />
+    <ClCompile Include="3DRenderer\Mesh\ColoredMesh.cpp" />
+    <ClCompile Include="3DRenderer\Mesh\TexturedMesh.cpp" />
+    <ClCompile Include="3DRenderer\Shader\Shader.cpp" />
+    <ClCompile Include="3DRenderer\Shader\ShaderManager.cpp" />
+    <ClCompile Include="3DRenderer\Shader\UniformLocations.cpp" />
+    <ClCompile Include="3DRenderer\Skybox.cpp" />
+    <ClCompile Include="3DRenderer\Texture\CubeMapTexture.cpp" />
+    <ClCompile Include="3DRenderer\Texture\Texture.cpp" />
+    <ClCompile Include="3DRenderer\Texture\TextureManager.cpp" />
+    <ClCompile Include="appFramework\App.cpp" />
+    <ClCompile Include="AppFramework\EventManager\EventManager.cpp" />
+    <ClCompile Include="AppFramework\GUI\EditableViaGui.cpp" />
+    <ClCompile Include="AppFramework\GUI\ObjectEditor.cpp" />
+    <ClCompile Include="AppFramework\GUI\Textbox.cpp" />
+    <ClCompile Include="AppFramework\GUI\TextWithBackdrop.cpp" />
+    <ClCompile Include="AppFramework\StateManager\BaseState.cpp" />
+    <ClCompile Include="AppFramework\StateManager\StateManager.cpp" />
+    <ClCompile Include="appFramework\Window.cpp" />
+    <ClCompile Include="Interfaces\RenderablePlanet.cpp" />
+    <ClCompile Include="Interfaces\Sphere.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Settings\Settings.cpp" />
+    <ClCompile Include="States\StateIntro.cpp" />
+    <ClCompile Include="States\StateMainMenu.cpp" />
+    <ClCompile Include="States\StateSimulationLoading.cpp" />
+    <ClCompile Include="States\StateSpaceSimulation\GUI\SpaceSimulationGUI.cpp" />
+    <ClCompile Include="States\StateSpaceSimulation\ObjectCreators\PlanetCreator.cpp" />
+    <ClCompile Include="States\StateSpaceSimulation\ObjectEditor\RenderablePlanetObjectEditor.cpp" />
+    <ClCompile Include="States\StateSpaceSimulation\StateSpaceSimulation.cpp" />
+    <ClCompile Include="Submodules\imgui\imgui-SFML.cpp" />
+    <ClCompile Include="Submodules\imgui\imgui.cpp" />
+    <ClCompile Include="Submodules\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Submodules\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Submodules\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Utils\Functions.cpp" />
+    <ClCompile Include="Utils\PhysicalUnit.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="3DObjects\ColoredPlanet.h" />
+    <ClInclude Include="3DObjects\CoordinateSystemAxes.h" />
+    <ClInclude Include="3DObjects\Orbit.h" />
+    <ClInclude Include="3DObjects\TexturedPlanet.h" />
+    <ClInclude Include="3DObjects\TexturedStar.h" />
+    <ClInclude Include="3DRenderer\Camera\ArcBallCamera.h" />
+    <ClInclude Include="3DRenderer\Camera\CameraInterface.h" />
+    <ClInclude Include="3DRenderer\Camera\CameraManager.h" />
+    <ClInclude Include="3DRenderer\Camera\CameraManagerToSFMLFrameworkAdapter.h" />
+    <ClInclude Include="3DRenderer\Camera\CameraMoveDirection.h" />
+    <ClInclude Include="3DRenderer\Camera\FPCamera.h" />
+    <ClInclude Include="3DRenderer\Light\DirectionalLight.h" />
+    <ClInclude Include="3DRenderer\Light\Light.h" />
+    <ClInclude Include="3DRenderer\Light\OmnipresentLight.h" />
+    <ClInclude Include="3DRenderer\Light\PointLight.h" />
+    <ClInclude Include="3DRenderer\Material.h" />
+    <ClInclude Include="3DRenderer\Mesh\BasicMesh.h" />
+    <ClInclude Include="3DRenderer\Mesh\ColoredMesh.h" />
+    <ClInclude Include="3DRenderer\Mesh\TexturedMesh.h" />
+    <ClInclude Include="3DRenderer\SceneContext.h" />
+    <ClInclude Include="3DRenderer\Shader\Shader.h" />
+    <ClInclude Include="3DRenderer\Shader\ShaderManager.h" />
+    <ClInclude Include="3DRenderer\Shader\UniformLocations.h" />
+    <ClInclude Include="3DRenderer\Skybox.h" />
+    <ClInclude Include="3DRenderer\Texture\CubeMapTexture.h" />
+    <ClInclude Include="3DRenderer\Texture\Texture.h" />
+    <ClInclude Include="3DRenderer\Texture\TextureManager.h" />
+    <ClInclude Include="appFramework\App.h" />
+    <ClInclude Include="AppFramework\EventManager\Binding.h" />
+    <ClInclude Include="AppFramework\EventManager\EventDetails.h" />
+    <ClInclude Include="AppFramework\EventManager\EventInfo.h" />
+    <ClInclude Include="AppFramework\EventManager\EventManager.h" />
+    <ClInclude Include="AppFramework\EventManager\EventType.h" />
+    <ClInclude Include="AppFramework\GUI\EditableViaGui.h" />
+    <ClInclude Include="AppFramework\GUI\ObjectEditor.h" />
+    <ClInclude Include="AppFramework\GUI\Textbox.h" />
+    <ClInclude Include="AppFramework\GUI\TextWithBackdrop.h" />
+    <ClInclude Include="AppFramework\Serializer\Serializable.h" />
+    <ClInclude Include="AppFramework\Serializer\SerializableObjectId.h" />
+    <ClInclude Include="AppFramework\Serializer\Serializer.h" />
+    <ClInclude Include="AppFramework\SharedContext.h" />
+    <ClInclude Include="AppFramework\StateManager\BaseState.h" />
+    <ClInclude Include="AppFramework\StateManager\StateManager.h" />
+    <ClInclude Include="AppFramework\StateManager\StateType.h" />
+    <ClInclude Include="appFramework\Window.h" />
+    <ClInclude Include="Interfaces\Colored.h" />
+    <ClInclude Include="Interfaces\Moveable.h" />
+    <ClInclude Include="Interfaces\PhysicalObject.h" />
+    <ClInclude Include="Interfaces\Renderable.h" />
+    <ClInclude Include="Interfaces\RenderablePlanet.h" />
+    <ClInclude Include="Interfaces\Scaleable.h" />
+    <ClInclude Include="Interfaces\Sphere.h" />
+    <ClInclude Include="Interfaces\Textured.h" />
+    <ClInclude Include="Settings\CameraSettings.h" />
+    <ClInclude Include="Settings\LightSettings.h" />
+    <ClInclude Include="Settings\Settings.h" />
+    <ClInclude Include="States\StateMainMenu.h" />
+    <ClInclude Include="States\StateIntro.h" />
+    <ClInclude Include="States\StateSimulationLoading.h" />
+    <ClInclude Include="States\StateSpaceSimulation\GUI\SpaceSimulationGUI.h" />
+    <ClInclude Include="States\StateSpaceSimulation\ObjectCreators\PlanetCreator.h" />
+    <ClInclude Include="States\StateSpaceSimulation\ObjectEditor\RenderablePlanetObjectEditor.h" />
+    <ClInclude Include="States\StateSpaceSimulation\SpaceSimulationSettings.h" />
+    <ClInclude Include="States\StateSpaceSimulation\StateSpaceSimulation.h" />
+    <ClInclude Include="Submodules\imgui\imconfig-SFML.h" />
+    <ClInclude Include="Submodules\imgui\imconfig.h" />
+    <ClInclude Include="Submodules\imgui\imgui-SFML.h" />
+    <ClInclude Include="Submodules\imgui\imgui-SFML_export.h" />
+    <ClInclude Include="Submodules\imgui\imgui.h" />
+    <ClInclude Include="Submodules\imgui\imgui_internal.h" />
+    <ClInclude Include="Submodules\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Submodules\imgui\imstb_textedit.h" />
+    <ClInclude Include="Submodules\imgui\imstb_truetype.h" />
+    <ClInclude Include="Utils\CircularVector.h" />
+    <ClInclude Include="Utils\Functions.h" />
+    <ClInclude Include="Utils\PhysicalUnit.h" />
+    <ClInclude Include="Utils\PhysicalUnitVec.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="keys.cfg" />
+    <None Include="Shaders\coloredObjectShader.fragment" />
+    <None Include="Shaders\coloredObjectShader.vertex" />
+    <None Include="Shaders\CommonCode\commonFunctions.glsl" />
+    <None Include="Shaders\CommonCode\commonStructs.glsl" />
+    <None Include="Shaders\coordinateSystemAxes.fragment" />
+    <None Include="Shaders\coordinateSystemAxes.vertex" />
+    <None Include="Shaders\orbitShader.fragment" />
+    <None Include="Shaders\orbitShader.vertex" />
+    <None Include="Shaders\skyboxShader.fragment" />
+    <None Include="Shaders\skyboxShader.vertex" />
+    <None Include="Shaders\texturedObjectShader.fragment" />
+    <None Include="Shaders\texturedObjectShader.vertex" />
+    <None Include="Shaders\texturedStarShader.fragment" />
+    <None Include="Shaders\texturedStarShader.vertex" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

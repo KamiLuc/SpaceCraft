@@ -12,7 +12,7 @@ public:
 
 	void useLight(const UniformPointLight& uniformPointLight) const;
 
-private:
+protected:
 	glm::vec3 position;
 	GLfloat diffuseIntensity;
 	GLfloat constant;

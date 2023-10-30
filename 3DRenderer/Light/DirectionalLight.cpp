@@ -6,7 +6,3 @@ DirectionalLight::DirectionalLight(const glm::vec3& color, GLfloat ambientInteni
 	, direction(direction)
 {
 }
-
-DirectionalLight::~DirectionalLight()
-{
-}

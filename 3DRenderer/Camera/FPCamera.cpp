@@ -65,30 +65,15 @@ void FPCamera::updateCameraProperties()
 	up = glm::normalize(glm::cross(right, front));
 }
 
+void FPCamera::editViaGui()
+{
+	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
+	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);;
+}
+
 glm::mat4 FPCamera::getViewMatrix() const
 {
 	return glm::lookAt(position, position + front, up);
-}
-
-void FPCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
-{
-	if (beginImGui)
-	{
-		ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
-	}
-
-	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
-	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);;
-
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 }))
-	{
-		objectHandler.removeObjectFromEdit(this);
-	}
-
-	if (beginImGui)
-	{
-		ImGui::End();
-	}
 }
 
 void FPCamera::useImmediateGluLookAt()

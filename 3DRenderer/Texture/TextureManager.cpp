@@ -8,27 +8,33 @@ TextureManager::TextureManager()
 
 void TextureManager::loadTextures()
 {
+	texturesLoaded.store(false);
+
+	loadSkybox();
 	checkPath(texturesPath);
 
-	texturesLoaded.store(false);
-	std::vector<std::string> texturesAlreadyLoaded {};
-
+	std::vector<std::string> alreadyLoadedTextures {};
 	for (auto& file : std::filesystem::directory_iterator(texturesPath))
 	{
+		if (file.is_directory())
+		{
+			continue;
+		}
+
 		std::filesystem::path path = file.path();
 		std::string fileExtension = path.extension().string();
 		std::string fileName = path.stem().string();
 
-		if (std::find(texturesAlreadyLoaded.begin(), texturesAlreadyLoaded.end(), fileName) == texturesAlreadyLoaded.end())
+		if (std::find(alreadyLoadedTextures.begin(), alreadyLoadedTextures.end(), fileName) == alreadyLoadedTextures.end())
 		{
-
 			try
 			{
-				auto texture = std::make_shared<Texture>(path, fileName, *this);
-				texture->loadTexture();
+				auto texture = std::make_shared<Texture>(fileName, *this);
+				texture->loadTexture(path);
 				textures[fileName] = std::move(texture);
-				texturesAlreadyLoaded.emplace_back(std::move(fileName));
-			} catch (...)
+				alreadyLoadedTextures.emplace_back(std::move(fileName));
+			}
+			catch (...)
 			{
 				continue;
 			}
@@ -48,9 +54,14 @@ void TextureManager::loadTexturesAsync()
 	loadingThread.detach();
 }
 
-void TextureManager::setPath(const std::filesystem::path& texturesPath)
+void TextureManager::setTexturesPath(const std::filesystem::path& texturesPath)
 {
 	this->texturesPath = texturesPath;
+}
+
+void TextureManager::setSkyboxTexturesPath(const std::filesystem::path& skyboxPath)
+{
+	this->skyboxTexturesPath = skyboxPath;
 }
 
 std::shared_ptr<Texture> TextureManager::getTexture(const std::string& texture) const
@@ -63,6 +74,11 @@ std::shared_ptr<Texture> TextureManager::getTexture(const std::string& texture) 
 	{
 		return nullptr;
 	}
+}
+
+std::shared_ptr<CubeMapTexture> TextureManager::getSkyboxTexture() const
+{
+	return skyboxTexture;
 }
 
 bool TextureManager::areTexturesLoaded() const
@@ -80,6 +96,53 @@ std::vector<std::string> TextureManager::getTexturesNames() const
 	}
 
 	return result;
+}
+
+void TextureManager::loadSkybox()
+{
+	checkPath(skyboxTexturesPath);
+
+	std::vector<std::filesystem::path> skyboxTextures;
+	skyboxTextures.resize(6);
+
+	for (const auto& file : std::filesystem::directory_iterator(skyboxTexturesPath))
+	{
+		auto fileName = file.path().stem().string();
+
+		if (fileName == "right")
+		{
+			skyboxTextures[0] = file.path();
+		}
+		else if (fileName == "left")
+		{
+			skyboxTextures[1] = file.path();
+		}
+		else if (fileName == "top")
+		{
+			skyboxTextures[2] = file.path();
+		}
+		else if (fileName == "bottom")
+		{
+			skyboxTextures[3] = file.path();
+		}
+		else if (fileName == "front")
+		{
+			skyboxTextures[4] = file.path();
+		}
+		else if (fileName == "back")
+		{
+			skyboxTextures[5] = file.path();
+		}
+	}
+
+	try
+	{
+		skyboxTexture = std::make_shared<CubeMapTexture>();
+		skyboxTexture->loadTexture(skyboxTextures);
+	}
+	catch (...)
+	{
+	}
 }
 
 void TextureManager::checkPath(const std::filesystem::path& texturesPath)

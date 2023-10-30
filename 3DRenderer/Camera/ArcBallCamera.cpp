@@ -2,8 +2,6 @@
 
 #include "ArcBallCamera.h"
 
-#include <cmath>
-
 ArcBallCamera::ArcBallCamera(const Settings::CameraSettings& settings, const glm::vec2& windowSize)
 	: CameraInterface(settings)
 	, viewMatrix(1.0f)
@@ -67,27 +65,6 @@ glm::mat4 ArcBallCamera::getViewMatrix() const
 	return viewMatrix;
 }
 
-void ArcBallCamera::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
-{
-	if (beginImGui)
-	{
-		ImGui::Begin(("Edit " + cameraName + " " + std::to_string(windowID)).c_str());
-	}
-
-	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
-	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);;
-
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth(), 20 }))
-	{
-		objectHandler.removeObjectFromEdit(this);
-	}
-
-	if (beginImGui)
-	{
-		ImGui::End();
-	}
-}
-
 void ArcBallCamera::useImmediateGluLookAt()
 {
 	gluLookAt(position.x, position.y, position.z,
@@ -105,8 +82,13 @@ glm::vec3 ArcBallCamera::getRightVector() const
 	return glm::transpose(viewMatrix)[0];
 }
 
+void ArcBallCamera::editViaGui()
+{
+	ImGui::DragFloat("Move speed", &moveSpeed, 1.0f, 0.0f, 10000.0f);
+	ImGui::DragFloat("Turn speed", &turnSpeed, 0.01f, 0.0f, 10000.0f);
+}
+
 void ArcBallCamera::updateCameraProperties()
 {
 	viewMatrix = glm::lookAt(position, lookAt, worldUp);
 }
-

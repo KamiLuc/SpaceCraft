@@ -1,8 +1,5 @@
 #include "TexturedPlanet.h"
 
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 TexturedPlanet::TexturedPlanet()
 	: TexturedPlanet({}, {}, {}, {}, 1.0f, {}, nullptr)
 {
@@ -38,61 +35,6 @@ void TexturedPlanet::render(SceneContext& sceneContext) const
 	if (renderOrbit)
 	{
 		orbitInWorldSpace.render(sceneContext);
-	}
-}
-
-void TexturedPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
-{
-	if (beginImGui)
-	{
-		ImGui::SetNextWindowSizeConstraints(ImVec2(410, 300), ImVec2(410, 1000));
-		ImGui::Begin(("Edit textured planet " + std::to_string(windowID)).c_str(), nullptr);
-	}
-
-	RenderablePlanet::editViaImGui(objectHandler, windowID, false);
-
-	ImGui::Separator();
-	if (ImGui::BeginCombo("Texture", texture->getName().c_str()))
-	{
-		auto& tm = texture->getTextureManager();
-		auto textures = tm.getTexturesNames();
-		for (size_t i = 0; i < textures.size(); i++)
-		{
-			auto textureToDisplay = tm.getTexture(textures[i]);
-			const bool isSelected = (texture->getName() == textures[i]);
-
-			if (ImGui::Selectable(textures[i].c_str(), isSelected))
-			{
-				texture = textureToDisplay;
-			}
-
-			ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(textureToDisplay->getTextureId())),
-						 ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
-
-			if (isSelected)
-			{
-				ImGui::SetItemDefaultFocus();
-			}
-		}
-		ImGui::EndCombo();
-	}
-	ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<intptr_t>(texture->getTextureId())),
-				 ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1));
-
-	ImGui::Separator();
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth() / 2, 20 }))
-	{
-		objectHandler.removeObjectFromEdit(this);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Delete planet", { ImGui::GetWindowWidth() / 2, 20 }))
-	{
-		objectHandler.deleteObject(this);
-	}
-
-	if (beginImGui)
-	{
-		ImGui::End();
 	}
 }
 
@@ -136,4 +78,9 @@ void TexturedPlanet::setUpMesh()
 
 	Sphere::createSphere(vertices, normals, indices);
 	mesh.createMesh(vertices, indices, normals, textureCoordinates);
+}
+
+void TexturedPlanet::editViaGui()
+{
+	RenderablePlanet::editViaGui();
 }

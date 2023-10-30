@@ -44,9 +44,9 @@ void Sphere::createSphere(std::vector<GLfloat>& vertices, std::vector<GLfloat>& 
 			vertices.push_back(y);
 			vertices.push_back(z);
 
-			normals.emplace_back(x * lengthInv);
-			normals.emplace_back(y * lengthInv);
-			normals.emplace_back(z * lengthInv);
+			normals.emplace_back(-x * lengthInv);
+			normals.emplace_back(-y * lengthInv);
+			normals.emplace_back(-z * lengthInv);
 		}
 	}
 
@@ -73,6 +73,4 @@ void Sphere::createSphere(std::vector<GLfloat>& vertices, std::vector<GLfloat>& 
 			}
 		}
 	}
-
-	calculateAverageNormals(indices, vertices, normals);
 }

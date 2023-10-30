@@ -1,0 +1,517 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{0c7b843e-4eb7-4a28-8811-f28f858adc8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Submodules">
+      <UniqueIdentifier>{a1b54285-459a-4a26-b0d9-9ded188f46dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Submodules\imgui">
+      <UniqueIdentifier>{012f76af-fe2b-420b-96cb-d636fff2f7eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="SourceFiles\appFramework">
+      <UniqueIdentifier>{337ce8b1-e656-4f31-be88-e327df2b76d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\appFramework\GUI">
+      <UniqueIdentifier>{acc1c79e-9934-4e06-9f08-74ac53fbd45a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\appFramework\EventManager">
+      <UniqueIdentifier>{0f5e0faa-43e2-43d4-a3b5-e9a4a96625e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\appFramework\StateManager">
+      <UniqueIdentifier>{d29cd5ae-c061-401e-8fe1-5af3d25fd1f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\appFramework\Serializer">
+      <UniqueIdentifier>{d290020e-3c31-437a-abab-801f06c7f7cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\States">
+      <UniqueIdentifier>{ff9d3dff-ccb0-496f-97a8-5f1d67c6fffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\States\StateSpaceSimulation">
+      <UniqueIdentifier>{2d9f5851-ce7f-4576-8396-cb46ff42e943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\3DRenderer">
+      <UniqueIdentifier>{f7afdf71-6d42-4538-9384-560cfe85f326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\3DRenderer\Camera">
+      <UniqueIdentifier>{95233a7a-7baa-4cfa-8822-a6c08ab0a408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\3DRenderer\Shader">
+      <UniqueIdentifier>{5c0f7dac-c5af-4720-be64-13c80133a608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\3DRenderer\Mesh">
+      <UniqueIdentifier>{bb10b673-9c75-4a0c-bcb9-5b33b6d10556}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\3DRenderer\Texture">
+      <UniqueIdentifier>{014467ab-38e9-4816-b786-e5d2b3431b5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\3DRenderer\Light">
+      <UniqueIdentifier>{936a66f7-33e8-4106-9eed-cf6bef7b51ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\Utils">
+      <UniqueIdentifier>{65a393c3-61a8-4ecc-8a40-d32941e64d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\3DObjects">
+      <UniqueIdentifier>{08cdff43-d92a-40f4-a7c9-b2bc02278494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\Settings">
+      <UniqueIdentifier>{7eb2079d-a9e9-4aa9-80db-4d0f3e9b0e93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\Interfaces">
+      <UniqueIdentifier>{f520c06a-843a-4285-90fe-57bc5a18d7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\States\StateSpaceSimulation\GUI">
+      <UniqueIdentifier>{36fa9ec6-1a51-4eaa-b6fc-4356c4b610c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\States\StateSpaceSimulation\ObjectCreators">
+      <UniqueIdentifier>{e436d4b7-324b-49ba-9805-0311039244a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\CommonCode">
+      <UniqueIdentifier>{40f75157-a164-4069-aefb-c601e2d7425a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\States\Other">
+      <UniqueIdentifier>{fb2e07a1-d50c-441a-96bc-b553678b8af8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\States\StateSpaceSimulation\ObjectEditors">
+      <UniqueIdentifier>{574c41c8-f186-4243-86d5-ec576b450e16}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Submodules\imgui\imgui.cpp">
+      <Filter>Submodules\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Submodules\imgui\imgui_draw.cpp">
+      <Filter>Submodules\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Submodules\imgui\imgui_tables.cpp">
+      <Filter>Submodules\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Submodules\imgui\imgui_widgets.cpp">
+      <Filter>Submodules\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Submodules\imgui\imgui-SFML.cpp">
+      <Filter>Submodules\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Functions.cpp">
+      <Filter>SourceFiles\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\PhysicalUnit.cpp">
+      <Filter>SourceFiles\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings\Settings.cpp">
+      <Filter>SourceFiles\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateSpaceSimulation\GUI\SpaceSimulationGUI.cpp">
+      <Filter>SourceFiles\States\StateSpaceSimulation\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateSpaceSimulation\ObjectCreators\PlanetCreator.cpp">
+      <Filter>SourceFiles\States\StateSpaceSimulation\ObjectCreators</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Light\DirectionalLight.cpp">
+      <Filter>SourceFiles\3DRenderer\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Light\OmnipresentLight.cpp">
+      <Filter>SourceFiles\3DRenderer\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Light\PointLight.cpp">
+      <Filter>SourceFiles\3DRenderer\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="3DObjects\ColoredPlanet.cpp">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="3DObjects\CoordinateSystemAxes.cpp">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="3DObjects\Orbit.cpp">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="3DObjects\TexturedPlanet.cpp">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Shader\Shader.cpp">
+      <Filter>SourceFiles\3DRenderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Shader\ShaderManager.cpp">
+      <Filter>SourceFiles\3DRenderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Shader\UniformLocations.cpp">
+      <Filter>SourceFiles\3DRenderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Interfaces\RenderablePlanet.cpp">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="Interfaces\Sphere.cpp">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="AppFramework\EventManager\EventManager.cpp">
+      <Filter>SourceFiles\appFramework\EventManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AppFramework\GUI\TextWithBackdrop.cpp">
+      <Filter>SourceFiles\appFramework\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AppFramework\GUI\Textbox.cpp">
+      <Filter>SourceFiles\appFramework\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="appFramework\App.cpp">
+      <Filter>SourceFiles\appFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="appFramework\Window.cpp">
+      <Filter>SourceFiles\appFramework\StateManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AppFramework\StateManager\BaseState.cpp">
+      <Filter>SourceFiles\appFramework\StateManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AppFramework\StateManager\StateManager.cpp">
+      <Filter>SourceFiles\appFramework\StateManager</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Camera\ArcBallCamera.cpp">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Camera\CameraManager.cpp">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Camera\FPCamera.cpp">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Camera\CameraManagerToSFMLFrameworkAdapter.cpp">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Light\Light.cpp">
+      <Filter>SourceFiles\3DRenderer\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Mesh\ColoredMesh.cpp">
+      <Filter>SourceFiles\3DRenderer\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Mesh\TexturedMesh.cpp">
+      <Filter>SourceFiles\3DRenderer\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Mesh\BasicMesh.cpp">
+      <Filter>SourceFiles\3DRenderer\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Texture\TextureManager.cpp">
+      <Filter>SourceFiles\3DRenderer\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Texture\Texture.cpp">
+      <Filter>SourceFiles\3DRenderer\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Material.cpp">
+      <Filter>SourceFiles\3DRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="3DObjects\TexturedStar.cpp">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Skybox.cpp">
+      <Filter>SourceFiles\3DRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRenderer\Texture\CubeMapTexture.cpp">
+      <Filter>SourceFiles\3DRenderer\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="AppFramework\GUI\ObjectEditor.cpp">
+      <Filter>SourceFiles\appFramework\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AppFramework\GUI\EditableViaGui.cpp">
+      <Filter>SourceFiles\appFramework\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateSimulationLoading.cpp">
+      <Filter>SourceFiles\States\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateMainMenu.cpp">
+      <Filter>SourceFiles\States\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateIntro.cpp">
+      <Filter>SourceFiles\States\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateSpaceSimulation\StateSpaceSimulation.cpp">
+      <Filter>SourceFiles\States\StateSpaceSimulation</Filter>
+    </ClCompile>
+    <ClCompile Include="States\StateSpaceSimulation\ObjectEditor\RenderablePlanetObjectEditor.cpp">
+      <Filter>SourceFiles\States\StateSpaceSimulation\ObjectEditors</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="appFramework\Window.h">
+      <Filter>SourceFiles\appFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="appFramework\App.h">
+      <Filter>SourceFiles\appFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\EventManager\Binding.h">
+      <Filter>SourceFiles\appFramework\EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\EventManager\EventDetails.h">
+      <Filter>SourceFiles\appFramework\EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\EventManager\EventInfo.h">
+      <Filter>SourceFiles\appFramework\EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\EventManager\EventManager.h">
+      <Filter>SourceFiles\appFramework\EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\EventManager\EventType.h">
+      <Filter>SourceFiles\appFramework\EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\GUI\Textbox.h">
+      <Filter>SourceFiles\appFramework\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\StateManager\BaseState.h">
+      <Filter>SourceFiles\appFramework\StateManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\StateManager\StateManager.h">
+      <Filter>SourceFiles\appFramework\StateManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\StateManager\StateType.h">
+      <Filter>SourceFiles\appFramework\StateManager</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Material.h">
+      <Filter>SourceFiles\3DRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Functions.h">
+      <Filter>SourceFiles\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Camera\CameraInterface.h">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Camera\CameraManager.h">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Camera\CameraMoveDirection.h">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Camera\CameraManagerToSFMLFrameworkAdapter.h">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Camera\FPCamera.h">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Camera\ArcBallCamera.h">
+      <Filter>SourceFiles\3DRenderer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\GUI\TextWithBackdrop.h">
+      <Filter>SourceFiles\appFramework\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Shader\ShaderManager.h">
+      <Filter>SourceFiles\3DRenderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Shader\Shader.h">
+      <Filter>SourceFiles\3DRenderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Mesh\BasicMesh.h">
+      <Filter>SourceFiles\3DRenderer\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Mesh\TexturedMesh.h">
+      <Filter>SourceFiles\3DRenderer\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Mesh\ColoredMesh.h">
+      <Filter>SourceFiles\3DRenderer\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Shader\UniformLocations.h">
+      <Filter>SourceFiles\3DRenderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imconfig.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imconfig-SFML.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imgui.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imgui_internal.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imgui-SFML.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imgui-SFML_export.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imstb_rectpack.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imstb_textedit.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Submodules\imgui\imstb_truetype.h">
+      <Filter>Submodules\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\SharedContext.h">
+      <Filter>SourceFiles\appFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings\CameraSettings.h">
+      <Filter>SourceFiles\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="3DObjects\CoordinateSystemAxes.h">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateSpaceSimulation\StateSpaceSimulation.h">
+      <Filter>SourceFiles\States\StateSpaceSimulation</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings\LightSettings.h">
+      <Filter>SourceFiles\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings\Settings.h">
+      <Filter>SourceFiles\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Texture\TextureManager.h">
+      <Filter>SourceFiles\3DRenderer\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="3DObjects\ColoredPlanet.h">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="3DObjects\TexturedPlanet.h">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Light\Light.h">
+      <Filter>SourceFiles\3DRenderer\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\Colored.h">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\Moveable.h">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\PhysicalObject.h">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\Renderable.h">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\Scaleable.h">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\Textured.h">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\Sphere.h">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\RenderablePlanet.h">
+      <Filter>SourceFiles\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\SceneContext.h">
+      <Filter>SourceFiles\3DRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PhysicalUnit.h">
+      <Filter>SourceFiles\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PhysicalUnitVec.h">
+      <Filter>SourceFiles\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CircularVector.h">
+      <Filter>SourceFiles\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="3DObjects\Orbit.h">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\Serializer\Serializable.h">
+      <Filter>SourceFiles\appFramework\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\Serializer\Serializer.h">
+      <Filter>SourceFiles\appFramework\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\Serializer\SerializableObjectId.h">
+      <Filter>SourceFiles\appFramework\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateSpaceSimulation\GUI\SpaceSimulationGUI.h">
+      <Filter>SourceFiles\States\StateSpaceSimulation\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateSpaceSimulation\ObjectCreators\PlanetCreator.h">
+      <Filter>SourceFiles\States\StateSpaceSimulation\ObjectCreators</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Light\DirectionalLight.h">
+      <Filter>SourceFiles\3DRenderer\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Light\OmnipresentLight.h">
+      <Filter>SourceFiles\3DRenderer\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Light\PointLight.h">
+      <Filter>SourceFiles\3DRenderer\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="3DObjects\TexturedStar.h">
+      <Filter>SourceFiles\3DObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Skybox.h">
+      <Filter>SourceFiles\3DRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Texture\Texture.h">
+      <Filter>SourceFiles\3DRenderer\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRenderer\Texture\CubeMapTexture.h">
+      <Filter>SourceFiles\3DRenderer\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\GUI\EditableViaGui.h">
+      <Filter>SourceFiles\appFramework\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AppFramework\GUI\ObjectEditor.h">
+      <Filter>SourceFiles\appFramework\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateSimulationLoading.h">
+      <Filter>SourceFiles\States\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateMainMenu.h">
+      <Filter>SourceFiles\States\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateIntro.h">
+      <Filter>SourceFiles\States\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateSpaceSimulation\SpaceSimulationSettings.h">
+      <Filter>SourceFiles\States\StateSpaceSimulation</Filter>
+    </ClInclude>
+    <ClInclude Include="States\StateSpaceSimulation\ObjectEditor\RenderablePlanetObjectEditor.h">
+      <Filter>SourceFiles\States\StateSpaceSimulation\ObjectEditors</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="keys.cfg" />
+    <None Include="Shaders\texturedObjectShader.fragment">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\texturedObjectShader.vertex">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\coloredObjectShader.fragment">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\coloredObjectShader.vertex">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\coordinateSystemAxes.fragment">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\coordinateSystemAxes.vertex">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\orbitShader.fragment">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\orbitShader.vertex">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\texturedStarShader.fragment">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\texturedStarShader.vertex">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\CommonCode\commonFunctions.glsl">
+      <Filter>Shaders\CommonCode</Filter>
+    </None>
+    <None Include="Shaders\CommonCode\commonStructs.glsl">
+      <Filter>Shaders\CommonCode</Filter>
+    </None>
+    <None Include="Shaders\skyboxShader.fragment">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\skyboxShader.vertex">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -57,6 +57,8 @@ struct UniformLocations
 	GLuint model;
 	GLuint worldScale;
 	GLuint orbitColor;
+	GLuint timePassed;
+	GLuint objectOnScreenPosition;
 
 	UniformMaterial material;
 	UniformCamera camera;

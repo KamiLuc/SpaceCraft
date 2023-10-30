@@ -83,7 +83,7 @@ inline void Serializer::createSerializedObjects(const std::filesystem::path& fil
 	{
 		try
 		{
-			ar& id;
+			ar & id;
 			if (!(creators.find(id) == creators.end()))
 			{
 				creators[id](ar);

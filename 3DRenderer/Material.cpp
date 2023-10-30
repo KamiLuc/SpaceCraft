@@ -10,6 +10,14 @@ Material::Material(GLfloat intensity, GLfloat shine)
 {
 }
 
-Material::~Material()
+void Material::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
 {
+	outputArchive & shininess;
+	outputArchive & specularIntensity;
+}
+
+void Material::serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version)
+{
+	inputArchive & shininess;
+	inputArchive & specularIntensity;
 }

@@ -3,17 +3,18 @@
 #include "Utils/CircularVector.h"
 #include "Interfaces/Renderable.h"
 
-class Orbit : public CircularVector<glm::vec3>, Renderable
+class Orbit : public CircularVector<glm::vec3>, public Renderable
 {
 public:
-	Orbit() : Orbit(0, { 0.0f,0.0f,0.0f }) {}
+	Orbit();
 	Orbit(size_t maxSize, const glm::vec3 orbitColor);
 	virtual ~Orbit();
 
-	glm::vec3 getColor() const { return color; }
-	void setColor(const glm::vec3& color) { this->color = color; }
-	void addPoint(const glm::vec3& point);
 	virtual void render(SceneContext& sceneContext) const override;
+	void addPoint(const glm::vec3& point);
+
+	glm::vec3 getColor() const;
+	void setColor(const glm::vec3& color);
 
 private:
 	glm::vec3 color;

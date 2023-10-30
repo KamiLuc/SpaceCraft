@@ -8,10 +8,14 @@ CameraManager::CameraManager(const Settings::CameraSettings& arcBallCameraSettin
 	, currentCamera(&arcBallCamera)
 	, fpCamera(firstPersonCameraSettings)
 	, arcBallCamera(arcBallCameraSettings, windowSize)
+	, arcBallCameraEditor("Edit arc ball camera", { 280, 78 }, { 280, 78 })
+	, fpCameraEditor("Edit first person camera", { 280, 78 }, { 280, 78 })
 {
 	auto projMat = calculateProjectionMatrix();
 	fpCamera.setProjectionMatrix(projMat);
+	fpCamera.registerEditor(&fpCameraEditor);
 	arcBallCamera.setProjectionMatrix(projMat);
+	arcBallCamera.registerEditor(&arcBallCameraEditor);
 }
 
 void CameraManager::addCameraMoveDirection(const CameraMoveDirection& direction)
@@ -53,6 +57,12 @@ void CameraManager::changeCamera()
 			currentCamera = &arcBallCamera;
 		}
 	}
+}
+
+void CameraManager::drawEditors()
+{
+	arcBallCameraEditor.draw();
+	fpCameraEditor.draw();
 }
 
 void CameraManager::observePoint(const glm::vec3& point)
