@@ -21,6 +21,8 @@ namespace Settings {
 		GlobalSettings(const GlobalSettings&) = delete;
 		GlobalSettings operator=(const GlobalSettings&) = delete;
 
+		unsigned int windowWidth;
+		unsigned int windowHeight;
 		CameraSettings arcBallCameraSettings;
 		CameraSettings firstPesonCameraSettings;
 		MainLightSettings mainLightSettings;
@@ -28,6 +30,7 @@ namespace Settings {
 		const std::filesystem::path shadersPath;
 		const std::filesystem::path commonShaderCodePath;
 		const std::filesystem::path savedSimulationsPath;
+		const std::filesystem::path skyboxTexturesPath;
 	};
 }
 

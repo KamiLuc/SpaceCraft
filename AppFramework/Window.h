@@ -24,13 +24,14 @@ public:
 	void beginDraw();
 	void endDraw();
 	void update();
+	void setWindowSize(const sf::Vector2u& size);
 	void setClearColor(const sf::Color& color);
 	void close(EventDetails* details = nullptr);
-	void toggleFullscreen(EventDetails* details);
 	void draw(const sf::Drawable& drawable);
 	void renderImGui();
 	void start2D();
 	void start3D();
+	void startWindow();
 	bool isDone() const;
 	bool isFocused() const;
 	bool isFullscreen() const;

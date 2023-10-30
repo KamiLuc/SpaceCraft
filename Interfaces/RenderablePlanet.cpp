@@ -4,14 +4,16 @@ RenderablePlanet::RenderablePlanet() : RenderablePlanet({}, {}, {}, {}, 1.0f, ""
 {
 }
 
-RenderablePlanet::RenderablePlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
-								   float scale, const std::string& identifier, unsigned int sectors, unsigned int stacks)
-	: Planet(position, velocity, mass, radius, scale, identifier, sectors, stacks)
+RenderablePlanet::RenderablePlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+								   const PhysicalUnit& radius, float scale, const std::string& identifier, unsigned int sectors, unsigned int stacks)
+	: PhysicalObject(position, velocity, mass, scale)
+	, Sphere(radius, stacks, sectors)
 	, lastRealOrbitUpdate(0.0f)
 	, renderOrbit(false)
 	, orbitDataUpdateIntervalInSec(0.1f)
 	, worldScale({ 1.495978707f, 10 })
 	, orbitInWorldSpace(150, { 1.0f, 1.0f, 1.0f })
+	, identifier(identifier)
 {
 }
 
@@ -29,14 +31,87 @@ glm::mat4 RenderablePlanet::getModelMatrix() const
 	return model;
 }
 
-void RenderablePlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
+void RenderablePlanet::update(float simInSec, float realTimeInSec)
 {
-	if (beginImGui)
+	if (canMove)
 	{
-		ImGui::Begin(("Edit planet " + std::to_string(windowID)).c_str());
+		position += velocity * simInSec;
+		if (lastRealOrbitUpdate >= orbitDataUpdateIntervalInSec && canMove)
+		{
+			orbitInWorldSpace.addPoint(getPositionInWorldSpace());
+			lastRealOrbitUpdate = 0.0f;
+		}
+		else
+		{
+			lastRealOrbitUpdate += realTimeInSec;
+		}
+	}
+}
+
+float RenderablePlanet::getRadiusInWorldSpace() const
+{
+	return (radius / worldScale).getValue() * scale;
+}
+
+glm::vec3 RenderablePlanet::getPositionInWorldSpace() const
+{
+	return (position / worldScale).getGlmVec();
+}
+
+void RenderablePlanet::editViaGui()
+{
+	std::array<const char*, 3> xyz { "X", "Y", "Z" };
+	std::array<const char*, 3> vxyz { "vX", "vY", "vZ" };
+
+	ImGui::PushItemWidth(100.0f);
+	ImGui::InputText("Identifier", const_cast<char*>(identifier.c_str()), sizeof(const_cast<char*>(identifier.c_str())));
+	ImGui::SameLine();
+	ImGui::Checkbox("Can move", &canMove);
+
+	if (ImGui::CollapsingHeader("Position"))
+	{
+		for (size_t i = 0; i < xyz.size(); ++i)
+		{
+			ImGui::DragFloat(xyz[i], position.getData()[i].getBasePtr(), 0.01f);
+			ImGui::SameLine();
+			std::string exponentLabel { xyz[i] };
+			exponentLabel += " Exponent";
+			ImGui::InputInt(exponentLabel.c_str(), position.getData()[i].getExponentPtr());
+		}
 	}
 
-	Planet::editViaImGui(objectHandler, windowID, false);
+	if (ImGui::CollapsingHeader("Velocity"))
+	{
+		for (size_t i = 0; i < vxyz.size(); ++i)
+		{
+			ImGui::DragFloat(vxyz[i], velocity.getData()[i].getBasePtr(), 0.01f);
+			ImGui::SameLine();
+			std::string exponentLabel { vxyz[i] };
+			exponentLabel += " Exponent";
+			ImGui::InputInt(exponentLabel.c_str(), velocity.getData()[i].getExponentPtr());
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Mass, Radius, Scale"))
+	{
+		ImGui::DragFloat("Mass", mass.getBasePtr(), 0.01f, 0.0f, 1000.0f);
+		ImGui::SameLine();
+		ImGui::InputInt("Mass Exponent", mass.getExponentPtr());
+		ImGui::DragFloat("Radius", radius.getBasePtr(), 0.01f, 0.0f, 1000.0f);
+		ImGui::SameLine();
+		ImGui::InputInt("Radius Exponent", radius.getExponentPtr());
+		ImGui::DragFloat("Scale", &scale, 0.1f, 1.0f, 10000.0f);
+	}
+
+	if (ImGui::CollapsingHeader("Material"))
+	{
+		ImGui::Separator();
+		ImGui::Text("Material settings");
+		ImGui::DragFloat("Specular intensity", material.getSpecularIntensityPtr(), 0.01f, 0.0f, 1024.0f);
+		ImGui::DragFloat("Shininess", material.getShininessPtr(), 0.01f, 0.0f, 1024.0f);
+	}
+
+	ImGui::PopItemWidth();
 
 	if (ImGui::CollapsingHeader("Orbit"))
 	{
@@ -63,36 +138,6 @@ void RenderablePlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, 
 		ImGui::DragFloat("Update interval", &orbitDataUpdateIntervalInSec, 0.01f, 0.01f, 100.0f);
 		ImGui::PopItemWidth();
 	}
-
-	if (beginImGui)
-	{
-		ImGui::End();
-	}
-}
-
-void RenderablePlanet::update(float simInSec, float realTimeInSec)
-{
-	if (lastRealOrbitUpdate >= orbitDataUpdateIntervalInSec && canMove)
-	{
-		orbitInWorldSpace.addPoint(getPositionInWorldSpace());
-		lastRealOrbitUpdate = 0.0f;
-	}
-	else
-	{
-		lastRealOrbitUpdate += realTimeInSec;
-	}
-
-	Planet::update(simInSec);
-}
-
-float RenderablePlanet::getRadiusInWorldSpace() const
-{
-	return (radius / worldScale).getValue() * scale;
-}
-
-glm::vec3 RenderablePlanet::getPositionInWorldSpace() const
-{
-	return (position / worldScale).getGlmVec();
 }
 
 void RenderablePlanet::serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version)
@@ -100,7 +145,7 @@ void RenderablePlanet::serialize(boost::archive::text_oarchive& outputArchive, c
 	outputArchive & canMove;
 	outputArchive & identifier;
 	outputArchive & mass;
-	////material
+	outputArchive & material;
 	outputArchive & position;
 	outputArchive & radius;
 	outputArchive & scale;
@@ -112,9 +157,19 @@ void RenderablePlanet::serialize(boost::archive::text_iarchive& inputArchive, co
 	inputArchive & canMove;
 	inputArchive & identifier;
 	inputArchive & mass;
-	//material
+	inputArchive & material;
 	inputArchive & position;
 	inputArchive & radius;
 	inputArchive & scale;
 	inputArchive & velocity;
+}
+
+void RenderablePlanet::setIdentifier(const std::string& identifier)
+{
+	this->identifier = identifier;
+}
+
+std::string RenderablePlanet::getIdentifier() const
+{
+	return identifier;
 }

@@ -1,21 +1,19 @@
 #pragma once
 
-#include "GUI/SpaceSimulationImGui.h"
+#include "SpaceSimulationSettings.h"
+#include "GUI/SpaceSimulationGUI.h"
 #include "AppFramework/Serializer/Serializer.h"
 #include "AppFramework/StateManager/StateManager.h"
 #include "3DRenderer/Camera/CameraManagerToSFMLFrameworkAdapter.h"
+#include "3DRenderer/Skybox.h"
 #include "3DObjects/CoordinateSystemAxes.h"
 #include "ObjectCreators/PlanetCreator.h"
 
 #include <ranges>
 
-class SpaceSimulationImGui;
-
-class StateSpaceSimulation : public BaseState, public EditableViaImGui
+class StateSpaceSimulation : public BaseState
 {
 public:
-	friend class SpaceSimulationImGui;
-
 	StateSpaceSimulation(StateManager* stateManager, Render render = Render::threeDimensional);
 
 	virtual void onCreate() override;
@@ -32,35 +30,22 @@ private:
 		RIGHT
 	};
 
-	void enableEvents();
-	void disableEvents();
-	void resetSimulation();
 	void renderObject(const Renderable& renderable);
-	void addPlanetToSimulation(std::shared_ptr<RenderablePlanet> planet);
-	void removePlanetFromSimulation(std::shared_ptr<RenderablePlanet> planet);
-	void addObjectToRender(std::shared_ptr<Renderable> object);
-	void removeObjectToRender(std::shared_ptr<Renderable> object);
 	void focusPlanet(std::shared_ptr<RenderablePlanet> planet);
 	void focusCenter(EventDetails* details);
 	void switchSimulationState(EventDetails* e);
 	void mouseLeftClick(EventDetails* details);
 	void mouseRightClick(EventDetails* details);
-	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool begiImGui) override;
-	void saveSimulation(const std::filesystem::path& filePath);
-	void loadSimulation(const std::filesystem::path& filePath);
 
-	bool pauseSimulation;
-	bool renderCoordinateAxes;
-	PhysicalUnit simulationSpeed;
+	SpaceSimulationSettings simulationSettings;
 	PhysicalUnit gravitationalConstant;
 	SceneContext sceneContext;
 	Serializer serializer;
-	std::shared_ptr<CoordinateSystemAxes> coordinateSystemAxes;
-	std::shared_ptr<RenderablePlanet> focusedPlanet;
-	std::list<std::shared_ptr<Renderable>> objectsToRender;
-	std::list<std::shared_ptr<RenderablePlanet>> planets;
-	std::unique_ptr<SpaceSimulationImGui> simulationGui;
-	std::shared_ptr<TextureManager> textureManager;
+
+	//make unique
+	std::unique_ptr<CoordinateSystemAxes> coordinateSystemAxes;
+	std::unique_ptr<SpaceSimulationGUI> simulationGui;
+	std::unique_ptr<Skybox> skybox;
 	std::unique_ptr<PlanetCreator> planetCreator;
 
 	void addCallbacks();

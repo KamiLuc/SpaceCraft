@@ -6,6 +6,8 @@ UniformLocations::UniformLocations()
 	, orbitColor(0)
 	, pointLightCount(0)
 	, omnipresentLight(0, 0)
+	, timePassed(0)
+	, objectOnScreenPosition(0)
 {
 }
 
@@ -15,6 +17,8 @@ void UniformLocations::clear()
 	worldScale = 0;
 	orbitColor = 0;
 	pointLightCount = 0;
+	timePassed = 0;
+	objectOnScreenPosition = 0;
 	omnipresentLight.clear();
 	camera.clear();
 	material.clear();

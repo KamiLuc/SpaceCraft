@@ -12,10 +12,10 @@ class TextureManager;
 class Texture
 {
 public:
-	Texture(const std::filesystem::path& fileLocation, const std::string& name, const TextureManager& textureManager);
-	~Texture();
+	Texture(const std::string& name, const TextureManager& textureManager);
+	virtual ~Texture();
 
-	void loadTexture();
+	void loadTexture(const std::filesystem::path& fileLocation);
 	void useTexture() const;
 	void clearTexture();
 	const TextureManager& getTextureManager() const;
@@ -27,7 +27,6 @@ private:
 	int32_t width;
 	int32_t height;
 	int32_t bitDepth;
-	std::filesystem::path fileLocation;
 	const TextureManager& textureManager;
 	const std::string name;
 };

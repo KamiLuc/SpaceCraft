@@ -1,7 +1,8 @@
 #include "App.h"
 
 App::App()
-	: window("SpaceCraft", { 1620, 900 }, sf::Color::White), sharedContext()
+	: window("SpaceCraft", { 1620, 900 }, sf::Color::White)
+	, sharedContext()
 	, stateManager(&sharedContext)
 {
 	shaderManager = std::make_shared<ShaderManager>();
@@ -16,8 +17,11 @@ App::App()
 
 	shaderManager->setShadersPath(settings.shadersPath);
 	shaderManager->setIncludePath(settings.commonShaderCodePath);
-	textureManager->setPath(settings.texturesPath);
+	textureManager->setTexturesPath(settings.texturesPath);
+	textureManager->setSkyboxTexturesPath(settings.skyboxTexturesPath);
+	window.setWindowSize({ settings.windowWidth, settings.windowHeight });
 
+	window.startWindow();
 	window.start3D();
 	shaderManager->loadAndCompileShaders();
 

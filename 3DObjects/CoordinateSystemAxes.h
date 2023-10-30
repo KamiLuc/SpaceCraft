@@ -4,12 +4,14 @@
 #include "Interfaces/Renderable.h"
 
 #include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class CoordinateSystemAxes : public Renderable, public Moveable
 {
 public:
 	CoordinateSystemAxes(const glm::vec3& position, float lineWidth = 3.0f, bool immediateRender = false);
-	virtual ~CoordinateSystemAxes();
+	~CoordinateSystemAxes();
 
 	glm::mat4 getModelMatrix() const;
 	void render(SceneContext& sceneContext) const override;

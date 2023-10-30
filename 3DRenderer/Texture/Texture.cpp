@@ -1,31 +1,25 @@
 #include "Texture.h"
 
-Texture::Texture(const std::filesystem::path& fileLocation, const std::string& name, const TextureManager& textureManager)
+Texture::Texture(const std::string& name, const TextureManager& textureManager)
 	: textureID(0)
 	, width(0)
 	, height(0)
 	, bitDepth(0)
-	, fileLocation(fileLocation)
 	, textureManager(textureManager)
 	, name(name)
 {
-	if (!std::filesystem::exists(fileLocation))
-	{
-		std::string exceptionMessage { std::move(std::string(__func__).append(" File doesn't exists: ").append(fileLocation.string().append("\n"))) };
-		printf(exceptionMessage.c_str());
-		throw std::invalid_argument(exceptionMessage);
-	}
 }
 
 Texture::~Texture()
 {
+	clearTexture();
 }
 
-void Texture::loadTexture()
+void Texture::loadTexture(const std::filesystem::path& fileLocation)
 {
-	unsigned char* textureData = stbi_load(this->fileLocation.string().c_str(), &this->width, &this->height, &this->bitDepth, 0);
+	unsigned char* textureData = stbi_load(fileLocation.string().c_str(), &width, &height, &bitDepth, 0);
 
-	auto fileExtension = this->fileLocation.extension().string();
+	auto fileExtension = fileLocation.extension().string();
 
 	if (fileExtension != ".jpg" && fileExtension != ".png")
 	{
@@ -40,8 +34,8 @@ void Texture::loadTexture()
 		throw std::runtime_error(exceptionMessage);
 	}
 
-	glGenTextures(1, &this->textureID);
-	glBindTexture(GL_TEXTURE_2D, this->textureID);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -50,12 +44,12 @@ void Texture::loadTexture()
 
 	if (fileExtension == ".jpg")
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else if (fileExtension == ".png")
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
@@ -66,17 +60,16 @@ void Texture::loadTexture()
 void Texture::useTexture() const
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, this->textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
 void Texture::clearTexture()
 {
-	glDeleteTextures(1, &this->textureID);
-	this->textureID = 0;
-	this->width = 0;
-	this->height = 0;
-	this->bitDepth = 0;
-	this->fileLocation = "";
+	glDeleteTextures(1, &textureID);
+	textureID = 0;
+	width = 0;
+	height = 0;
+	bitDepth = 0;
 }
 
 const TextureManager& Texture::getTextureManager() const

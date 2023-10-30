@@ -1,34 +1,38 @@
 #pragma once
 
-#include "Settings/CameraSettings.h" 
-#include "Settings/LightSettings.h"
+#include "../SpaceSimulationSettings.h"
+#include "../ObjectCreators/PlanetCreator.h"
+#include "AppFramework/GUI/ObjectEditor.h"
+#include "AppFramework/Serializer/Serializer.h"
 #include "3DRenderer/Texture/TextureManager.h"
-#include "Interfaces/Planet.h"
-#include "AppFramework/GUI/EditableViaImGui.h"
-#include "../StateSpaceSimulation.h"
 
+#include <array>
 #include <vector>
 #include <imgui.h>
-#include <array>
+#include <filesystem>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-using namespace Settings;
-
-class StateSpaceSimulation;
-
-class SpaceSimulationImGui : public ImGuiEditableObjectsHandler
+class SpaceSimulationGUI
 {
 public:
-	SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, TextureManager& textureManager);
+	SpaceSimulationGUI(SpaceSimulationSettings& spaceSimulationSettings, PlanetCreator& planetCreator, Serializer& serializer, SceneContext& sceneContext);
 
 	void draw();
 
 private:
-	StateSpaceSimulation& spaceSimulation;
-	TextureManager& textureManager;
+	ObjectEditor mainLightObjectEditor;
+	ObjectEditor spaceSimulationSettingsObjectEditor;
+
+	SceneContext& sceneContext;
+	PlanetCreator& planetCreator;
+	Serializer& serializer;
+	SpaceSimulationSettings& spaceSimulationSettings;
+
 	std::vector<unsigned int> planetsToDelete;
 	std::vector<std::filesystem::path> savedSimulations;
-	bool renderCoordinateSystemAxis;
+
+	void loadSavedSimulations();
+	void drawEditors();
 
 	void showFileMenu();
 	void showSettingsMenu();
@@ -41,6 +45,7 @@ private:
 
 	void createColoredPlanet();
 	void createTexturedPlanet();
+	void createTexturedStar();
 	void createSolarSystem();
 	void createEarth();
 	void createSun();
@@ -51,10 +56,5 @@ private:
 	void createUranus();
 	void createNeptune();
 	void createMars();
-
-	void loadSavedSimulations();
-
-	virtual void deleteObject(std::shared_ptr<EditableViaImGui> object) override;
-	virtual void deleteObject(EditableViaImGui* object) override;
 };
 

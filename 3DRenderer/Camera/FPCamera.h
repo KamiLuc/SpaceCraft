@@ -1,18 +1,18 @@
 #pragma once
 
 #include "CameraInterface.h"
-#include "AppFramework/GUI/EditableViaImGui.h"
+#include "AppFramework/GUI/EditableViaGui.h"
 
-class FPCamera : public CameraInterface, public EditableViaImGui
+
+class FPCamera : public CameraInterface, public EditableViaGui
 {
 public:
 	FPCamera(const Settings::CameraSettings& settings);
 
-	virtual void handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition) override;
-	virtual void updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec) override;
-	virtual glm::mat4 getViewMatrix() const override;
-
-	void editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui) override;
+	void handleMouse(const glm::vec2& oldMousePosition, const glm::vec2& newMousePosition) override;
+	void updateCameraPosition(const CameraMoveDirection& direction, const GLfloat& timeInSec) override;
+	glm::mat4 getViewMatrix() const override;
+	void editViaGui() override;
 	void useImmediateGluLookAt() override;
 
 private:
@@ -20,7 +20,5 @@ private:
 	glm::vec3 up;
 	glm::vec3 right;
 
-	virtual void updateCameraProperties() override;
+	void updateCameraProperties() override;
 };
-
-

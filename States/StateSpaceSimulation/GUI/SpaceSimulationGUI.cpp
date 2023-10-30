@@ -1,16 +1,21 @@
-#include "SpaceSimulationImGui.h"
+#include "SpaceSimulationGUI.h"
 
-SpaceSimulationImGui::SpaceSimulationImGui(StateSpaceSimulation& spaceSimulation, TextureManager& textureManager)
-	: spaceSimulation(spaceSimulation)
-	, textureManager(textureManager)
-	, renderCoordinateSystemAxis(false)
+
+SpaceSimulationGUI::SpaceSimulationGUI(SpaceSimulationSettings& spaceSimulationSettings, PlanetCreator& planetCreator,
+									   Serializer& serializer, SceneContext& sceneContext)
+	: spaceSimulationSettings(spaceSimulationSettings)
+	, planetCreator(planetCreator)
+	, sceneContext(sceneContext)
+	, serializer(serializer)
+	, spaceSimulationSettingsObjectEditor("Edit simulation settings", { 550, 153 }, { 550, 153 })
+	, mainLightObjectEditor("Edit main light", { 320, 79 }, { 320, 79 })
 {
+	spaceSimulationSettings.registerEditor(&spaceSimulationSettingsObjectEditor);
+	sceneContext.mainLight->registerEditor(&mainLightObjectEditor);
 }
 
-void SpaceSimulationImGui::draw()
+void SpaceSimulationGUI::draw()
 {
-	update();
-
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -30,11 +35,21 @@ void SpaceSimulationImGui::draw()
 		}
 		ImGui::EndMainMenuBar();
 	}
+
+	drawEditors();
 }
 
-void SpaceSimulationImGui::createColoredPlanet()
+void SpaceSimulationGUI::drawEditors()
 {
-	auto temp = spaceSimulation.planetCreator->buildColoredPlanet(
+	planetCreator.drawEditors();
+	spaceSimulationSettingsObjectEditor.draw();
+	sceneContext.cameraManager->drawEditors();
+	mainLightObjectEditor.draw();
+}
+
+void SpaceSimulationGUI::createColoredPlanet()
+{
+	auto temp = planetCreator.buildColoredPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 0.0f, 0 },
@@ -42,21 +57,36 @@ void SpaceSimulationImGui::createColoredPlanet()
 		1.0f,
 		"Planet",
 		{ 0.3f, 0.2f, 0.8f, 1.0f });
+	temp->startEditing();
 }
 
-void SpaceSimulationImGui::createTexturedPlanet()
+void SpaceSimulationGUI::createTexturedPlanet()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 0.0f, 0 },
 		{ 5.0f, 10 },
 		1.0f,
 		"Planet",
-		textureManager.getTexture(textureManager.getTexturesNames()[0]));
+		planetCreator.getTextureManager()->getTexture(planetCreator.getTextureManager()->getTexturesNames()[0]));
+	temp->startEditing();
 }
 
-void SpaceSimulationImGui::createSolarSystem()
+void SpaceSimulationGUI::createTexturedStar()
+{
+	auto temp = planetCreator.buildTexturedStar(
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
+		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
+		{ 0.0f, 0 },
+		{ 5.0f, 10 },
+		1.0f,
+		"Star",
+		planetCreator.getTextureManager()->getTexture("sun"));
+	temp->startEditing();
+}
+
+void SpaceSimulationGUI::createSolarSystem()
 {
 	createSun();
 	createMercury();
@@ -67,138 +97,120 @@ void SpaceSimulationImGui::createSolarSystem()
 	createSaturn();
 	createUranus();
 	createNeptune();
-
-	objectsToEdit.clear();
 }
 
-void SpaceSimulationImGui::createEarth()
+void SpaceSimulationGUI::createEarth()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.496f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(2.978f, 4)}),
 		{ 5.972f, 24 },
 		{ 6.371f, 6 },
 		2000.0f,
 		"Earth",
-		textureManager.getTexture("earth"));
+		planetCreator.getTextureManager()->getTexture("earth"));
 }
 
-void SpaceSimulationImGui::createSun()
+void SpaceSimulationGUI::createSun()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedStar(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4)}),
 		{ 1.989f, 30 },
 		{ 6.963f, 8 },
 		55.0f,
 		"Sun",
-		textureManager.getTexture("sun"));
-
-	temp->setCanMove(false);
+		planetCreator.getTextureManager()->getTexture("sun"));
 }
 
-void SpaceSimulationImGui::createMercury()
+void SpaceSimulationGUI::createMercury()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(5.79f, 10), PhysicalUnit(0.0f, 10), PhysicalUnit(0.0f, 10)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(4.787f, 4)}),
 		{ 3.301f, 23 },
 		{ 2.439f, 6 },
 		3000.0f,
 		"Mercury",
-		textureManager.getTexture("mercury"));
-
-	addObjectToEdit(temp);
+		planetCreator.getTextureManager()->getTexture("mercury"));
 }
 
-void SpaceSimulationImGui::createVenus()
+void SpaceSimulationGUI::createVenus()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.082f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(3.502f, 4)}),
 		{ 4.867f, 24 },
 		{ 6.051f, 6 },
 		2000.0f,
 		"Venus",
-		textureManager.getTexture("venus"));
-
-	addObjectToEdit(temp);
+		planetCreator.getTextureManager()->getTexture("venus"));
 }
 
-void SpaceSimulationImGui::createJupiter()
+void SpaceSimulationGUI::createJupiter()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(7.785f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(1.307f, 4)}),
 		{ 1.898f, 27 },
 		{ 6.699f, 7 },
 		500.0f,
 		"Jupiter",
-		textureManager.getTexture("jupiter"));
-
-	addObjectToEdit(temp);
+		planetCreator.getTextureManager()->getTexture("jupiter"));
 }
 
-void SpaceSimulationImGui::createSaturn()
+void SpaceSimulationGUI::createSaturn()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(1.427f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(9.672f, 3)}),
 		{ 5.683f, 26 },
 		{ 5.823f, 7 },
 		500.0f,
 		"Saturn",
-		textureManager.getTexture("saturn"));
-
-	addObjectToEdit(temp);
+		planetCreator.getTextureManager()->getTexture("saturn"));
 }
 
-void SpaceSimulationImGui::createUranus()
+void SpaceSimulationGUI::createUranus()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(2.871f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(6.81f, 3)}),
 		{ 8.681f, 25 },
 		{ 2.536f, 7 },
 		3000.0f,
 		"Uranus",
-		textureManager.getTexture("uranus"));
-
-	addObjectToEdit(temp);
+		planetCreator.getTextureManager()->getTexture("uranus"));
 }
 
-void SpaceSimulationImGui::createNeptune()
+void SpaceSimulationGUI::createNeptune()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(4.498f, 12), PhysicalUnit(0.0f, 12), PhysicalUnit(0.0f, 12)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 3), PhysicalUnit(0.0f, 3), PhysicalUnit(5.43f, 3)}),
 		{ 1.024f, 26 },
 		{ 2.462f, 7 },
 		5000.0f,
 		"Neptune",
-		textureManager.getTexture("neptune"));
-
-	addObjectToEdit(temp);
+		planetCreator.getTextureManager()->getTexture("neptune"));
 }
 
-void SpaceSimulationImGui::createMars()
+void SpaceSimulationGUI::createMars()
 {
-	auto temp = spaceSimulation.planetCreator->buildTexturedPlanet(
+	auto temp = planetCreator.buildTexturedPlanet(
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(2.279f, 11), PhysicalUnit(0.0f, 11), PhysicalUnit(0.0f, 11)}),
 		PhysicalUnitVec<3>(std::array<PhysicalUnit, 3>{PhysicalUnit(0.0f, 4), PhysicalUnit(0.0f, 4), PhysicalUnit(2.407f, 4)}),
 		{ 6.39f, 23 },
 		{ 3.389f, 6 },
 		2000.0f,
 		"Mars",
-		textureManager.getTexture("mars"));
-
-	addObjectToEdit(temp.get());
+		planetCreator.getTextureManager()->getTexture("mars"));
 }
 
-void SpaceSimulationImGui::loadSavedSimulations()
+void SpaceSimulationGUI::loadSavedSimulations()
 {
 	savedSimulations.clear();
-	auto savedSimulationsDirectory = spaceSimulation.serializer.getSaveDirectiory();
+	auto savedSimulationsDirectory = serializer.getSaveDirectiory();
 
 	for (const auto& dirEntry : std::filesystem::directory_iterator { savedSimulationsDirectory })
 	{
@@ -209,12 +221,13 @@ void SpaceSimulationImGui::loadSavedSimulations()
 	}
 }
 
-void SpaceSimulationImGui::showFileMenu()
+void SpaceSimulationGUI::showFileMenu()
 {
 	if (ImGui::Button("Save", ImVec2(70, 30)))
 	{
 		ImGui::OpenPopup("Save simulation");
-		spaceSimulation.disableEvents();
+		spaceSimulationSettings.pauseSimulation = true;
+		spaceSimulationSettings.disableEvents();
 	}
 	showSaveSimulationModal("Save simulation");
 
@@ -226,7 +239,7 @@ void SpaceSimulationImGui::showFileMenu()
 	showLoadSimulationModal("Load simulation");
 }
 
-void SpaceSimulationImGui::showObjectsMenu()
+void SpaceSimulationGUI::showObjectsMenu()
 {
 	if (ImGui::Selectable("Create colored planet"))
 	{
@@ -237,14 +250,19 @@ void SpaceSimulationImGui::showObjectsMenu()
 	{
 		createTexturedPlanet();
 	}
-	ImGui::Separator();
 
+	if (ImGui::Selectable("Create star"))
+	{
+		createTexturedStar();
+	}
+
+	ImGui::Separator();
 	if (ImGui::Selectable("Create Solar system"))
 	{
 		createSolarSystem();
 	}
-	ImGui::Separator();
 
+	ImGui::Separator();
 	if (ImGui::BeginMenu("Create real planet"))
 	{
 		if (ImGui::Selectable("Create Sun"))
@@ -295,7 +313,7 @@ void SpaceSimulationImGui::showObjectsMenu()
 		ImGui::EndMenu();
 	}
 
-	auto& planets = spaceSimulation.planets;
+	auto& planets = planetCreator.getPlanetContainerRef();
 	if (planets.size() > 0)
 	{
 		ImGui::Separator();
@@ -320,9 +338,9 @@ void SpaceSimulationImGui::showObjectsMenu()
 	}
 }
 
-void SpaceSimulationImGui::showDeletePlanetsMenu()
+void SpaceSimulationGUI::showDeletePlanetsMenu()
 {
-	auto& planets = spaceSimulation.planets;
+	auto& planets = planetCreator.getPlanetContainerRef();
 	if (ImGui::ListBoxHeader("Planets to delete"))
 	{
 		unsigned int index = 0;
@@ -341,7 +359,6 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 					planetsToDelete.push_back(index);
 				}
 			}
-
 			++index;
 		}
 
@@ -353,62 +370,54 @@ void SpaceSimulationImGui::showDeletePlanetsMenu()
 		std::sort(planetsToDelete.begin(), planetsToDelete.end());
 		while (planetsToDelete.size())
 		{
-
 			auto toDelete = planets.begin();
 			for (unsigned int i = 0; i < *planetsToDelete.rbegin(); ++i)
 			{
 				++toDelete;
 			}
 
-			removeObjectFromEdit(toDelete->get());
-			spaceSimulation.removePlanetFromSimulation(*toDelete);
+			planetCreator.removePlanetFromSimulation(*toDelete);
 			planetsToDelete.pop_back();
 		}
 	}
 
 	if (ImGui::Button("Delete all"))
 	{
-		while (planets.size() != 0)
-		{
-			auto planet = planets.rbegin();
-			spaceSimulation.removePlanetFromSimulation(*planet);
-		}
-
-		objectsToEdit.clear();
+		planetCreator.clearObjects();
 	}
 }
 
-void SpaceSimulationImGui::showEditPlanetsMenu()
+void SpaceSimulationGUI::showEditPlanetsMenu()
 {
-	auto& planets = spaceSimulation.planets;
+	auto& planets = planetCreator.getPlanetContainerRef();
 	unsigned int index = 1;
 
 	for (const auto& planet : planets)
 	{
 		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str()))
 		{
-			addObjectToEdit(planet.get());
+			planet->startEditing();
 		}
 		++index;
 	}
 }
 
-void SpaceSimulationImGui::showObjectFocusMenu()
+void SpaceSimulationGUI::showObjectFocusMenu()
 {
-	auto& planets = spaceSimulation.planets;
+	auto& planets = planetCreator.getPlanetContainerRef();
 	unsigned int index = 1;
 
 	for (const auto& planet : planets)
 	{
 		if (ImGui::Selectable((std::to_string(index) + ". " + planet->getIdentifier()).c_str()))
 		{
-			spaceSimulation.focusPlanet(planet);
+			spaceSimulationSettings.focusedPlanet = planet;
 		}
 		++index;
 	}
 }
 
-void SpaceSimulationImGui::showSaveSimulationModal(const std::string & modal)
+void SpaceSimulationGUI::showSaveSimulationModal(const std::string & modal)
 {
 	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -437,9 +446,10 @@ void SpaceSimulationImGui::showSaveSimulationModal(const std::string & modal)
 							  });
 			}
 
-			spaceSimulation.saveSimulation(spaceSimulation.serializer.getSaveDirectiory() / fileName.append(".sc"));
+			auto& planets = planetCreator.getPlanetContainerRef();
+			serializer.serializeObjects(serializer.getSaveDirectiory() / fileName.append(".sc"), planets.begin(), planets.end());
 			memset(inputText, 0, 256);
-			spaceSimulation.enableEvents();
+			spaceSimulationSettings.enableEvents();
 			ImGui::CloseCurrentPopup();
 		}
 
@@ -449,7 +459,7 @@ void SpaceSimulationImGui::showSaveSimulationModal(const std::string & modal)
 		if (ImGui::Button("Cancel", ImVec2(120, 0)))
 		{
 			memset(inputText, 0, 256);
-			spaceSimulation.enableEvents();
+			spaceSimulationSettings.enableEvents();
 			ImGui::CloseCurrentPopup();
 		}
 
@@ -457,7 +467,7 @@ void SpaceSimulationImGui::showSaveSimulationModal(const std::string & modal)
 	}
 }
 
-void SpaceSimulationImGui::showLoadSimulationModal(const std::string & modal)
+void SpaceSimulationGUI::showLoadSimulationModal(const std::string & modal)
 {
 	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -485,7 +495,9 @@ void SpaceSimulationImGui::showLoadSimulationModal(const std::string & modal)
 						selectedId = i;
 					}
 
-					spaceSimulation.loadSimulation(savedSimulations[selectedId]);
+					spaceSimulationSettings.pauseSimulation = true;
+					planetCreator.clearObjects();
+					serializer.createSerializedObjects(savedSimulations[selectedId]);
 				}
 			}
 
@@ -504,49 +516,47 @@ void SpaceSimulationImGui::showLoadSimulationModal(const std::string & modal)
 	}
 }
 
-void SpaceSimulationImGui::deleteObject(std::shared_ptr<EditableViaImGui> object)
-{
-	deleteObject(object.get());
-}
+//void SpaceSimulationGUI::deleteObject(std::shared_ptr<EditableViaImGui> object)
+//{
+//	deleteObject(object.get());
+//}
+//
+//void SpaceSimulationGUI::deleteObject(EditableViaImGui *object)
+//{
+//	auto& planets = spaceSimulation.planets;
+//	auto planet = std::find_if(planets.begin(), planets.end(), [&object](std::shared_ptr<RenderablePlanet> obj)
+//							   {
+//								   return object == obj.get();
+//							   });
+//
+//	if (planet != planets.end())
+//	{
+//		removeObjectFromEdit(object);
+//		spaceSimulation.removePlanetFromSimulation(*planet);
+//	}
+//}
 
-void SpaceSimulationImGui::deleteObject(EditableViaImGui *object)
-{
-	auto& planets = spaceSimulation.planets;
-	auto planet = std::find_if(planets.begin(), planets.end(), [&object](std::shared_ptr<RenderablePlanet> obj)
-							   {
-								   return object == obj.get();
-							   });
-
-	if (planet != planets.end())
-	{
-		removeObjectFromEdit(object);
-		spaceSimulation.removePlanetFromSimulation(*planet);
-	}
-}
-
-void SpaceSimulationImGui::showSettingsMenu()
+void SpaceSimulationGUI::showSettingsMenu()
 {
 	if (ImGui::Selectable("Simulation settings"))
 	{
-		addObjectToEdit(&spaceSimulation);
+		spaceSimulationSettings.startEditing();
 	}
 
 	ImGui::Separator();
 	if (ImGui::Selectable("First person camera"))
 	{
-		auto& camera = spaceSimulation.sceneContext.cameraManager->getFirstPersonCameraRef();
-		addObjectToEdit(&camera);
+		sceneContext.cameraManager->getFirstPersonCameraRef().startEditing();
 	}
 
 	if (ImGui::Selectable("Arc ball camera"))
 	{
-		auto& camera = spaceSimulation.sceneContext.cameraManager->getArcBallCameraRef();
-		addObjectToEdit(&camera);
+		sceneContext.cameraManager->getArcBallCameraRef().startEditing();
 	}
 
 	ImGui::Separator();
 	if (ImGui::Selectable("Main light"))
 	{
-		addObjectToEdit(spaceSimulation.sceneContext.mainLight);
+		sceneContext.mainLight->startEditing();
 	}
 }

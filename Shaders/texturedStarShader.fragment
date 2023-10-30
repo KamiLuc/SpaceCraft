@@ -1,99 +1,35 @@
 #version 330
 
+#include "commonStructs"
+
 const int MAX_POINT_LIGHTS = 124;
 
 in vec4 vCol;
 in vec2 texCoord;
 in vec3 normal;
 in vec3 fragPos;
-
 out vec4 color;
-
-struct Light
-{
-	vec3 color;
-	float ambientIntensity;
-};
-
-struct PointLight
-{
-	Light base;
-	vec3 position;
-	float diffuseIntensity;
-	float constant;
-	float linear;
-	float exponent;
-};
-
-struct Material
-{
-	float specularIntensity;
-	float shininess;
-};
 
 uniform Light omnipresentLight;
 uniform int pointLightCount;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform vec3 cameraPosition;
+uniform vec2 objectOnScreenPosition;
+uniform float timePassed;
 
 //acces via glActiveTexture
 uniform sampler2D theTexture;
 uniform Material material;
 
-uniform vec3 cameraPosition;
-
-vec4 calculateLightByDirection(Light light, vec3 direction, float diffuseIntensity)
+float random(vec2 uv)
 {
-	vec4 ambientColor = vec4(light.color, 1.0f) * light.ambientIntensity;
-	
-	float diffuseFactor = max(dot(normalize(normal), normalize(direction)), 0.0f);
-	vec4 diffuseColor = vec4(light.color, 1.0f) * diffuseIntensity * diffuseFactor;
-	
-	vec4 specularColor = vec4(0, 0, 0, 0);
-	
-	if(diffuseFactor > 0.0f)
-	{
-		vec3 fragToCamera = normalize(cameraPosition - fragPos);
-		vec3 reflectedVertex = normalize(reflect(direction, normalize(normal)));
-		
-		float specularFactor = dot(fragToCamera, reflectedVertex);
-		if(specularFactor > 0.0f)
-		{
-			specularFactor = pow(specularFactor, material.shininess);
-			specularColor = vec4(light.color * material.specularIntensity * specularFactor, 1.0f);
-		}
-	}
-	
-	return (ambientColor + diffuseColor + specularColor);
+	return fract(sin(dot(uv, vec2(12.9898, 78.233)) * 43758.5453));
 };
-
-vec4 calculatePointLights()
-{
-	vec4 totalColor = vec4(0, 0, 0, 0);
-
-	for (int i = 0; i < pointLightCount; ++i)
-	{
-		vec3 direction = fragPos - pointLights[i].position;
-		float distance = length(direction);
-		direction = normalize(direction);
-
-		vec4 color = calculateLightByDirection(pointLights[i].base, direction, pointLights[i].diffuseIntensity);
-		float attenuation = pointLights[i].exponent * distance * distance + pointLights[i].linear * distance + pointLights[i].constant;
-
-		totalColor += (color / attenuation);
-	}
-
-	return totalColor;
-};
-
-vec4 calculateOmnipresentLight()
-{
-	vec4 color = vec4(0, 0, 0, 0);
-	return color + vec4(omnipresentLight.color, 1) * omnipresentLight.ambientIntensity;
-}
 
 void main()
 {
-	vec4 finalColor = calculatePointLights();
-
-	color = texture(theTexture, texCoord) * finalColor;
+	float pulse = 0.8 + 0.10 * sin(timePassed) + 0.10;
+	vec4 finalColor = vec4(1.0, 1.0, 1.0, 1.0);
+	finalColor *= pulse;
+	color = texture(theTexture, texCoord) * finalColor; 
 }

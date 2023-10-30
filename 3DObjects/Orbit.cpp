@@ -1,5 +1,10 @@
 #include "Orbit.h"
 
+Orbit::Orbit()
+	: Orbit(0, { 0.0f,0.0f,0.0f })
+{
+}
+
 Orbit::Orbit(size_t maxSize, const glm::vec3 orbitColor)
 	: CircularVector(maxSize)
 	, color(orbitColor)
@@ -41,6 +46,16 @@ void Orbit::addPoint(const glm::vec3& point)
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, CircularVector::getActualSize() * sizeof(glm::vec3), CircularVector::getData(), GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+glm::vec3 Orbit::getColor() const
+{
+	return color;
+}
+
+void Orbit::setColor(const glm::vec3 & color)
+{
+	this->color = color;
 }
 
 void Orbit::render(SceneContext& sceneContext) const

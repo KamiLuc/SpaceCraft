@@ -107,6 +107,8 @@ void Shader::compileShader(const char* vertexCode, const char* fragmentCode)
 	uniformLocations.material.shininess = glGetUniformLocation(shaderID, "material.shininess");
 	uniformLocations.orbitColor = glGetUniformLocation(shaderID, "orbitColor");
 	uniformLocations.pointLightCount = glGetUniformLocation(shaderID, "pointLightCount");
+	uniformLocations.timePassed = glGetUniformLocation(shaderID, "timePassed");
+	uniformLocations.objectOnScreenPosition = glGetUniformLocation(shaderID, "objectOnScreenPosition");
 
 	for (unsigned int i = 0; i < uniformLocations.pointLights.size(); ++i)
 	{

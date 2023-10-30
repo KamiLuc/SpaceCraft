@@ -1,8 +1,5 @@
 #include "CoordinateSystemAxes.h"
 
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 CoordinateSystemAxes::CoordinateSystemAxes(const glm::vec3& position, float lineWidth, bool immediateRender)
 	: VAO(0)
 	, VBO(0)

@@ -12,8 +12,8 @@ public:
 	virtual ~Light();
 
 	glm::vec3 getColor() const;
-	void setColor(const glm::vec3 color);
 	GLfloat getAmbientIntensity() const;
+	void setColor(const glm::vec3 color);
 	void setAmbientIntensity(GLfloat ambientIntensity);
 
 protected:

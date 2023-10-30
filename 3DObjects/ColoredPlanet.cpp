@@ -1,8 +1,5 @@
 #include "ColoredPlanet.h"
 
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 ColoredPlanet::ColoredPlanet()
 	: ColoredPlanet({}, {}, {}, {}, 1.0f, {}, glm::vec4(1.0f))
 {
@@ -34,43 +31,6 @@ void ColoredPlanet::render(SceneContext& sceneContext) const
 	}
 }
 
-void ColoredPlanet::editViaImGui(ImGuiEditableObjectsHandler& objectHandler, unsigned int windowID, bool beginImGui)
-{
-	if (beginImGui)
-	{
-		ImGui::Begin(("Edit colored planet " + std::to_string(windowID)).c_str());
-	}
-	else
-	{
-		ImGui::Separator();
-	}
-
-	RenderablePlanet::editViaImGui(objectHandler, windowID, false);
-
-	ImGui::Separator();
-	if (ImGui::ColorEdit4("Planet color", glm::value_ptr(color), ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar))
-	{
-		mesh.bindSingleColor(color);
-	}
-
-	ImGui::Separator();
-	if (ImGui::Button("Close", { ImGui::GetWindowWidth() / 2, 20 }))
-	{
-		objectHandler.removeObjectFromEdit(this);
-	}
-
-	ImGui::SameLine();
-	if (ImGui::Button("Delete planet", { ImGui::GetWindowWidth() / 2, 20 }))
-	{
-		objectHandler.deleteObject(this);
-	}
-
-	if (beginImGui)
-	{
-		ImGui::End();
-	}
-}
-
 SerializableObjectId ColoredPlanet::getSerializabledId() const
 {
 	return SerializableObjectId::COLORED_PLANET;
@@ -95,7 +55,7 @@ void ColoredPlanet::serialize(boost::archive::text_iarchive& inputArchive, const
 	setColor(serializedColor);
 }
 
-void ColoredPlanet::setColor(const glm::vec4 color)
+void ColoredPlanet::setColor(const glm::vec4 & color)
 {
 	this->color = color;
 	mesh.bindSingleColor(color);
@@ -118,4 +78,15 @@ void ColoredPlanet::setUpMesh()
 
 	Sphere::createSphere(vertices, normals, indices);
 	mesh.createMesh(vertices, indices, normals, colors);
+}
+
+void ColoredPlanet::editViaGui()
+{
+	RenderablePlanet::editViaGui();
+
+	ImGui::Separator();
+	if (ImGui::ColorEdit4("Planet color", glm::value_ptr(color), ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar))
+	{
+		mesh.bindSingleColor(color);
+	}
 }
