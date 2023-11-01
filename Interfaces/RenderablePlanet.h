@@ -15,7 +15,7 @@ class RenderablePlanet : public Renderable, public Serializable, public Editable
 public:
 	RenderablePlanet();
 	RenderablePlanet(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
-					 float scale, const std::string& identifier, unsigned int sectors = 32, unsigned int stacks = 32);
+					 float scale, const std::string& identifier, unsigned int sectors = 64, unsigned int stacks = 64);
 	virtual ~RenderablePlanet() {}
 
 	glm::mat4 getModelMatrix() const;
@@ -36,5 +36,7 @@ protected:
 	float orbitDataUpdateIntervalInSec;
 	bool renderOrbit;
 
+	void beginOutlineRender() const;
+	void endOutlineRender(const SceneContext& sceneContext, const BasicMesh& mesh) const;
 	void editViaGui() override;
 };

@@ -1,11 +1,10 @@
 #include "Texture.h"
 
-Texture::Texture(const std::string& name, const TextureManager& textureManager)
+Texture::Texture(const std::string& name)
 	: textureID(0)
 	, width(0)
 	, height(0)
 	, bitDepth(0)
-	, textureManager(textureManager)
 	, name(name)
 {
 }
@@ -70,11 +69,6 @@ void Texture::clearTexture()
 	width = 0;
 	height = 0;
 	bitDepth = 0;
-}
-
-const TextureManager& Texture::getTextureManager() const
-{
-	return textureManager;
 }
 
 std::string Texture::getName() const

@@ -513,5 +513,11 @@
     <None Include="Shaders\skyboxShader.vertex">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\outlineShader.fragment">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\outlineShader.vertex">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

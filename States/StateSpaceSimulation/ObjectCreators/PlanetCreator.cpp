@@ -1,5 +1,7 @@
 #include "PlanetCreator.h"
 
+#include <functional>
+
 PlanetCreator::PlanetCreator(
 	std::shared_ptr<TextureManager> textureManager, std::list<std::shared_ptr<PointLight>>& pointLightContainer)
 	: textureManager(textureManager)
@@ -8,6 +10,9 @@ PlanetCreator::PlanetCreator(
 	, texturedPlanetEditor("Edit textured planet", { 410, 300 }, { 410, 1000 }, textureManager.get())
 	, texturedStarEditor("Edit textured star", { 410, 300 }, { 410, 1000 }, textureManager.get())
 {
+	coloredPlanetEditor.registerDeleteObjectFunction([&](RenderablePlanet* ptr) { removePlanetFromSimulation(ptr); });
+	texturedPlanetEditor.registerDeleteObjectFunction([&](RenderablePlanet* ptr) { removePlanetFromSimulation(ptr); });
+	texturedStarEditor.registerDeleteObjectFunction([&](RenderablePlanet* ptr) { removePlanetFromSimulation(ptr); });
 }
 
 void PlanetCreator::drawEditors()
@@ -54,6 +59,13 @@ std::shared_ptr<TexturedPlanet> PlanetCreator::buildTexturedPlanet(
 	return object;
 }
 
+std::shared_ptr<TexturedPlanet> PlanetCreator::buildTexturedPlanet(
+	const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass, const PhysicalUnit& radius,
+	float scale, const std::string& identifier, const std::string& textureName)
+{
+	return buildTexturedPlanet(position, velocity, mass, radius, scale, identifier, textureManager->getTexture(textureName));
+}
+
 void PlanetCreator::createTexturedStarFromArchive(boost::archive::text_iarchive& ar)
 {
 	auto object = std::make_shared<TexturedStar>();
@@ -75,6 +87,11 @@ std::shared_ptr<TexturedStar> PlanetCreator::buildTexturedStar(
 	return object;
 }
 
+std::shared_ptr<TexturedStar> PlanetCreator::buildTexturedStar(const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit & mass, const PhysicalUnit & radius, float scale, const std::string & identifier, const std::string & textureName)
+{
+	return buildTexturedStar(position, velocity, mass, radius, scale, identifier, textureManager->getTexture(textureName));
+}
+
 void PlanetCreator::clearObjects()
 {
 	for (const auto& planet : planetContainer)
@@ -87,17 +104,18 @@ void PlanetCreator::clearObjects()
 	pointLightContainer.clear();
 }
 
-void PlanetCreator::removePlanetFromSimulation(std::shared_ptr<RenderablePlanet> planet)
+void PlanetCreator::removePlanetFromSimulation(RenderablePlanet* planet)
 {
 	planet->unregisterEditor();
-	renderContainer.remove(planet);
-	planetContainer.remove(planet);
 
-	auto p = std::dynamic_pointer_cast<PointLight>(planet);
+	auto p = dynamic_cast<PointLight*>(planet);
 	if (p)
 	{
-		pointLightContainer.remove(p);
+		pointLightContainer.remove_if([&](auto el) { return el.get() == p; });
 	}
+
+	renderContainer.remove_if([&](auto el) { return el.get() == planet; });
+	planetContainer.remove_if([&](auto el) { return el.get() == planet; });
 }
 
 std::shared_ptr<TextureManager> PlanetCreator::getTextureManager()

@@ -13,9 +13,11 @@ public:
 	ObjectEditor(const std::string& windowTitle, const ImVec2& windowMinSize, const ImVec2& windowMaxSize);
 	virtual ~ObjectEditor();
 
+	void draw();
 	void addObjectToEdit(EditableViaGui* editableObject);
 	void removeObjectFromEdit(EditableViaGui* editableObject);
-	void draw();
+	bool isBeingEdited(const EditableViaGui* editableObject) const;
+	bool shouldDraw();
 
 protected:
 	virtual void internalUpdate(EditableViaGui*);
@@ -24,9 +26,10 @@ protected:
 
 private:
 	void begin(unsigned int index, std::pair<EditableViaGui*, bool>& objectPair);
-	bool end();
+	void end();
 
 	std::string windowTitle;
 	ImVec2 windowMinSize;
 	ImVec2 windowMaxSize;
+	bool breakDrawLoop;
 };

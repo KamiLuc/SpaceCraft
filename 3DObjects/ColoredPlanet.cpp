@@ -15,15 +15,24 @@ ColoredPlanet::ColoredPlanet(const PhysicalUnitVec<3>& position, const PhysicalU
 
 void ColoredPlanet::render(SceneContext& sceneContext) const
 {
-	auto shader = sceneContext.shaderManager->useShader("coloredObjectShader");
+	bool drawOutline = this->isBeingEdited();
+	if (drawOutline)
+	{
+		beginOutlineRender();
+	}
 
+	auto shader = sceneContext.shaderManager->useShader("coloredObjectShader");
 	shader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
 	shader->useOmnipresentLight(*sceneContext.mainLight);
 	shader->usePointLights(sceneContext.pointLights);
 	shader->useMaterial(material);
 	shader->useModel(getModelMatrix());
-
 	mesh.useMesh();
+
+	if (drawOutline)
+	{
+		endOutlineRender(sceneContext, mesh);
+	}
 
 	if (renderOrbit)
 	{

@@ -10,6 +10,7 @@
 #include "ObjectCreators/PlanetCreator.h"
 
 #include <ranges>
+#include <future>
 
 class StateSpaceSimulation : public BaseState
 {
@@ -36,6 +37,12 @@ private:
 	void switchSimulationState(EventDetails* e);
 	void mouseLeftClick(EventDetails* details);
 	void mouseRightClick(EventDetails* details);
+
+	std::atomic<bool> stopAsyncUpdating;
+	std::future<bool> asyncUpdateResult;
+	bool asyncUpdate();
+	void startAsyncUpdate();
+	void stopAsyncUpdate();
 
 	SpaceSimulationSettings simulationSettings;
 	PhysicalUnit gravitationalConstant;

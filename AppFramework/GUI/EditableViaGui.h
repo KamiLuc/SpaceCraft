@@ -13,6 +13,7 @@ public:
 	void startEditing();
 	void registerEditor(ObjectEditor* editor) { this->editor = editor; }
 	void unregisterEditor();
+	bool isBeingEdited() const;
 
 	virtual void editViaGui() = 0;
 

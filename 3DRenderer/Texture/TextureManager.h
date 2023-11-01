@@ -18,7 +18,7 @@ public:
 	void loadTexturesAsync();
 	void setTexturesPath(const std::filesystem::path& texturesPath);
 	void setSkyboxTexturesPath(const std::filesystem::path& skyboxPath);
-	std::shared_ptr<Texture> getTexture(const std::string& texture) const;
+	std::shared_ptr<Texture> getTexture(std::string texture) const;
 	std::shared_ptr<CubeMapTexture> getSkyboxTexture() const;
 	std::vector<std::string> getTexturesNames() const;
 	bool areTexturesLoaded() const;

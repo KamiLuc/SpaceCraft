@@ -29,13 +29,15 @@ void TextureManager::loadTextures()
 		{
 			try
 			{
-				auto texture = std::make_shared<Texture>(fileName, *this);
+				auto texture = std::make_shared<Texture>(fileName);
 				texture->loadTexture(path);
+				std::transform(fileName.begin(), fileName.end(), fileName.begin(), toupper);
 				textures[fileName] = std::move(texture);
 				alreadyLoadedTextures.emplace_back(std::move(fileName));
 			}
-			catch (...)
+			catch (std::exception& e)
 			{
+				printf("%s %s", __func__, e.what());
 				continue;
 			}
 		}
@@ -64,8 +66,9 @@ void TextureManager::setSkyboxTexturesPath(const std::filesystem::path& skyboxPa
 	this->skyboxTexturesPath = skyboxPath;
 }
 
-std::shared_ptr<Texture> TextureManager::getTexture(const std::string& texture) const
+std::shared_ptr<Texture> TextureManager::getTexture(std::string texture) const
 {
+	std::transform(texture.begin(), texture.end(), texture.begin(), toupper);
 	if (textures.contains(texture))
 	{
 		return textures.at(texture);

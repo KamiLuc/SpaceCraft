@@ -21,3 +21,13 @@ void EditableViaGui::unregisterEditor()
 		this->editor = nullptr;
 	}
 }
+
+bool EditableViaGui::isBeingEdited() const
+{
+	if (editor)
+	{
+		return editor->isBeingEdited(this);
+	}
+
+	return false;
+}

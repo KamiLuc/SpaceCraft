@@ -82,7 +82,7 @@ void SpaceSimulationGUI::createTexturedStar()
 		{ 5.0f, 10 },
 		1.0f,
 		"Star",
-		planetCreator.getTextureManager()->getTexture("sun"));
+		"sun");
 	temp->startEditing();
 }
 
@@ -108,7 +108,7 @@ void SpaceSimulationGUI::createEarth()
 		{ 6.371f, 6 },
 		2000.0f,
 		"Earth",
-		planetCreator.getTextureManager()->getTexture("earth"));
+		"earth");
 }
 
 void SpaceSimulationGUI::createSun()
@@ -120,7 +120,7 @@ void SpaceSimulationGUI::createSun()
 		{ 6.963f, 8 },
 		55.0f,
 		"Sun",
-		planetCreator.getTextureManager()->getTexture("sun"));
+		"sun");
 }
 
 void SpaceSimulationGUI::createMercury()
@@ -132,7 +132,7 @@ void SpaceSimulationGUI::createMercury()
 		{ 2.439f, 6 },
 		3000.0f,
 		"Mercury",
-		planetCreator.getTextureManager()->getTexture("mercury"));
+		"mercury");
 }
 
 void SpaceSimulationGUI::createVenus()
@@ -144,7 +144,7 @@ void SpaceSimulationGUI::createVenus()
 		{ 6.051f, 6 },
 		2000.0f,
 		"Venus",
-		planetCreator.getTextureManager()->getTexture("venus"));
+		"venus");
 }
 
 void SpaceSimulationGUI::createJupiter()
@@ -156,7 +156,7 @@ void SpaceSimulationGUI::createJupiter()
 		{ 6.699f, 7 },
 		500.0f,
 		"Jupiter",
-		planetCreator.getTextureManager()->getTexture("jupiter"));
+		"jupiter");
 }
 
 void SpaceSimulationGUI::createSaturn()
@@ -168,7 +168,7 @@ void SpaceSimulationGUI::createSaturn()
 		{ 5.823f, 7 },
 		500.0f,
 		"Saturn",
-		planetCreator.getTextureManager()->getTexture("saturn"));
+		"saturn");
 }
 
 void SpaceSimulationGUI::createUranus()
@@ -180,7 +180,7 @@ void SpaceSimulationGUI::createUranus()
 		{ 2.536f, 7 },
 		3000.0f,
 		"Uranus",
-		planetCreator.getTextureManager()->getTexture("uranus"));
+		"uranus");
 }
 
 void SpaceSimulationGUI::createNeptune()
@@ -192,7 +192,7 @@ void SpaceSimulationGUI::createNeptune()
 		{ 2.462f, 7 },
 		5000.0f,
 		"Neptune",
-		planetCreator.getTextureManager()->getTexture("neptune"));
+		"neptune");
 }
 
 void SpaceSimulationGUI::createMars()
@@ -204,7 +204,7 @@ void SpaceSimulationGUI::createMars()
 		{ 3.389f, 6 },
 		2000.0f,
 		"Mars",
-		planetCreator.getTextureManager()->getTexture("mars"));
+		"mArS");
 }
 
 void SpaceSimulationGUI::loadSavedSimulations()
@@ -376,7 +376,7 @@ void SpaceSimulationGUI::showDeletePlanetsMenu()
 				++toDelete;
 			}
 
-			planetCreator.removePlanetFromSimulation(*toDelete);
+			planetCreator.removePlanetFromSimulation(toDelete->get());
 			planetsToDelete.pop_back();
 		}
 	}

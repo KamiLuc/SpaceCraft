@@ -24,14 +24,20 @@ public:
 	std::shared_ptr<TexturedPlanet> buildTexturedPlanet(
 		const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
 		const PhysicalUnit& radius, float scale, const std::string& identifier, std::shared_ptr<Texture> texture);
+	std::shared_ptr<TexturedPlanet> buildTexturedPlanet(
+		const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+		const PhysicalUnit& radius, float scale, const std::string& identifier, const std::string& textureName);
 
 	void createTexturedStarFromArchive(boost::archive::text_iarchive& ar);
 	std::shared_ptr<TexturedStar> buildTexturedStar(
 		const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
 		const PhysicalUnit& radius, float scale, const std::string& identifier, std::shared_ptr<Texture> texture);
+	std::shared_ptr<TexturedStar> buildTexturedStar(
+		const PhysicalUnitVec<3>& position, const PhysicalUnitVec<3>& velocity, const PhysicalUnit& mass,
+		const PhysicalUnit& radius, float scale, const std::string& identifier, const std::string& textureName);
 
 	void clearObjects();
-	void removePlanetFromSimulation(std::shared_ptr<RenderablePlanet> planet);
+	void removePlanetFromSimulation(RenderablePlanet* planet);
 	std::shared_ptr<TextureManager> getTextureManager();
 	std::list<std::shared_ptr<Renderable>>& getRenderContainerRef();
 	std::list<std::shared_ptr<RenderablePlanet>>& getPlanetContainerRef();

@@ -21,16 +21,25 @@ std::string TexturedPlanet::getSerializedTextureName() const
 
 void TexturedPlanet::render(SceneContext& sceneContext) const
 {
-	auto shader = sceneContext.shaderManager->useShader("texturedObjectShader");
+	bool drawOutline = this->isBeingEdited();
+	if (drawOutline)
+	{
+		beginOutlineRender();
+	}
 
+	auto shader = sceneContext.shaderManager->useShader("texturedObjectShader");
 	shader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
 	shader->useOmnipresentLight(*sceneContext.mainLight);
 	shader->usePointLights(sceneContext.pointLights);
 	shader->useMaterial(material);
 	shader->useModel(getModelMatrix());
-
 	texture->useTexture();
 	mesh.useMesh();
+
+	if (drawOutline)
+	{
+		endOutlineRender(sceneContext, mesh);
+	}
 
 	if (renderOrbit)
 	{

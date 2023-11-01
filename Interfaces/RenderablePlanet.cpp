@@ -58,6 +58,28 @@ glm::vec3 RenderablePlanet::getPositionInWorldSpace() const
 	return (position / worldScale).getGlmVec();
 }
 
+void RenderablePlanet::beginOutlineRender() const
+{
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glStencilMask(0xFF);
+}
+
+void RenderablePlanet::endOutlineRender(const SceneContext& sceneContext, const BasicMesh& mesh) const
+{
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilMask(0x00);
+	glDisable(GL_DEPTH_TEST);
+
+	auto outlineShader = sceneContext.shaderManager->useShader("outlineShader");
+	outlineShader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
+	outlineShader->useModel(getModelMatrix());
+	mesh.useMesh();
+
+	glStencilMask(0xFF);
+	glStencilFunc(GL_ALWAYS, 0, 0xFF);
+	glEnable(GL_DEPTH_TEST);
+}
+
 void RenderablePlanet::editViaGui()
 {
 	std::array<const char*, 3> xyz { "X", "Y", "Z" };

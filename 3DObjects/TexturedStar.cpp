@@ -16,18 +16,26 @@ TexturedStar::TexturedStar(const PhysicalUnitVec<3>& position, const PhysicalUni
 
 void TexturedStar::render(SceneContext& sceneContext) const
 {
-	auto shader = sceneContext.shaderManager->useShader("texturedStarShader");
+	bool drawOutline = this->isBeingEdited();
+	if (drawOutline)
+	{
+		beginOutlineRender();
+	}
 
+	auto shader = sceneContext.shaderManager->useShader("texturedStarShader");
 	shader->useCamera(*sceneContext.cameraManager->getCurrentCamera());
 	shader->useOmnipresentLight(*sceneContext.mainLight);
 	shader->usePointLights(sceneContext.pointLights);
 	shader->useMaterial(material);
 	shader->useModel(getModelMatrix());
-
+	glUniform1f(shader->getUniformLocations().timePassed, sceneContext.lifeTimeInSec);
 	texture->useTexture();
 	mesh.useMesh();
 
-	glUniform1f(shader->getUniformLocations().timePassed, sceneContext.lifeTimeInSec);
+	if (drawOutline)
+	{
+		endOutlineRender(sceneContext, mesh);
+	}
 
 	if (renderOrbit)
 	{
@@ -94,4 +102,6 @@ void TexturedStar::editViaGui()
 
 		PointLight::diffuseIntensity = di;
 	}
+
+	PointLight::position = getPositionInWorldSpace();
 }

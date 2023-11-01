@@ -3,6 +3,7 @@
 StateSpaceSimulation::StateSpaceSimulation(StateManager* stateManager, Render render)
 	: BaseState(stateManager, render)
 	, gravitationalConstant(6.67430f, -11)
+	, stopAsyncUpdating(false)
 {
 }
 
@@ -38,11 +39,13 @@ void StateSpaceSimulation::onCreate()
 	simulationGui = std::make_unique<SpaceSimulationGUI>(simulationSettings, *planetCreator, serializer, sceneContext);
 
 	addCallbacks();
+	startAsyncUpdate();
 }
 
 void StateSpaceSimulation::onDestroy()
 {
 	removeCallbacks();
+	stopAsyncUpdate();
 }
 
 void StateSpaceSimulation::update(const sf::Time& time)
@@ -51,35 +54,6 @@ void StateSpaceSimulation::update(const sf::Time& time)
 	sceneContext.cameraManager->updateCameraPosition(realTimeInSec);
 	sceneContext.lastUpdateInSec = realTimeInSec;
 	sceneContext.lifeTimeInSec += realTimeInSec;
-
-	auto& planets = planetCreator->getPlanetContainerRef();
-	float simTime = realTimeInSec * static_cast<float>(simulationSettings.simulationSpeed.getValue());
-
-	if (!simulationSettings.pauseSimulation && !planets.empty())
-	{
-		unsigned int toDrop = 1;
-		for (const auto& firstPlanet : planets)
-		{
-			for (const auto& secondPlanet : planets | std::views::drop(toDrop++))
-			{
-				auto distanceVec = secondPlanet->getPosition() - firstPlanet->getPosition();
-				auto distanceSquared = distanceVec.getLength().getSquared();
-				auto force = gravitationalConstant * (firstPlanet->getMass() * secondPlanet->getMass()) / distanceSquared;
-				auto forceVec = distanceVec.getNormalized() * force;
-
-				auto firstAcceleration = forceVec / firstPlanet->getMass();
-				auto secondAcceleration = (forceVec * (-1)) / secondPlanet->getMass();
-
-				firstPlanet->setVelocity(firstPlanet->getVelocity() + firstAcceleration * simTime);
-				secondPlanet->setVelocity(secondPlanet->getVelocity() + secondAcceleration * simTime);
-			}
-		}
-
-		for (auto& el : planets)
-		{
-			el->update(simTime, realTimeInSec);
-		}
-	}
 
 	if (simulationSettings.focusedPlanet != nullptr)
 	{
@@ -144,6 +118,55 @@ void StateSpaceSimulation::mouseLeftClick(EventDetails* details)
 void StateSpaceSimulation::mouseRightClick(EventDetails* details)
 {
 	handleMouse(details, Mouse::RIGHT);
+}
+
+bool StateSpaceSimulation::asyncUpdate()
+{
+	while (!this->stopAsyncUpdating)
+	{
+		auto& planets = planetCreator->getPlanetContainerRef();
+		float realTimeInSec = static_cast<float>(sceneContext.lastUpdateInSec);
+		float simTime = realTimeInSec * static_cast<float>(simulationSettings.simulationSpeed.getValue());
+
+		if (!simulationSettings.pauseSimulation && !planets.empty())
+		{
+			unsigned int toDrop = 1;
+			for (const auto& firstPlanet : planets)
+			{
+				for (const auto& secondPlanet : planets | std::views::drop(toDrop++))
+				{
+					auto distanceVec = secondPlanet->getPosition() - firstPlanet->getPosition();
+					auto distanceSquared = distanceVec.getLength().getSquared();
+					auto force = gravitationalConstant * (firstPlanet->getMass() * secondPlanet->getMass()) / distanceSquared;
+					auto forceVec = distanceVec.getNormalized() * force;
+
+					auto firstAcceleration = forceVec / firstPlanet->getMass();
+					auto secondAcceleration = (forceVec * (-1)) / secondPlanet->getMass();
+
+					firstPlanet->setVelocity(firstPlanet->getVelocity() + firstAcceleration * simTime);
+					secondPlanet->setVelocity(secondPlanet->getVelocity() + secondAcceleration * simTime);
+				}
+			}
+
+			for (auto& el : planets)
+			{
+				el->update(simTime, realTimeInSec);
+			}
+		}
+	}
+
+	return true;
+}
+
+void StateSpaceSimulation::startAsyncUpdate()
+{
+	asyncUpdateResult = std::async(std::launch::async, &StateSpaceSimulation::asyncUpdate, this);
+}
+
+void StateSpaceSimulation::stopAsyncUpdate()
+{
+	stopAsyncUpdating = true;
+	asyncUpdateResult.wait();
 }
 
 void StateSpaceSimulation::handleMouse(EventDetails* details, Mouse mouseButton)

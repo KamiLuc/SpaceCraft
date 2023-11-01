@@ -280,6 +280,8 @@
     <None Include="Shaders\coordinateSystemAxes.vertex" />
     <None Include="Shaders\orbitShader.fragment" />
     <None Include="Shaders\orbitShader.vertex" />
+    <None Include="Shaders\outlineShader.fragment" />
+    <None Include="Shaders\outlineShader.vertex" />
     <None Include="Shaders\skyboxShader.fragment" />
     <None Include="Shaders\skyboxShader.vertex" />
     <None Include="Shaders\texturedObjectShader.fragment" />
