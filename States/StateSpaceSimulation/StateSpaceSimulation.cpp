@@ -55,6 +55,11 @@ void StateSpaceSimulation::update(const sf::Time& time)
 	sceneContext.lastUpdateInSec = realTimeInSec;
 	sceneContext.lifeTimeInSec += realTimeInSec;
 
+	for (auto& el : planetCreator->getPlanetContainerRef())
+	{
+		el->updateOrbit(realTimeInSec);
+	}
+
 	if (simulationSettings.focusedPlanet != nullptr)
 	{
 		sceneContext.cameraManager->observePoint(simulationSettings.focusedPlanet->getPositionInWorldSpace());
@@ -150,7 +155,7 @@ bool StateSpaceSimulation::asyncUpdate()
 
 			for (auto& el : planets)
 			{
-				el->update(simTime, realTimeInSec);
+				el->update(realTimeInSec * static_cast<float>(simulationSettings.simulationSpeed.getValue()));
 			}
 		}
 	}

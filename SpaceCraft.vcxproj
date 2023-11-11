@@ -179,6 +179,7 @@
     <ClCompile Include="States\StateIntro.cpp" />
     <ClCompile Include="States\StateMainMenu.cpp" />
     <ClCompile Include="States\StateSimulationLoading.cpp" />
+    <ClCompile Include="States\StateSpaceSimulation\GUI\PlanetDistanceVisualizer.cpp" />
     <ClCompile Include="States\StateSpaceSimulation\GUI\SpaceSimulationGUI.cpp" />
     <ClCompile Include="States\StateSpaceSimulation\ObjectCreators\PlanetCreator.cpp" />
     <ClCompile Include="States\StateSpaceSimulation\ObjectEditor\RenderablePlanetObjectEditor.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="States\StateMainMenu.h" />
     <ClInclude Include="States\StateIntro.h" />
     <ClInclude Include="States\StateSimulationLoading.h" />
+    <ClInclude Include="States\StateSpaceSimulation\GUI\PlanetDistanceVisualizer.h" />
     <ClInclude Include="States\StateSpaceSimulation\GUI\SpaceSimulationGUI.h" />
     <ClInclude Include="States\StateSpaceSimulation\ObjectCreators\PlanetCreator.h" />
     <ClInclude Include="States\StateSpaceSimulation\ObjectEditor\RenderablePlanetObjectEditor.h" />

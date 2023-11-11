@@ -31,11 +31,18 @@ glm::mat4 RenderablePlanet::getModelMatrix() const
 	return model;
 }
 
-void RenderablePlanet::update(float simInSec, float realTimeInSec)
+void RenderablePlanet::update(float simInSec)
 {
 	if (canMove)
 	{
 		position += velocity * simInSec;
+	}
+}
+
+void RenderablePlanet::updateOrbit(float realTimeInSec)
+{
+	if (canMove)
+	{
 		if (lastRealOrbitUpdate >= orbitDataUpdateIntervalInSec && canMove)
 		{
 			orbitInWorldSpace.addPoint(getPositionInWorldSpace());

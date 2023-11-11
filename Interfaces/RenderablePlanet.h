@@ -21,7 +21,8 @@ public:
 	glm::mat4 getModelMatrix() const;
 	void serialize(boost::archive::text_oarchive& outputArchive, const unsigned int version) override;
 	void serialize(boost::archive::text_iarchive& inputArchive, const unsigned int version) override;
-	void update(float simTimeInSec, float realTimeInSec);
+	void update(float simTimeInSec);
+	void updateOrbit(float realTimeInSec);
 	void setIdentifier(const std::string& identifier);
 	float getRadiusInWorldSpace() const;
 	std::string getIdentifier() const;

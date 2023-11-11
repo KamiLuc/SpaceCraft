@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PlanetDistanceVisualizer.h"
 #include "../SpaceSimulationSettings.h"
 #include "../ObjectCreators/PlanetCreator.h"
 #include "AppFramework/GUI/ObjectEditor.h"
@@ -22,6 +23,8 @@ public:
 private:
 	ObjectEditor mainLightObjectEditor;
 	ObjectEditor spaceSimulationSettingsObjectEditor;
+	ObjectEditor planetDistanceVisualizerEditor;
+	PlanetDistanceVisualizer planetDistanceVisualizer;
 
 	SceneContext& sceneContext;
 	PlanetCreator& planetCreator;
@@ -37,6 +40,7 @@ private:
 	void showFileMenu();
 	void showSettingsMenu();
 	void showObjectsMenu();
+	void showToolsMenu();
 	void showDeletePlanetsMenu();
 	void showEditPlanetsMenu();
 	void showObjectFocusMenu();

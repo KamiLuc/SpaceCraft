@@ -4,14 +4,17 @@
 SpaceSimulationGUI::SpaceSimulationGUI(SpaceSimulationSettings& spaceSimulationSettings, PlanetCreator& planetCreator,
 									   Serializer& serializer, SceneContext& sceneContext)
 	: spaceSimulationSettings(spaceSimulationSettings)
+	, planetDistanceVisualizer(planetCreator.getPlanetContainerRef())
 	, planetCreator(planetCreator)
 	, sceneContext(sceneContext)
 	, serializer(serializer)
 	, spaceSimulationSettingsObjectEditor("Edit simulation settings", { 550, 153 }, { 550, 153 })
 	, mainLightObjectEditor("Edit main light", { 320, 79 }, { 320, 79 })
+	, planetDistanceVisualizerEditor("Distance visualizer", { 500, 230 }, { 1000, 1000 })
 {
 	spaceSimulationSettings.registerEditor(&spaceSimulationSettingsObjectEditor);
 	sceneContext.mainLight->registerEditor(&mainLightObjectEditor);
+	planetDistanceVisualizer.registerEditor(&planetDistanceVisualizerEditor);
 }
 
 void SpaceSimulationGUI::draw()
@@ -33,6 +36,11 @@ void SpaceSimulationGUI::draw()
 			showObjectsMenu();
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Tools"))
+		{
+			showToolsMenu();
+			ImGui::EndMenu();
+		}
 		ImGui::EndMainMenuBar();
 	}
 
@@ -45,6 +53,7 @@ void SpaceSimulationGUI::drawEditors()
 	spaceSimulationSettingsObjectEditor.draw();
 	sceneContext.cameraManager->drawEditors();
 	mainLightObjectEditor.draw();
+	planetDistanceVisualizerEditor.draw();
 }
 
 void SpaceSimulationGUI::createColoredPlanet()
@@ -335,6 +344,14 @@ void SpaceSimulationGUI::showObjectsMenu()
 			showObjectFocusMenu();
 			ImGui::EndMenu();
 		}
+	}
+}
+
+void SpaceSimulationGUI::showToolsMenu()
+{
+	if (ImGui::Selectable("Distance visualizer"))
+	{
+		planetDistanceVisualizer.startEditing();
 	}
 }
 
