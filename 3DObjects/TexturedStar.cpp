@@ -78,6 +78,7 @@ void TexturedStar::serialize(boost::archive::text_iarchive& inputArchive, const 
 	glm::vec3 serializedColor {};
 	inputArchive& serializedColor[0] & serializedColor[1] & serializedColor[2];
 	color = serializedColor;
+	PointLight::position = getPositionInWorldSpace();
 }
 
 void TexturedStar::editViaGui()
